@@ -1,0 +1,36 @@
+START 
+    CREATE Class Client
+    Declare serverIp as String
+    Declare serverPort as Integer
+    Declare socket as Socket
+    Declare inputReader as BufferedReader
+    Declare outputWriter as PrintWriter
+    Declare isConnected as Boolean
+
+    METHOD Client(serverIp, serverPort)
+        SET this.serverIp = serverIp
+        SET this.serverPort = serverPort
+    END METHOD
+
+    METHOD Connect(username, password)
+        TRY
+            Create socket connection using serverIp and severPort
+            Set the socket timeout to 100 milliseconds
+            Create inputReader using socket's input stream 
+            Create outputWriter using socket's output stream
+            SET isConnected = true
+            SEND username to server using outputWriter
+    START a new thread to listen to incoming messages
+            RETURN TRUE
+
+        CATCH IOException
+            SET isConnected = false
+            RETURN FALSE
+        END TRY
+    END METHOD
+
+    METHOD listenForMessages()
+        TRY
+            Create incoming as a String
+            WHILE isConnected
+                
