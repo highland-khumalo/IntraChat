@@ -6,7 +6,17 @@ package com.IntraChat.gui;
         
 
 
+public class Structure extends javax.swing.JFrame {
+    
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Chat.class.getName());
 
+    /**
+     * Creates new form Chat
+     */
+    public Structure() {
+        initComponents();
+    }
+    
     //End of variables declaration
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -120,10 +130,8 @@ package com.IntraChat.gui;
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
+
+    public void start() {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -142,7 +150,7 @@ package com.IntraChat.gui;
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new Structure().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -162,3 +170,4 @@ package com.IntraChat.gui;
     private javax.swing.JTextField usernameTF;
     // End of variables declaration//GEN-END:variables
 
+}
