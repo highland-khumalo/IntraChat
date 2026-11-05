@@ -9,7 +9,7 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Base64;
 
-public class SecurityAndFileIO {
+public class AuthService {
     private static final SecureRandom secureRandom = new SecureRandom();
     private static final long Day = 24 * 60 * 60 * 1000L; // 24 hours in milliseconds
     
