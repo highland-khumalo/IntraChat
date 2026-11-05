@@ -1,4 +1,4 @@
-package main.java.com.IntraChat.security;
+package com.IntraChat.security;
 
 import java.nio.charset.StandardCharsets;
 import javax.crypto.Cipher;
