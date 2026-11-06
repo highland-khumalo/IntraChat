@@ -17,8 +17,7 @@ public class NetworkBackendTest {
         if (userInp.equalsIgnoreCase("y")) {
             System.out.println("Starting Server...");
 
-            int defaultPort = 5000;
-            Server server = new Server(defaultPort);
+            Server server = new Server(Server.defaultPort);
             server.start();
 
         } else if (userInp.equalsIgnoreCase("n")) {

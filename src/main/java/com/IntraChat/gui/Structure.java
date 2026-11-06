@@ -3,11 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.IntraChat.gui;
-        
 
+import com.IntraChat.network.Server;
 
 public class Structure extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Chat.class.getName());
 
     /**
@@ -19,7 +19,7 @@ public class Structure extends javax.swing.JFrame {
         setTitle("Login");
         pack();
     }
-    
+
     //End of variables declaration
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -36,7 +36,7 @@ public class Structure extends javax.swing.JFrame {
         code = new javax.swing.JLabel();
         password = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        startSeverBtn = new javax.swing.JButton();
         logo = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
 
@@ -89,13 +89,13 @@ public class Structure extends javax.swing.JFrame {
         jLabel5.setText("LOGIN :");
         jPanel3.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(88, 21, 130, 40));
 
-        jButton2.setBackground(new java.awt.Color(0, 0, 0));
-        jButton2.setFont(new java.awt.Font("Segoe UI Black", 3, 12)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 140, 0));
-        jButton2.setText("Start Server");
-        jButton2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jButton2.addActionListener(this::jButton2ActionPerformed);
-        jPanel3.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 290, 120, 40));
+        startSeverBtn.setBackground(new java.awt.Color(0, 0, 0));
+        startSeverBtn.setFont(new java.awt.Font("Segoe UI Black", 3, 12)); // NOI18N
+        startSeverBtn.setForeground(new java.awt.Color(255, 140, 0));
+        startSeverBtn.setText("Start Server");
+        startSeverBtn.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        startSeverBtn.addActionListener(this::startSeverBtnActionPerformed);
+        jPanel3.add(startSeverBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 290, 120, 40));
 
         Rootpanel.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 0, 340, 420));
         Rootpanel.add(logo, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 180, -1, -1));
@@ -125,10 +125,21 @@ public class Structure extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_passwordFActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void startSeverBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startSeverBtnActionPerformed
+        Server server = new Server(Server.defaultPort);
+        new Thread(() -> {
+            server.start();
+        }).start();
+        String ipAddress = server.getServerIpAddress();
+        int ipPort = server.getPort();
 
+        javax.swing.JOptionPane.showMessageDialog(
+                this,
+                "Sever Started at " + ipAddress + ":" + ipPort,
+                "Notification",
+                javax.swing.JOptionPane.INFORMATION_MESSAGE
+        );
+    }//GEN-LAST:event_startSeverBtnActionPerformed
 
     public void start() {
         /* Set the Nimbus look and feel */
@@ -157,7 +168,6 @@ public class Structure extends javax.swing.JFrame {
     private javax.swing.JLabel code;
     private javax.swing.JTextField codeTF;
     private javax.swing.JButton forgotpassword;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel3;
@@ -165,6 +175,7 @@ public class Structure extends javax.swing.JFrame {
     private javax.swing.JLabel logo;
     private javax.swing.JLabel password;
     private javax.swing.JPasswordField passwordF;
+    private javax.swing.JButton startSeverBtn;
     private javax.swing.JLabel username;
     private javax.swing.JTextField usernameTF;
     // End of variables declaration//GEN-END:variables
