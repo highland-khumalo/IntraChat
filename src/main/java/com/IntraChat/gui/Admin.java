@@ -1,5 +1,11 @@
 package com.IntraChat.gui;
 
+import com.IntraChat.database.DatabaseManager;
+import com.IntraChat.network.Server;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
@@ -10,6 +16,8 @@ package com.IntraChat.gui;
  * @author onele
  */
 public class Admin extends javax.swing.JPanel {
+
+    private Server serverInstance;
 
     /**
      * Creates new form Admin
@@ -260,10 +268,12 @@ public class Admin extends javax.swing.JPanel {
 
         jButton1.setBackground(new java.awt.Color(255, 153, 0));
         jButton1.setText("Dashboard");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         jButton2.setBackground(new java.awt.Color(0, 0, 0));
         jButton2.setForeground(new java.awt.Color(255, 153, 0));
         jButton2.setText("User Management");
+        jButton2.addActionListener(this::jButton2ActionPerformed);
 
         jButton3.setBackground(new java.awt.Color(0, 0, 0));
         jButton3.setForeground(new java.awt.Color(255, 153, 0));
@@ -273,10 +283,12 @@ public class Admin extends javax.swing.JPanel {
         jButton4.setBackground(new java.awt.Color(0, 0, 0));
         jButton4.setForeground(new java.awt.Color(255, 153, 0));
         jButton4.setText("Logs");
+        jButton4.addActionListener(this::jButton4ActionPerformed);
 
         jButton5.setBackground(new java.awt.Color(0, 0, 0));
         jButton5.setForeground(new java.awt.Color(255, 153, 0));
         jButton5.setText("About");
+        jButton5.addActionListener(this::jButton5ActionPerformed);
 
         label3.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         label3.setForeground(new java.awt.Color(255, 153, 0));
@@ -328,12 +340,61 @@ public class Admin extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+        String status = (serverInstance != null && serverInstance.isRunning())
+                ? "Online (Port " + serverInstance.getPort() + ")"
+                : "Offline";
+        JOptionPane.showMessageDialog(this, "Current Server Status: " + status, "Server Control", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        // TODO add your handling code here:
+        if (serverInstance != null && serverInstance.isRunning()) {
+            serverInstance.stop();
+            label12.setText("Offline");
+            label12.setForeground(java.awt.Color.RED);
+            jButton9.setText("Start server");
+            JOptionPane.showMessageDialog(this, "Server stopped successfully.", "Server Control", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            serverInstance = new Server(Server.defaultPort);
+            new Thread(() -> serverInstance.start()).start();
+            label12.setText("Online");
+            label12.setForeground(new java.awt.Color(0, 204, 0));
+            jButton9.setText("Stop server");
+            JOptionPane.showMessageDialog(this, "Server started on port " + Server.defaultPort + ".", "Server Control", JOptionPane.INFORMATION_MESSAGE);
+        }
     }//GEN-LAST:event_jButton9ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+        JOptionPane.showMessageDialog(this, "Dashboard updated.\nActive Server: " + ((serverInstance != null && serverInstance.isRunning()) ? "Yes" : "No"), "Dashboard", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
+        JOptionPane.showMessageDialog(this, "User Management console ready.\nView registered users in the table.", "User Management", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {
+        try {
+            var history = DatabaseManager.getChatHistoryArrayList();
+            StringBuilder sb = new StringBuilder();
+            for (var m : history) {
+                sb.append("[").append(m.timestamp()).append("] ")
+                  .append(m.sender()).append(" -> ")
+                  .append(m.recipient()).append(": ")
+                  .append(m.content()).append("\n");
+            }
+            if (sb.length() == 0) {
+                sb.append("No chat records logged yet.");
+            }
+            JTextArea ta = new JTextArea(sb.toString(), 18, 45);
+            ta.setEditable(false);
+            JOptionPane.showMessageDialog(this, new JScrollPane(ta), "Chat Logs", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error fetching logs: " + e.getMessage(), "Logs Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
+        JOptionPane.showMessageDialog(this, "IntraChat Admin Console\nVersion 1.0-SNAPSHOT\nJava 21 Swing Application", "About", JOptionPane.INFORMATION_MESSAGE);
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -367,4 +428,5 @@ public class Admin extends javax.swing.JPanel {
     private java.awt.Label label8;
     private java.awt.Label label9;
     // End of variables declaration//GEN-END:variables
+}
    

@@ -64,8 +64,6 @@ public class FileHandling {
             System.out.println("An error occurred while saving user data.");
             e.printStackTrace();
         }
-        input.close();
-    }*/
-
-    
+        input.close();*/
+    }
 }

@@ -7,16 +7,21 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class Client {
-private final String serverIp;
+    private final String serverIp;
     private final int serverPort;
     private Socket socket;
     private BufferedReader in;
     private PrintWriter out;
     private boolean isConnected;
+    private java.util.function.Consumer<String> messageListener;
 
     public Client(String serverIp, int serverPort) {
         this.serverIp = serverIp;
         this.serverPort = serverPort;
+    }
+
+    public void setMessageListener(java.util.function.Consumer<String> listener) {
+        this.messageListener = listener;
     }
 
     public boolean connect(String username, String password) { //Note: add the Code parameter and convert it back to IP
@@ -27,6 +32,7 @@ private final String serverIp;
             isConnected = true;
 
             out.println(username);
+            out.println(password != null ? password : "");
 
             new Thread(this::listenForMessages).start();
 
@@ -41,12 +47,17 @@ private final String serverIp;
         try {
             String incoming;
             while (isConnected && (incoming = in.readLine()) != null) {
-                // Note: Remember to handle the gui aspect when complete
                 System.out.println(incoming);
+                if (messageListener != null) {
+                    messageListener.accept(incoming);
+                }
             }
         } catch (IOException e) {
             if (isConnected) {
                 System.out.println("(client) Disconnected from server.");
+                if (messageListener != null) {
+                    messageListener.accept("(system) Disconnected from server.");
+                }
             }
         } finally {
             disconnect();
@@ -56,6 +67,18 @@ private final String serverIp;
         if (out != null && isConnected) {
             out.println(message);
         }
+    }
+
+    public boolean isConnected() {
+        return isConnected;
+    }
+
+    public String getServerIp() {
+        return serverIp;
+    }
+
+    public int getServerPort() {
+        return serverPort;
     }
 
     public void disconnect() {

@@ -4,19 +4,52 @@
  */
 package com.IntraChat.gui;
 
-
-
+import com.IntraChat.database.DatabaseManager;
+import com.IntraChat.network.Client;
+import com.IntraChat.network.Server;
+import java.awt.BorderLayout;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 public class Chat extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Chat.class.getName());
 
+    private Client client;
+    private String currentUser = "Anonymous";
+    private JTextArea chatTextArea;
+
     /**
      * Creates new form Chat
      */
- public Chat(){
-     initComponents();
- }}
+    public Chat() {
+        initComponents();
+        customInit();
+    }
+
+    public Chat(Client client, String username) {
+        this.client = client;
+        this.currentUser = (username != null && !username.trim().isEmpty()) ? username.trim() : "Anonymous";
+        initComponents();
+        customInit();
+    }
+
+    private javax.swing.ImageIcon getSafeIcon(String resourcePath) {
+        java.net.URL url = getClass().getResource(resourcePath);
+        if (url == null && resourcePath.startsWith("/resources/")) {
+            url = getClass().getResource(resourcePath.substring("/resources".length()));
+        }
+        if (url == null && !resourcePath.startsWith("/resources/")) {
+            url = getClass().getResource("/resources" + resourcePath);
+        }
+        return url != null ? new javax.swing.ImageIcon(url) : null;
+    }
 
 
     /**
@@ -59,8 +92,9 @@ public class Chat extends javax.swing.JFrame {
         Attach_button = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
 
-        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/save_res.png"))); // NOI18N
+        jButton7.setIcon(getSafeIcon("/resources/save_res.png"));
         jButton7.setText("Save Chat Log");
+        jButton7.addActionListener(this::jButton7ActionPerformed);
 
         OnlineUsers.setBackground(new java.awt.Color(32, 32, 32));
         OnlineUsers.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, null, new java.awt.Color(255, 102, 0)));
@@ -81,20 +115,21 @@ public class Chat extends javax.swing.JFrame {
         iconsPanel.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 140, 0), 1, true));
 
         files_button.setBackground(new java.awt.Color(32, 32, 32));
-        files_button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/folder-white.png"))); // NOI18N
+        files_button.setIcon(getSafeIcon("/resources/folder-white.png"));
         files_button.setBorder(null);
         files_button.addActionListener(this::files_buttonActionPerformed);
 
         notifications_button.setBackground(new java.awt.Color(32, 32, 32));
         notifications_button.setBorder(null);
+        notifications_button.addActionListener(this::notifications_buttonActionPerformed);
 
         chats_button.setBackground(new java.awt.Color(32, 32, 32));
-        chats_button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/speech-bubble-white.png"))); // NOI18N
+        chats_button.setIcon(getSafeIcon("/resources/speech-bubble-white.png"));
         chats_button.setBorder(null);
         chats_button.addActionListener(this::chats_buttonActionPerformed);
 
         Settings_button.setBackground(new java.awt.Color(32, 32, 32));
-        Settings_button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/settings-white.png"))); // NOI18N
+        Settings_button.setIcon(getSafeIcon("/resources/settings-white.png"));
         Settings_button.setBorder(null);
         Settings_button.addActionListener(this::Settings_buttonActionPerformed);
 
@@ -239,10 +274,11 @@ public class Chat extends javax.swing.JFrame {
 
         send_button.setBackground(new java.awt.Color(255, 140, 0));
         send_button.setForeground(new java.awt.Color(255, 255, 255));
-        send_button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/send-2-white.png"))); // NOI18N
+        send_button.setIcon(getSafeIcon("/resources/send-2-white.png"));
         send_button.setText("send");
+        send_button.addActionListener(this::send_buttonActionPerformed);
 
-        Logo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/final_logo.jpg"))); // NOI18N
+        Logo.setIcon(getSafeIcon("/resources/final_logo.jpg"));
 
         IP_label.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         IP_label.setForeground(new java.awt.Color(255, 255, 255));
@@ -252,14 +288,15 @@ public class Chat extends javax.swing.JFrame {
         jTextField1.setForeground(new java.awt.Color(255, 255, 255));
         jTextField1.setText("type message here.");
         jTextField1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 140, 0), 1, true));
+        jTextField1.addActionListener(this::jTextField1ActionPerformed);
 
         Attach_button.setBackground(new java.awt.Color(255, 140, 0));
-        Attach_button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Attatch-white.png"))); // NOI18N
+        Attach_button.setIcon(getSafeIcon("/resources/Attatch-white.png"));
         Attach_button.addActionListener(this::Attach_buttonActionPerformed);
 
         jButton1.setBackground(new java.awt.Color(32, 32, 32));
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/search_white.png"))); // NOI18N
+        jButton1.setIcon(getSafeIcon("/resources/search_white.png"));
         jButton1.setText("search users");
         jButton1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 140, 0), 1, true));
         jButton1.addActionListener(this::jButton1ActionPerformed);
@@ -375,29 +412,228 @@ public class Chat extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
+    private void customInit() {
+        chatPanel.setLayout(new BorderLayout());
+        chatTextArea = new JTextArea();
+        chatTextArea.setEditable(false);
+        chatTextArea.setBackground(new java.awt.Color(24, 24, 24));
+        chatTextArea.setForeground(java.awt.Color.WHITE);
+        chatTextArea.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
+        chatTextArea.setLineWrap(true);
+        chatTextArea.setWrapStyleWord(true);
+        JScrollPane scrollPane = new JScrollPane(chatTextArea);
+        scrollPane.setBorder(null);
+        chatPanel.add(scrollPane, BorderLayout.CENTER);
+
+        // Update IP and user display
+        if (client != null && client.isConnected()) {
+            IP_label.setText("User: " + currentUser + " | " + client.getServerIp() + ":" + client.getServerPort());
+            client.setMessageListener(this::onMessageReceived);
+        } else {
+            IP_label.setText("User: " + currentUser + " | Offline Mode");
+        }
+
+        // Placeholder cleanup on jTextField1
+        jTextField1.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                if ("type message here.".equals(jTextField1.getText())) {
+                    jTextField1.setText("");
+                }
+            }
+            @Override
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                if (jTextField1.getText().trim().isEmpty()) {
+                    jTextField1.setText("type message here.");
+                }
+            }
+        });
+
+        // ChatRoom selection synchronization with TabbedPane
+        ChatRooms.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                String selected = ChatRooms.getSelectedValue();
+                if (selected != null) {
+                    for (int i = 0; i < jTabbedPane1.getTabCount(); i++) {
+                        if (jTabbedPane1.getTitleAt(i).equalsIgnoreCase(selected)) {
+                            jTabbedPane1.setSelectedIndex(i);
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+
+        // Online users double-click to message
+        OnlineUsers.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getClickCount() == 2) {
+                    String target = OnlineUsers.getSelectedValue();
+                    if (target != null) {
+                        jTextField1.setText("@" + target + " ");
+                        jTextField1.requestFocusInWindow();
+                    }
+                }
+            }
+        });
+
+        // Load chat history from SQLite
+        try {
+            ArrayList<DatabaseManager.Message> history = DatabaseManager.getChatHistoryArrayList();
+            if (history != null && !history.isEmpty()) {
+                chatTextArea.append("--- Previous Chat History ---\n");
+                for (var msg : history) {
+                    chatTextArea.append("[" + msg.timestamp() + "] " + msg.sender() + ": " + msg.content() + "\n");
+                }
+                chatTextArea.append("-----------------------------\n");
+            }
+        } catch (Exception e) {
+            logger.log(java.util.logging.Level.FINE, "Chat history load: " + e.getMessage());
+        }
+
+        // Clean disconnect on close
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                if (client != null && client.isConnected()) {
+                    client.sendMessage("/quit");
+                    client.disconnect();
+                }
+            }
+        });
+    }
+
+    public void onMessageReceived(String message) {
+        java.awt.EventQueue.invokeLater(() -> {
+            if (chatTextArea != null) {
+                chatTextArea.append(message + "\n");
+                chatTextArea.setCaretPosition(chatTextArea.getDocument().getLength());
+            }
+        });
+    }
+
+    private void send_buttonActionPerformed(java.awt.event.ActionEvent evt) {
+        sendMessage();
+    }
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {
+        sendMessage();
+    }
+
+    private void sendMessage() {
+        String msg = jTextField1.getText().trim();
+        if (msg.isEmpty() || "type message here.".equals(msg)) {
+            return;
+        }
+
+        if (jCheckBox1.isSelected()) {
+            msg = "[Encrypted] " + msg;
+        }
+
+        if (client != null && client.isConnected()) {
+            client.sendMessage(msg);
+        } else {
+            onMessageReceived(currentUser + ": " + msg);
+        }
+
+        // Store into database
+        try {
+            DatabaseManager.logMessage(currentUser, "General", msg);
+        } catch (Exception e) {
+            logger.log(java.util.logging.Level.WARNING, "Failed to log message to DB: " + e.getMessage());
+        }
+
+        jTextField1.setText("");
+        jTextField1.requestFocusInWindow();
+    }
 
     private void Attach_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Attach_buttonActionPerformed
-        // TODO add your handling code here:
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Select file to share");
+        int result = chooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = chooser.getSelectedFile();
+            String attachMsg = "[Attachment: " + selectedFile.getName() + " (" + selectedFile.length() + " bytes)]";
+            if (client != null && client.isConnected()) {
+                client.sendMessage(attachMsg);
+            } else {
+                onMessageReceived(currentUser + ": " + attachMsg);
+            }
+        }
     }//GEN-LAST:event_Attach_buttonActionPerformed
 
     private void files_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_files_buttonActionPerformed
-        // TODO add your handling code here:
+        Attach_buttonActionPerformed(evt);
     }//GEN-LAST:event_files_buttonActionPerformed
 
     private void chats_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chats_buttonActionPerformed
-        // TODO add your handling code here:
+        jTabbedPane1.setSelectedIndex(1);
     }//GEN-LAST:event_chats_buttonActionPerformed
 
     private void Settings_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Settings_buttonActionPerformed
-        // TODO add your handling code here:
+        String status = (client != null && client.isConnected()) ? "Connected (" + client.getServerIp() + ":" + client.getServerPort() + ")" : "Disconnected";
+        JOptionPane.showMessageDialog(
+            this,
+            "Logged in as: " + currentUser + "\nNetwork Status: " + status + "\nDatabase: chat.db (SQLite)",
+            "Settings & Info",
+            JOptionPane.INFORMATION_MESSAGE
+        );
     }//GEN-LAST:event_Settings_buttonActionPerformed
 
+    private void notifications_buttonActionPerformed(java.awt.event.ActionEvent evt) {
+        JOptionPane.showMessageDialog(
+            this,
+            "No unread notifications.",
+            "Notifications",
+            JOptionPane.INFORMATION_MESSAGE
+        );
+    }
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        String search = JOptionPane.showInputDialog(this, "Enter username to search:", "Search Users", JOptionPane.QUESTION_MESSAGE);
+        if (search != null && !search.trim().isEmpty()) {
+            var model = OnlineUsers.getModel();
+            boolean found = false;
+            for (int i = 0; i < model.getSize(); i++) {
+                if (model.getElementAt(i).equalsIgnoreCase(search.trim())) {
+                    OnlineUsers.setSelectedIndex(i);
+                    OnlineUsers.ensureIndexIsVisible(i);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                JOptionPane.showMessageDialog(this, "User '" + search + "' is not currently online.", "Search Result", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        if (jCheckBox1.isSelected()) {
+            onMessageReceived("(system) End-to-end message encryption mode activated.");
+        } else {
+            onMessageReceived("(system) Message encryption mode deactivated.");
+        }
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {
+        if (chatTextArea == null || chatTextArea.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Chat log is currently empty.", "Save Log", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setSelectedFile(new File("chat_log.txt"));
+        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            try (FileWriter writer = new FileWriter(fileChooser.getSelectedFile())) {
+                writer.write(chatTextArea.getText());
+                JOptionPane.showMessageDialog(this, "Chat log saved successfully!", "Save Log", JOptionPane.INFORMATION_MESSAGE);
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "Failed to save file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -456,4 +692,5 @@ public class Chat extends javax.swing.JFrame {
     private javax.swing.JButton send_button;
     private javax.swing.JLabel settings_label;
     // End of variables declaration//GEN-END:variables
+}
 

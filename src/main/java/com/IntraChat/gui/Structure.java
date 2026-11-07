@@ -4,9 +4,16 @@
  */
 package com.IntraChat.gui;
 
+import com.IntraChat.database.DatabaseManager;
+import com.IntraChat.io.FileHandling;
+import com.IntraChat.network.Client;
+import com.IntraChat.network.Server;
+import javax.swing.JOptionPane;
+
 public class Structure extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Chat.class.getName());
+    private static Server runningServer;
 
     /**
      * Creates new form Chat
@@ -15,6 +22,20 @@ public class Structure extends javax.swing.JFrame {
         initComponents();
     }
         
+    private javax.swing.ImageIcon getSafeIcon(String resourcePath) {
+        java.net.URL url = getClass().getResource(resourcePath);
+        if (url == null && resourcePath.startsWith("/resources/")) {
+            url = getClass().getResource(resourcePath.substring("/resources".length()));
+        }
+        if (url == null && !resourcePath.startsWith("/resources/")) {
+            url = getClass().getResource("/resources" + resourcePath);
+        }
+        return url != null ? new javax.swing.ImageIcon(url) : null;
+    }
+
+    public void start() {
+        java.awt.EventQueue.invokeLater(() -> setVisible(true));
+    }
 
 
 
@@ -73,12 +94,14 @@ public class Structure extends javax.swing.JFrame {
         loginBtn.setForeground(new java.awt.Color(255, 255, 255));
         loginBtn.setText("login");
         loginBtn.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        loginBtn.addActionListener(this::loginBtnActionPerformed);
         jPanel3.add(loginBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 290, 130, 40));
 
         forgotpassword.setBackground(new java.awt.Color(32, 32, 32));
         forgotpassword.setForeground(new java.awt.Color(255, 255, 255));
         forgotpassword.setText("forgot password");
         forgotpassword.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(255, 255, 255)));
+        forgotpassword.addActionListener(this::forgotpasswordActionPerformed);
         jPanel3.add(forgotpassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 360, 150, -1));
 
         username.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
@@ -121,7 +144,7 @@ public class Structure extends javax.swing.JFrame {
         Rootpanel.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 0, 340, 420));
         Rootpanel.add(logo, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 180, -1, -1));
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/logo.login.png"))); // NOI18N
+        jLabel1.setIcon(getSafeIcon("/resources/logo.login.png"));
         Rootpanel.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 420, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -143,20 +166,99 @@ public class Structure extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void codeTFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_codeTFActionPerformed
-        // TODO add your handling code here:
+        loginBtnActionPerformed(evt);
     }//GEN-LAST:event_codeTFActionPerformed
 
     private void passwordFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordFActionPerformed
-        // TODO add your handling code here:
+        loginBtnActionPerformed(evt);
     }//GEN-LAST:event_passwordFActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        if (runningServer != null && runningServer.isRunning()) {
+            JOptionPane.showMessageDialog(
+                this,
+                "Server is already running on port " + runningServer.getPort() + ".",
+                "Server Info",
+                JOptionPane.INFORMATION_MESSAGE
+            );
+            return;
+        }
+
+        runningServer = new Server(Server.defaultPort);
+        new Thread(() -> {
+            runningServer.start();
+        }).start();
+
+        if (codeTF.getText().trim().isEmpty()) {
+            codeTF.setText("127.0.0.1");
+        }
+
+        JOptionPane.showMessageDialog(
+            this,
+            "Server started successfully on port " + Server.defaultPort + "!\nDefault IP set to 127.0.0.1",
+            "Server Started",
+            JOptionPane.INFORMATION_MESSAGE
+        );
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void usernameTFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameTFActionPerformed
-        // TODO add your handling code here:
+        passwordF.requestFocusInWindow();
     }//GEN-LAST:event_usernameTFActionPerformed
+
+    private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {
+        String username = usernameTF.getText().trim();
+        String password = new String(passwordF.getPassword()).trim();
+        String code = codeTF.getText().trim();
+
+        if (username.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                this,
+                "Please enter both a username and password.",
+                "Login Error",
+                JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        // Initialize SQLite database and verify/register user
+        try {
+            DatabaseManager.initializeDatabase();
+            if (!DatabaseManager.authenticateUser(username, password)) {
+                if (!FileHandling.login(username, password, code)) {
+                    // Automatically register new user to DB if not present
+                    DatabaseManager.addUser(username, password);
+                }
+            }
+        } catch (Exception e) {
+            logger.log(java.util.logging.Level.WARNING, "Database / authentication error: " + e.getMessage());
+        }
+
+        String serverIp = code.isEmpty() ? "127.0.0.1" : code;
+        Client client = new Client(serverIp, Server.defaultPort);
+        boolean connected = client.connect(username, password);
+
+        if (connected) {
+            Chat chatFrame = new Chat(client, username);
+            chatFrame.setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(
+                this,
+                "Could not connect to server at " + serverIp + ":" + Server.defaultPort + ".\nPlease start the server or verify the IP/code.",
+                "Connection Failed",
+                JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void forgotpasswordActionPerformed(java.awt.event.ActionEvent evt) {
+        JOptionPane.showMessageDialog(
+            this,
+            "Please check user_data.txt or contact your administrator to reset credentials.",
+            "Forgot Password",
+            JOptionPane.INFORMATION_MESSAGE
+        );
+    }
 
     /**
      * @param args the command line arguments
@@ -201,4 +303,5 @@ public class Structure extends javax.swing.JFrame {
     private javax.swing.JLabel username;
     private javax.swing.JTextField usernameTF;
     // End of variables declaration//GEN-END:variables
+}
 

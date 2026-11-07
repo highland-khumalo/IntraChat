@@ -85,6 +85,10 @@ public class Server {
         return port;
     }
 
+    public boolean isRunning() {
+        return isRunning;
+    }
+
     public void stop() {
         isRunning = false;
         try {
