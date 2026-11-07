@@ -8,10 +8,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Server {
 
-private final int port;
+    private final int port;
     private ServerSocket serverSocket;
     private boolean isRunning;
-    
+
+    public static int defaultPort = 5000;
+
     private final List<ClientHandler> clients = new CopyOnWriteArrayList<>();
 
     public Server(int port) {
@@ -61,6 +63,26 @@ private final int port;
     public void removeClient(ClientHandler client) {
         clients.remove(client);
         System.out.println("(server) Client disconnected. Total active: " + clients.size());
+    }
+
+    public List<ClientHandler> getClients() {
+        return clients;
+    }
+
+    public String getServerIpAddress() {
+        try {
+            String ipAddress = serverSocket.getInetAddress().getHostAddress();
+            System.out.println("(server) Server IP Address: " + ipAddress);
+            return ipAddress;
+        } catch (Exception e) {
+            System.err.println("(server error) Unable to get server IP address: " + e.getMessage());
+            return null;
+
+        }
+    }
+
+    public int getPort() {
+        return port;
     }
 
     public void stop() {
