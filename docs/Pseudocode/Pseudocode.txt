@@ -1,0 +1,386 @@
+CLASS NetworkBackendTest
+
+    METHOD main()
+    DISPLAY "Network test"
+    DISPLAY "Are you a server?(y/n)"
+
+    READ userInput from console
+    IF userInput is "y" THEN
+    DISPLAY "Starting Server..."
+    SET default port number to 5000
+    CREATE a server using the default port
+    START server
+ELSE 
+   START client mode
+   DISPLAY "Starting Client..."
+   PROMPT user to enter username
+    READ username from console
+    PROMPT user to enter password
+    READ password from console
+    PROMPT user to enter server IP address
+    READ serverIp from console
+    CREATE a client connection using the provided server IP and default port
+IF connection to the server using the provided username and password is successful THEN
+     DISPLAY "Connected type your message below"
+
+        WHILE client is connected
+            PROMPT user to enter a message
+            READ message from console
+            IF message is "/quit" THEN
+                BREAK the loop and disconnect from the server
+            ELSE 
+                SEND the message to the server using the client connection
+            END IF
+        END WHILE
+        DISCONNECT from the server
+    ELSE 
+        DISPLAY "Failed to connect to server"
+    END IF
+END METHOD
+END CLASS
+
+CLASS DatabaseManager
+      METHOD connect
+        ESTABLIDH a connection to the database
+        RETURN the connection object
+    END METHOD
+
+    METHOD initializeDatabase
+        DEFINE SQL statement for creating the Users table
+
+        Users table contains:
+        User ID
+        Username
+        Password
+        Account creation date
+
+        DEFINE SQL statement for creating the Messages table
+
+        Messages table contains:
+        Message ID
+        Sender ID
+        Receiver ID
+        Message content
+        Timestamp
+     TRY
+        CONNECT to the database
+        EXECUTE the SQL statement to create the Users table
+        EXECUTE the SQL statement to create the Messages table
+        DISPLAY "Database initialized successfully"
+        CATCH SQLException
+        DISPLAY "Error initializing database: " + exception message
+        END TRY
+    END METHOD
+       
+       METHOD addUser(username, password)
+        DEFINE SQL statement for inserting a new user into the Users table
+        TRY
+            CONNECT to the database
+            PREPARE the SQL statement with the provided username and password
+            EXECUTE the SQL statement to insert the new user
+            DISPLAY "User added successfully"
+        CATCH SQLException
+            DISPLAY "Error adding user: " + exception message
+        END TRY
+    END METHOD
+
+        METHOD logMessage(sender, receiver, Content)
+        DEFINE SQL statement for inserting a new message into the Messages table
+        TRY
+            CONNECT to the database
+            PREPARE the SQL statement with the provided sender, receiver, and content
+            EXECUTE the SQL statement to insert the new message
+            DISPLAY "Message logged successfully"
+        CATCH SQLException
+            DISPLAY "Error logging message: " + exception message
+        END TRY
+    END METHOD
+        
+        METHOD dispalyChatHIstory()
+        DEFINE SQL statement for retrieving chat history from the Messages table
+        TRY
+            CONNECT to the database
+            EXECUTE the SQL statement to retrieve chat history
+            DISPLAY the retrieved chat history
+        WHILE there are more messages to display
+        READ the sender, receiver, content, timestamp from the result set 
+        DISPLAY :
+        Timestamp
+        Sender
+        Receiver
+        Content
+        END WHILE 
+        CATCH SQLException
+            DISPLAY "Fetch Failed:" 
+        END TRY
+
+        METHOD authenticateUser(username, password)
+         DECLARE sql = "SELECT * FROM users WHERE username = ? AND password = ?"
+
+         TRY
+            CONNECT to the database
+            PREPARE statement using sql
+
+            SET the first parameter to username
+            SET the second parameter to password
+
+            EXECUTE query and STORE reults in rs 
+            IF rs contains at teast one row THEN 
+              RETURN TRUE
+            ELSE 
+               RETURN FALSE
+    END IF
+
+    CATCH SQLException e
+    DISPALY error message
+        RETURN FALSE
+END TRY
+END METHOD
+
+     METHOD GetChatHistoryArrayList
+        RETURNS  List of Messages
+        CREATE empty cahtHistory list
+
+        SET sql to 
+        "SELECT sender, receipient, content, timestamp FROM messages ORDER by id ASC"
+
+        TRY 
+        CONNECT to database
+        EXECUTE sql query
+        WHILE  there is another record ofin the result set DO
+            READ sender
+            READ receipient
+            READ content
+            READ timestamp
+
+    CREATE Message object using sender, content,timestamp
+
+    ADD Message object to cahtHistory
+    END WHILE
+CATCH database error
+
+     DISPLAY "Fetch failed"
+END TRY
+     RETURN catchHistory
+END CLASS 
+
+CLASS Client
+
+    Declare serverIp AS String
+    Declare serverPort AS Integer
+    Declare socket AS Socket
+    Declare inputReader AS BufferedReader
+    Declare outputWriter AS PrintWriter
+    Declare isConnected AS Boolean
+
+    METHOD Client(serverIp, serverPort)
+        STORE serverIp
+        STORE serverPort
+    END METHOD
+
+    METHOD Connect(username, password)
+        TRY
+            Create socket connection using serverIp and severPort
+            Set the socket timeout to 1000 milliseconds
+            Create inputReader using socket's input stream 
+            Create outputWriter using socket's output stream
+            SET connection status to TRUE
+            SEND username to server using outputWriter
+    START a new thread to listen to incoming messages
+            RETURN TRUE
+
+        CATCH IOException
+           Set connection status to TRUE
+           DISPLAY "Error while connecting to server"
+            RETURN FALSE
+        END TRY
+    END METHOD
+
+    METHOD listenForMessages()
+        TRY
+            Create incoming as a String
+            WHILE Connected and Message is received 
+             READ incoming message
+                DISPLAY the message 
+            END WHILE 
+        CATCH IOException
+           IF still marked as Connected
+          DISPLAY "disconnected from server"
+    END IF
+        FINALLY 
+        Diconnect from server
+    END TRY
+END METHOD
+     METHOD SendMessage(message)
+     IF outputWriter is not null AND isConnected is TRUE
+        WRITE message to outputWriter
+     SEND message to server using outputWriter
+END METHOD
+    
+     METHOD diconnect()
+
+        SET connection status to FALSE
+        TRY 
+        IF input stream exists 
+           close input stream
+        END IF
+        IF output stream exists
+           close output stream
+        END IF
+        If socket exists
+           close socket
+        END IF
+        CATCH IOException
+            DISPLAY "Error while disconnecting from server"
+        END TRY
+        END METHOD 
+    END CLASS
+
+CLASS ClientHandler
+
+     DECLARE socket AS Socket
+     DECLARE server AS Server
+     DECLARE inputReader AS BufferedReader
+     DECLARE outputWriter AS PrintWriter
+     DECLARE username AS String
+     DECLARE password AS String
+
+    METHOD ClientHandler(socket, server)
+        STORE socket
+        STORE server
+    TRY 
+      CREATE inputReader using socket's input stream
+      CREATE outputWriter using socket's output stream
+    END TRY
+CATCH IOException
+      DISPLAY "Error while creating input/output streams"
+    END CATCH
+END METHOD
+
+    METHOD run()
+        TRY
+        READ initialName from inputReader
+        IF initialName is not null
+            SET username to initialName
+     END IF
+        READ initialPassword from inputReader
+        IF initialPassword is not null
+            SET password to initialPassword
+        END IF
+        BROADCAST that the user has joined the chat
+        
+        DECLARE incomingMessage AS String
+        WHILE incomingMessage is not null
+            READ incomingMessage from inputReader
+            IF incomingMessage equals "/quit" THEN
+             TERMINATE the communictaion loop
+            ELSE 
+            FORMAT message using username and incoming message
+            RECORD the formatted message in the server log
+            BROADCAST the formatted message to all connected clients
+            END IF
+        END WHILE
+    CATCH IOException
+        DISPLAY a message indicating an error occurred while reading the message
+    FINALL
+        CLOSE Connection
+    END TRY 
+
+   METHOD sendMessage(message)       
+     IF outputWriter is not null
+        WRITE message to outputWriter
+    END IF
+    END METHOD
+
+     METHOD closeConnection()
+     REMOVE the client from the server's list of connected clients
+     NOTIFY all connected clients that the user has left the chat
+      TRY 
+      IF input stream exists THEN
+      CLOSE input stream
+      END IF 
+      IF output stream exists THEN
+      CLOSE output stream
+      END IF
+
+      IF socket exists AND socket is not closed THEN
+      CLOSE socket
+      END IF
+      CATCH IOException
+      DISPLAY error message indicating that the connection could not be closed properly
+        END TRY
+        END METHOD
+
+        METHOD getUsername()
+
+        Access the client's username
+        Provide the username to the calling method
+    END METHOD
+END CLASS
+
+CLASS Server
+    
+    DECLARE port AS Integer
+    DECLARE serverSocket AS ServerSocket
+    DECLARE isRunning AS Boolean
+    DECLARE clients AS List of ClientHandler
+    
+    METHOD Server(port)
+        STORE port
+        INITIALIZE clients as an empty list
+    END METHOD
+      
+    METHOD start()
+      SET isRunning to TRUE
+      TRY
+         CREATE serverSocket using the specified port
+         DISPLAY "Server started on port " + port + " and waiting for clients..."
+           WHILE isRunning
+           Wait for a client connection
+           ACCEPT the client connection 
+           CREATE a new ClientHandler for the connected client
+           ADD the new ClientHandler to the list of connected clients
+           START a new thread to handle communication with the client
+        END WHILE
+
+           CATCH IOException
+           IF the serverr is still running THEN
+            DISPLAY "Error while starting the server" 
+        END IF
+    FINALLY
+          STOP the server and close all client connections
+        END TRY
+    END METHOD
+
+    METHOD broadcast(message, sender)
+        FOR EACH client IN clients
+                SEND message to the client using sendMessage method
+            END IF
+        END FOR
+    END METHOD
+
+    METHOD removeClient(client)
+    REMOVE the specified client from the list of connected clients
+    DISPLAY the message indicating that the client has disconnected
+    DISPLAY the total number of active clients
+    END METHOD
+
+    METHOD stop()
+        SET isRunning to FALSE
+        TRY
+            IF serverSocket exists AND serverSocket is not closed THEN
+                CLOSE serverSocket
+            END IF
+        CATCH IOException
+             FOR each connected client in clients
+             CLOSE the client's connection
+             END FOR
+       
+       CLEAR all the clients from the client list
+            DISPLAY "Error while stopping the server"
+        END TRY
+    END METHOD
+END CLASS
+
+
+
