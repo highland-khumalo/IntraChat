@@ -395,6 +395,17 @@ public class Admin extends javax.swing.JPanel {
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
         JOptionPane.showMessageDialog(this, "IntraChat Admin Console\nVersion 1.0-SNAPSHOT\nJava 21 Swing Application", "About", JOptionPane.INFORMATION_MESSAGE);
     }
+    
+    public void start() {
+        java.awt.EventQueue.invokeLater(() -> setVisible(true));
+    }
+
+    public static void main(String[] args) {
+        java.awt.EventQueue.invokeLater(() -> {
+            Admin adminPanel = new Admin();
+            adminPanel.start();
+        });
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

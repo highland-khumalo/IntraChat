@@ -55,7 +55,7 @@ public class Structure extends javax.swing.JFrame {
         code = new javax.swing.JLabel();
         password = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        startSeverBtn = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         logo = new javax.swing.JLabel();
@@ -94,14 +94,12 @@ public class Structure extends javax.swing.JFrame {
         loginBtn.setForeground(new java.awt.Color(255, 255, 255));
         loginBtn.setText("login");
         loginBtn.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        loginBtn.addActionListener(this::loginBtnActionPerformed);
         jPanel3.add(loginBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 290, 130, 40));
 
         forgotpassword.setBackground(new java.awt.Color(32, 32, 32));
         forgotpassword.setForeground(new java.awt.Color(255, 255, 255));
         forgotpassword.setText("forgot password");
         forgotpassword.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(255, 255, 255)));
-        forgotpassword.addActionListener(this::forgotpasswordActionPerformed);
         jPanel3.add(forgotpassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 360, 150, -1));
 
         username.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
@@ -124,13 +122,13 @@ public class Structure extends javax.swing.JFrame {
         jLabel5.setText("Welcome");
         jPanel3.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, 120, 30));
 
-        jButton2.setBackground(new java.awt.Color(255, 140, 0));
-        jButton2.setFont(new java.awt.Font("Segoe UI Black", 3, 12)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Start Server");
-        jButton2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jButton2.addActionListener(this::jButton2ActionPerformed);
-        jPanel3.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 290, 120, 40));
+        startSeverBtn.setBackground(new java.awt.Color(255, 140, 0));
+        startSeverBtn.setFont(new java.awt.Font("Segoe UI Black", 3, 12)); // NOI18N
+        startSeverBtn.setForeground(new java.awt.Color(255, 255, 255));
+        startSeverBtn.setText("Start Server");
+        startSeverBtn.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        startSeverBtn.addActionListener(this::startSeverBtnActionPerformedl);
+        jPanel3.add(startSeverBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 290, 120, 40));
 
         jLabel2.setForeground(new java.awt.Color(255, 140, 0));
         jLabel2.setText("Login to continue your conversation 👥");
@@ -144,22 +142,18 @@ public class Structure extends javax.swing.JFrame {
         Rootpanel.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 0, 340, 420));
         Rootpanel.add(logo, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 180, -1, -1));
 
-        jLabel1.setIcon(getSafeIcon("/resources/logo.login.png"));
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/logo.login.png"))); // NOI18N
         Rootpanel.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 420, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(Rootpanel, javax.swing.GroupLayout.PREFERRED_SIZE, 760, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(Rootpanel, javax.swing.GroupLayout.PREFERRED_SIZE, 760, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(Rootpanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+            .addComponent(Rootpanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -173,33 +167,10 @@ public class Structure extends javax.swing.JFrame {
         loginBtnActionPerformed(evt);
     }//GEN-LAST:event_passwordFActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        if (runningServer != null && runningServer.isRunning()) {
-            JOptionPane.showMessageDialog(
-                this,
-                "Server is already running on port " + runningServer.getPort() + ".",
-                "Server Info",
-                JOptionPane.INFORMATION_MESSAGE
-            );
-            return;
-        }
-
-        runningServer = new Server(Server.defaultPort);
-        new Thread(() -> {
-            runningServer.start();
-        }).start();
-
-        if (codeTF.getText().trim().isEmpty()) {
-            codeTF.setText("127.0.0.1");
-        }
-
-        JOptionPane.showMessageDialog(
-            this,
-            "Server started successfully on port " + Server.defaultPort + "!\nDefault IP set to 127.0.0.1",
-            "Server Started",
-            JOptionPane.INFORMATION_MESSAGE
-        );
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void startSeverBtnActionPerformedl(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startSeverBtnActionPerformedl
+        var admin = new Admin();
+        admin.start();
+    }//GEN-LAST:event_startSeverBtnActionPerformedl
 
     private void usernameTFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameTFActionPerformed
         passwordF.requestFocusInWindow();
@@ -290,7 +261,6 @@ public class Structure extends javax.swing.JFrame {
     private javax.swing.JLabel code;
     private javax.swing.JTextField codeTF;
     private javax.swing.JButton forgotpassword;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -300,6 +270,7 @@ public class Structure extends javax.swing.JFrame {
     private javax.swing.JLabel logo;
     private javax.swing.JLabel password;
     private javax.swing.JPasswordField passwordF;
+    private javax.swing.JButton startSeverBtn;
     private javax.swing.JLabel username;
     private javax.swing.JTextField usernameTF;
     // End of variables declaration//GEN-END:variables
