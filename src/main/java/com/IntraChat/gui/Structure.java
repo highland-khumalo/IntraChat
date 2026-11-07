@@ -4,8 +4,6 @@
  */
 package com.IntraChat.gui;
 
-import com.IntraChat.database.DatabaseManager;
-import com.IntraChat.io.FileHandling;
 import com.IntraChat.network.Client;
 import com.IntraChat.network.Server;
 import javax.swing.JOptionPane;
@@ -193,48 +191,6 @@ public class Structure extends javax.swing.JFrame {
             return;
         }
 
-        try {
-            DatabaseManager.initializeDatabase();
-            if (DatabaseManager.userExists(username)) {
-                if (!DatabaseManager.authenticateUser(username, password)) {
-                    if (!FileHandling.login(username, password, code)) {
-                        JOptionPane.showMessageDialog(
-                            this,
-                            "Incorrect password for user '" + username + "'.",
-                            "Authentication Failed",
-                            JOptionPane.ERROR_MESSAGE
-                        );
-                        return;
-                    }
-                }
-                if (!DatabaseManager.isUserAllowed(username)) {
-                    JOptionPane.showMessageDialog(
-                        this,
-                        "Your account '" + username + "' is pending administrator approval.\n"
-                        + "Please ask the administrator to accept your account in the Admin Console.",
-                        "Account Pending Approval",
-                        JOptionPane.WARNING_MESSAGE
-                    );
-                    return;
-                }
-            } else {
-                boolean firstUser = (DatabaseManager.getUserCount() == 0);
-                DatabaseManager.addUser(username, password, firstUser ? "true" : "false");
-                if (!firstUser) {
-                    JOptionPane.showMessageDialog(
-                        this,
-                        "Registration requested!\n\nYour account '" + username + "' is pending administrator approval.\n"
-                        + "An administrator must accept your account in the Admin Console before you can log in.",
-                        "Registration Submitted",
-                        JOptionPane.INFORMATION_MESSAGE
-                    );
-                    return;
-                }
-            }
-        } catch (Exception e) {
-            logger.log(java.util.logging.Level.WARNING, "Database / authentication error: " + e.getMessage());
-        }
-
         com.IntraChat.security.AuthService.ConnectionTarget target = com.IntraChat.security.AuthService.parseConnectionCode(code);
         final String finalServerIp = target.ip();
         final int finalServerPort = target.port();
@@ -255,17 +211,44 @@ public class Structure extends javax.swing.JFrame {
                     chatFrame.setVisible(true);
                     this.dispose();
                 } else {
-                    JOptionPane.showMessageDialog(
-                        this,
-                        "Could not connect to server at " + finalServerIp + ":" + finalServerPort + ".\n\n"
-                        + "Tips for connecting from another device:\n"
-                        + " 1. Make sure both devices are on the same Wi-Fi / Local Network.\n"
-                        + " 2. Ensure the host has clicked 'Start Server' on their device.\n"
-                        + " 3. Verify you entered the host's LAN IP (e.g. 192.168.x.x) and not localhost.\n"
-                        + " 4. Check that the host's firewall allows incoming connections on port " + finalServerPort + ".",
-                        "Connection Failed",
-                        JOptionPane.ERROR_MESSAGE
-                    );
+                    String err = client.getLastErrorMessage();
+                    if (err != null && err.contains("Account pending")) {
+                        JOptionPane.showMessageDialog(
+                            this,
+                            "Your account '" + username + "' is pending administrator approval.\n"
+                            + "Please ask the server administrator to accept your account in the Admin Console.",
+                            "Account Pending Approval",
+                            JOptionPane.WARNING_MESSAGE
+                        );
+                    } else if (err != null && err.contains("Account registered")) {
+                        JOptionPane.showMessageDialog(
+                            this,
+                            "Registration requested on the server!\n\nYour account '" + username + "' is pending administrator approval.\n"
+                            + "The server administrator must accept your account in the Admin Console before you can log in.",
+                            "Registration Submitted",
+                            JOptionPane.INFORMATION_MESSAGE
+                        );
+                    } else if (err != null && err.contains("Authentication failed")) {
+                        JOptionPane.showMessageDialog(
+                            this,
+                            "Incorrect password for user '" + username + "'.",
+                            "Authentication Failed",
+                            JOptionPane.ERROR_MESSAGE
+                        );
+                    } else {
+                        JOptionPane.showMessageDialog(
+                            this,
+                            "Could not connect to server at " + finalServerIp + ":" + finalServerPort + ".\n\n"
+                            + (err != null && !err.isBlank() ? "Details: " + err + "\n\n" : "")
+                            + "Tips for connecting from another device:\n"
+                            + " 1. Make sure both devices are on the same Wi-Fi / Local Network.\n"
+                            + " 2. Ensure the host has clicked 'Start Server' on their device.\n"
+                            + " 3. Verify you entered the host's LAN Connection Code.\n"
+                            + " 4. Check that the host's firewall allows incoming connections on port " + finalServerPort + ".",
+                            "Connection Failed",
+                            JOptionPane.ERROR_MESSAGE
+                        );
+                    }
                 }
             });
         }).start();
