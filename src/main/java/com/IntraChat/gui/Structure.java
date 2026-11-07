@@ -20,6 +20,16 @@ public class Structure extends javax.swing.JFrame {
      */
     public Structure() {
         initComponents();
+        customInit();
+    }
+
+    private void customInit() {
+        loginBtn.addActionListener(this::loginBtnActionPerformed);
+
+        String localIp = Server.getLocalLanIp();
+        jLabel2.setText("Login to chat 👥 (Enter Connection Code below)");
+        code.setText("Connection Code:");
+        codeTF.setToolTipText("Enter Server Connection Code (e.g. INTRA-...) or leave blank for localhost");
     }
         
     private javax.swing.ImageIcon getSafeIcon(String resourcePath) {
@@ -50,7 +60,6 @@ public class Structure extends javax.swing.JFrame {
         passwordF = new javax.swing.JPasswordField();
         usernameTF = new javax.swing.JTextField();
         loginBtn = new javax.swing.JButton();
-        forgotpassword = new javax.swing.JButton();
         username = new javax.swing.JLabel();
         code = new javax.swing.JLabel();
         password = new javax.swing.JLabel();
@@ -75,7 +84,7 @@ public class Structure extends javax.swing.JFrame {
         codeTF.setForeground(new java.awt.Color(255, 255, 255));
         codeTF.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(255, 255, 255)));
         codeTF.addActionListener(this::codeTFActionPerformed);
-        jPanel3.add(codeTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 250, 120, -1));
+        jPanel3.add(codeTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 250, 200, -1));
 
         passwordF.setBackground(new java.awt.Color(32, 32, 32));
         passwordF.setForeground(new java.awt.Color(255, 255, 255));
@@ -96,12 +105,6 @@ public class Structure extends javax.swing.JFrame {
         loginBtn.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jPanel3.add(loginBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 290, 130, 40));
 
-        forgotpassword.setBackground(new java.awt.Color(32, 32, 32));
-        forgotpassword.setForeground(new java.awt.Color(255, 255, 255));
-        forgotpassword.setText("forgot password");
-        forgotpassword.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(255, 255, 255)));
-        jPanel3.add(forgotpassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 360, 150, -1));
-
         username.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
         username.setForeground(new java.awt.Color(255, 255, 255));
         username.setText("username:");
@@ -109,8 +112,8 @@ public class Structure extends javax.swing.JFrame {
 
         code.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
         code.setForeground(new java.awt.Color(255, 255, 255));
-        code.setText("code:");
-        jPanel3.add(code, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 220, 37, -1));
+        code.setText("Server IP / Code:");
+        jPanel3.add(code, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 220, 150, -1));
 
         password.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
         password.setForeground(new java.awt.Color(255, 255, 255));
@@ -168,8 +171,7 @@ public class Structure extends javax.swing.JFrame {
     }//GEN-LAST:event_passwordFActionPerformed
 
     private void startSeverBtnActionPerformedl(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startSeverBtnActionPerformedl
-        var admin = new Admin();
-        admin.start();
+        Admin.openAdminConsole(Server.defaultPort);
     }//GEN-LAST:event_startSeverBtnActionPerformedl
 
     private void usernameTFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameTFActionPerformed
@@ -191,44 +193,82 @@ public class Structure extends javax.swing.JFrame {
             return;
         }
 
-        // Initialize SQLite database and verify/register user
         try {
             DatabaseManager.initializeDatabase();
-            if (!DatabaseManager.authenticateUser(username, password)) {
-                if (!FileHandling.login(username, password, code)) {
-                    // Automatically register new user to DB if not present
-                    DatabaseManager.addUser(username, password);
+            if (DatabaseManager.userExists(username)) {
+                if (!DatabaseManager.authenticateUser(username, password)) {
+                    if (!FileHandling.login(username, password, code)) {
+                        JOptionPane.showMessageDialog(
+                            this,
+                            "Incorrect password for user '" + username + "'.",
+                            "Authentication Failed",
+                            JOptionPane.ERROR_MESSAGE
+                        );
+                        return;
+                    }
+                }
+                if (!DatabaseManager.isUserAllowed(username)) {
+                    JOptionPane.showMessageDialog(
+                        this,
+                        "Your account '" + username + "' is pending administrator approval.\n"
+                        + "Please ask the administrator to accept your account in the Admin Console.",
+                        "Account Pending Approval",
+                        JOptionPane.WARNING_MESSAGE
+                    );
+                    return;
+                }
+            } else {
+                boolean firstUser = (DatabaseManager.getUserCount() == 0);
+                DatabaseManager.addUser(username, password, firstUser ? "true" : "false");
+                if (!firstUser) {
+                    JOptionPane.showMessageDialog(
+                        this,
+                        "Registration requested!\n\nYour account '" + username + "' is pending administrator approval.\n"
+                        + "An administrator must accept your account in the Admin Console before you can log in.",
+                        "Registration Submitted",
+                        JOptionPane.INFORMATION_MESSAGE
+                    );
+                    return;
                 }
             }
         } catch (Exception e) {
             logger.log(java.util.logging.Level.WARNING, "Database / authentication error: " + e.getMessage());
         }
 
-        String serverIp = code.isEmpty() ? "127.0.0.1" : code;
-        Client client = new Client(serverIp, Server.defaultPort);
-        boolean connected = client.connect(username, password);
+        com.IntraChat.security.AuthService.ConnectionTarget target = com.IntraChat.security.AuthService.parseConnectionCode(code);
+        final String finalServerIp = target.ip();
+        final int finalServerPort = target.port();
 
-        if (connected) {
-            Chat chatFrame = new Chat(client, username);
-            chatFrame.setVisible(true);
-            this.dispose();
-        } else {
-            JOptionPane.showMessageDialog(
-                this,
-                "Could not connect to server at " + serverIp + ":" + Server.defaultPort + ".\nPlease start the server or verify the IP/code.",
-                "Connection Failed",
-                JOptionPane.ERROR_MESSAGE
-            );
-        }
-    }
+        loginBtn.setEnabled(false);
+        loginBtn.setText("Connecting...");
 
-    private void forgotpasswordActionPerformed(java.awt.event.ActionEvent evt) {
-        JOptionPane.showMessageDialog(
-            this,
-            "Please check user_data.txt or contact your administrator to reset credentials.",
-            "Forgot Password",
-            JOptionPane.INFORMATION_MESSAGE
-        );
+        new Thread(() -> {
+            Client client = new Client(finalServerIp, finalServerPort);
+            boolean connected = client.connect(username, password);
+
+            javax.swing.SwingUtilities.invokeLater(() -> {
+                loginBtn.setEnabled(true);
+                loginBtn.setText("login");
+
+                if (connected) {
+                    Chat chatFrame = new Chat(client, username);
+                    chatFrame.setVisible(true);
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(
+                        this,
+                        "Could not connect to server at " + finalServerIp + ":" + finalServerPort + ".\n\n"
+                        + "Tips for connecting from another device:\n"
+                        + " 1. Make sure both devices are on the same Wi-Fi / Local Network.\n"
+                        + " 2. Ensure the host has clicked 'Start Server' on their device.\n"
+                        + " 3. Verify you entered the host's LAN IP (e.g. 192.168.x.x) and not localhost.\n"
+                        + " 4. Check that the host's firewall allows incoming connections on port " + finalServerPort + ".",
+                        "Connection Failed",
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            });
+        }).start();
     }
 
     /**
@@ -260,7 +300,6 @@ public class Structure extends javax.swing.JFrame {
     private javax.swing.JPanel Rootpanel;
     private javax.swing.JLabel code;
     private javax.swing.JTextField codeTF;
-    private javax.swing.JButton forgotpassword;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

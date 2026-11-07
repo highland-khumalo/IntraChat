@@ -1,18 +1,53 @@
 package com.IntraChat.io;
 
 import java.io.File;
-//import java.io.FileNotFoundException;
-//import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.text.DecimalFormat;
+import java.util.Base64;
 import java.util.Scanner;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.nio.file.*; 
-
 
 public class FileHandling {
-    //If user in user data file exists, then login is successful, else login fails and register the new user by adding the user data to the file.
+
+    public static String encodeFileToBase64(File file) throws IOException {
+        byte[] bytes = Files.readAllBytes(file.toPath());
+        return Base64.getEncoder().encodeToString(bytes);
+    }
+
+    public static File saveBase64ToFile(String base64Data, File targetFile) throws IOException {
+        byte[] bytes = Base64.getDecoder().decode(base64Data);
+        if (targetFile.getParentFile() != null && !targetFile.getParentFile().exists()) {
+            targetFile.getParentFile().mkdirs();
+        }
+        try (FileOutputStream fos = new FileOutputStream(targetFile)) {
+            fos.write(bytes);
+        }
+        return targetFile;
+    }
+
+    public static String formatFileSize(long bytes) {
+        if (bytes <= 0) return "0 B";
+        final String[] units = new String[] { "B", "KB", "MB", "GB" };
+        int digitGroups = (int) (Math.log10(bytes) / Math.log10(1024));
+        if (digitGroups >= units.length) digitGroups = units.length - 1;
+        return new DecimalFormat("#,##0.#").format(bytes / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+    }
+
+    public static File getDefaultDownloadsDirectory() {
+        String userHome = System.getProperty("user.home");
+        File downloads = new File(userHome, "Downloads");
+        if (downloads.exists() && downloads.isDirectory()) {
+            return downloads;
+        }
+        File chatDownloads = new File(userHome, "IntraChat_Downloads");
+        if (!chatDownloads.exists()) {
+            chatDownloads.mkdirs();
+        }
+        return chatDownloads;
+    }
+
+    // Legacy login method preserved for backward compatibility
     public static boolean login(String username, String password, String code) {
         try {
             File file = new File("user_data.txt");
@@ -35,35 +70,5 @@ public class FileHandling {
             e.printStackTrace();
         }
         return false; // Login failed
-    }
-    
-    public static void main(String[] args) {
-
-        //Entering new user data and saving it to a file
-        /*Scanner input = new Scanner(System.in);
-        
-        System.out.println("Enter your username:");
-        String username = input.nextLine();
-        System.out.println("Enter your password:");
-        String password = input.nextLine();
-        System.out.println("Enter your code:");
-        String code = input.nextLine();
-
-        try {
-            File file = new File("user_data.txt");
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            
-            FileWriter writer = new FileWriter(file, true);
-            writer.write(username + "," + password + "," + code + "\n");
-            writer.close();
-            
-            System.out.println("User data saved successfully.");
-        } catch (IOException e) {
-            System.out.println("An error occurred while saving user data.");
-            e.printStackTrace();
-        }
-        input.close();*/
     }
 }

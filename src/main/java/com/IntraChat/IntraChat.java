@@ -1,27 +1,23 @@
 
 package com.IntraChat;
 
-import com.IntraChat.gui.Admin;
-import com.IntraChat.gui.Chat;
 import com.IntraChat.gui.Structure;
+
 /**
+ * Main application launcher for IntraChat.
  *
  * @author bonginkosi0607
  */
 public class IntraChat {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        System.out.println("gjhddsa");
+        try {
+            com.formdev.flatlaf.FlatDarkLaf.setup();
+        } catch (Throwable ignored) {
+            System.out.print("unable to use FlatDark");
+        }
+
         var frame = new Structure();
         frame.start();
-        /*var admin = new Admin();
-        admin.start();*/
-        System.out.print("hg");
-        /*var chat = new Chat();
-        chat.start();*/
-        
     }
 }

@@ -34,7 +34,9 @@ public class Client {
             out.println(username);
             out.println(password != null ? password : "");
 
-            new Thread(this::listenForMessages).start();
+            Thread listenerThread = new Thread(this::listenForMessages);
+            listenerThread.setDaemon(true);
+            listenerThread.start();
 
             return true;
         } catch (IOException e) {
@@ -81,12 +83,15 @@ public class Client {
         return serverPort;
     }
 
-    public void disconnect() {
+    public synchronized void disconnect() {
+        if (!isConnected && (socket == null || socket.isClosed())) {
+            return;
+        }
         isConnected = false;
         try {
+            if (socket != null && !socket.isClosed()) socket.close();
             if (in != null) in.close();
             if (out != null) out.close();
-            if (socket != null && !socket.isClosed()) socket.close();
         } catch (IOException e) {
             System.err.println("(error) Error closing connection: " + e.getMessage());
         }

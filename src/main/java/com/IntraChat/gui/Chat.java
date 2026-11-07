@@ -5,17 +5,36 @@
 package com.IntraChat.gui;
 
 import com.IntraChat.database.DatabaseManager;
+import com.IntraChat.io.FileHandling;
 import com.IntraChat.network.Client;
 import com.IntraChat.network.Server;
 import java.awt.BorderLayout;
+import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableModel;
 
 public class Chat extends javax.swing.JFrame {
     
@@ -24,6 +43,10 @@ public class Chat extends javax.swing.JFrame {
     private Client client;
     private String currentUser = "Anonymous";
     private JTextArea chatTextArea;
+
+    public record SharedFileRecord(String filename, long size, String sender, String target, String base64Data, String time) {}
+    private final List<SharedFileRecord> sharedFiles = new CopyOnWriteArrayList<>();
+    private final Map<String, JTextArea> chatViews = new ConcurrentHashMap<>();
 
     /**
      * Creates new form Chat
@@ -100,7 +123,7 @@ public class Chat extends javax.swing.JFrame {
         OnlineUsers.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, null, new java.awt.Color(255, 102, 0)));
         OnlineUsers.setForeground(new java.awt.Color(255, 255, 255));
         OnlineUsers.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Sipho", "Amila", "Thabo", "Letlogonolo", "Dumisani" };
+            String[] strings = {};
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
@@ -177,7 +200,7 @@ public class Chat extends javax.swing.JFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 486, Short.MAX_VALUE)
+            .addGap(0, 383, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("#Maths", jPanel1);
@@ -193,7 +216,7 @@ public class Chat extends javax.swing.JFrame {
         );
         chatPanelLayout.setVerticalGroup(
             chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 486, Short.MAX_VALUE)
+            .addGap(0, 383, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("#General", chatPanel);
@@ -209,7 +232,7 @@ public class Chat extends javax.swing.JFrame {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 486, Short.MAX_VALUE)
+            .addGap(0, 383, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("#ELC", jPanel2);
@@ -226,7 +249,7 @@ public class Chat extends javax.swing.JFrame {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 486, Short.MAX_VALUE)
+            .addGap(0, 383, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("#SDN", jPanel3);
@@ -254,7 +277,7 @@ public class Chat extends javax.swing.JFrame {
         jList1.setBackground(new java.awt.Color(32, 32, 32));
         jList1.setForeground(new java.awt.Color(255, 255, 255));
         jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Sipho", "Amila", "Thabo", "Letlogonolo", "Dumisani" };
+            String[] strings = {};
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
@@ -282,7 +305,7 @@ public class Chat extends javax.swing.JFrame {
 
         IP_label.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         IP_label.setForeground(new java.awt.Color(255, 255, 255));
-        IP_label.setText("Connected | IP: 192.168.1.15");
+        IP_label.setText("Connecting...");
 
         jTextField1.setBackground(new java.awt.Color(32, 32, 32));
         jTextField1.setForeground(new java.awt.Color(255, 255, 255));
@@ -377,7 +400,7 @@ public class Chat extends javax.swing.JFrame {
                             .addComponent(iconsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(rootPanelLayout.createSequentialGroup()
                         .addGap(28, 28, 28)
-                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 523, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(rootPanelLayout.createSequentialGroup()
                                 .addGap(12, 12, 12)
@@ -413,38 +436,90 @@ public class Chat extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void customInit() {
-        chatPanel.setLayout(new BorderLayout());
-        chatTextArea = new JTextArea();
-        chatTextArea.setEditable(false);
-        chatTextArea.setBackground(new java.awt.Color(24, 24, 24));
-        chatTextArea.setForeground(java.awt.Color.WHITE);
-        chatTextArea.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
-        chatTextArea.setLineWrap(true);
-        chatTextArea.setWrapStyleWord(true);
-        JScrollPane scrollPane = new JScrollPane(chatTextArea);
-        scrollPane.setBorder(null);
-        chatPanel.add(scrollPane, BorderLayout.CENTER);
+        // Wrap rootPanel in a JScrollPane so the window is scrollable on smaller screens / laptops
+        getContentPane().removeAll();
+        getContentPane().setLayout(new BorderLayout());
+        JScrollPane mainScrollPane = new JScrollPane(rootPanel);
+        mainScrollPane.setBorder(null);
+        mainScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        mainScrollPane.getHorizontalScrollBar().setUnitIncrement(16);
+        mainScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        mainScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        mainScrollPane.getViewport().setBackground(rootPanel.getBackground());
+        mainScrollPane.setBackground(rootPanel.getBackground());
+        getContentPane().add(mainScrollPane, BorderLayout.CENTER);
 
-        // Update IP and user display
+        // Adjust window size to fit screen bounds comfortably on laptops
+        try {
+            java.awt.Rectangle screenBounds = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+            pack();
+            int targetWidth = Math.min(getWidth(), screenBounds.width);
+            int targetHeight = Math.min(getHeight(), screenBounds.height - 40);
+            setSize(targetWidth, targetHeight);
+            setLocationRelativeTo(null);
+        } catch (Exception ignored) {}
+
+        // Setup the initial room panels in jTabbedPane1
+        setupConversationTab("#Maths", jPanel1);
+        setupConversationTab("#General", chatPanel);
+        setupConversationTab("#ELC", jPanel2);
+        setupConversationTab("#SDN", jPanel3);
+
+        // Load room histories from SQLite
+        List<String> rooms = List.of("#General", "#Maths", "#ELC", "#SDN");
+        for (String room : rooms) {
+            try {
+                var history = DatabaseManager.getChatHistoryForRoom(room);
+                JTextArea area = chatViews.get(normalizeTabKey(room));
+                if (area != null && history != null && !history.isEmpty()) {
+                    area.append("--- " + room + " History ---\n");
+                    for (var msg : history) {
+                        String sender = msg.sender().equalsIgnoreCase(currentUser) ? "You" : msg.sender();
+                        area.append("[" + msg.timestamp() + "] " + sender + ": " + msg.content() + "\n");
+                    }
+                    area.append("-----------------------------\n");
+                }
+            } catch (Exception e) {
+                logger.log(java.util.logging.Level.FINE, "Room history error for " + room + ": " + e.getMessage());
+            }
+        }
+
+        // Connection info display
+        String lanIp = Server.getLocalLanIp();
         if (client != null && client.isConnected()) {
-            IP_label.setText("User: " + currentUser + " | " + client.getServerIp() + ":" + client.getServerPort());
+            String connCode = com.IntraChat.security.AuthService.generateConnectionCode(client.getServerIp(), client.getServerPort());
+            IP_label.setText("User: " + currentUser + " | Code: " + connCode);
+            IP_label.setToolTipText("Server: " + client.getServerIp() + ":" + client.getServerPort() + " | Click to copy Connection Code");
+            IP_label.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+            IP_label.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseClicked(java.awt.event.MouseEvent e) {
+                    try {
+                        java.awt.datatransfer.StringSelection sel = new java.awt.datatransfer.StringSelection(connCode);
+                        java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().setContents(sel, sel);
+                        JOptionPane.showMessageDialog(Chat.this, "Connection Code copied to clipboard:\n" + connCode, "Code Copied", JOptionPane.INFORMATION_MESSAGE);
+                    } catch (Exception ignored) {}
+                }
+            });
             client.setMessageListener(this::onMessageReceived);
         } else {
-            IP_label.setText("User: " + currentUser + " | Offline Mode");
+            IP_label.setText("User: " + currentUser + " | Offline (Your IP: " + lanIp + ")");
         }
 
         // Placeholder cleanup on jTextField1
         jTextField1.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
-                if ("type message here.".equals(jTextField1.getText())) {
+                String text = jTextField1.getText();
+                if (text.startsWith("type message here") || text.startsWith("Message ")) {
                     jTextField1.setText("");
                 }
+                jTextField1.scrollRectToVisible(jTextField1.getBounds());
             }
             @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 if (jTextField1.getText().trim().isEmpty()) {
-                    jTextField1.setText("type message here.");
+                    updateInputPlaceholder();
                 }
             }
         });
@@ -455,7 +530,8 @@ public class Chat extends javax.swing.JFrame {
                 String selected = ChatRooms.getSelectedValue();
                 if (selected != null) {
                     for (int i = 0; i < jTabbedPane1.getTabCount(); i++) {
-                        if (jTabbedPane1.getTitleAt(i).equalsIgnoreCase(selected)) {
+                        String title = jTabbedPane1.getTitleAt(i).replace("• ", "").trim();
+                        if (title.equalsIgnoreCase(selected)) {
                             jTabbedPane1.setSelectedIndex(i);
                             break;
                         }
@@ -464,33 +540,56 @@ public class Chat extends javax.swing.JFrame {
             }
         });
 
-        // Online users double-click to message
-        OnlineUsers.addMouseListener(new java.awt.event.MouseAdapter() {
+        // Tab change listener to clear notification badges and update placeholder
+        jTabbedPane1.addChangeListener(e -> {
+            int idx = jTabbedPane1.getSelectedIndex();
+            if (idx >= 0) {
+                String title = jTabbedPane1.getTitleAt(idx);
+                if (title.startsWith("• ")) {
+                    jTabbedPane1.setTitleAt(idx, title.substring(2).trim());
+                }
+                updateInputPlaceholder();
+                String cleanTitle = jTabbedPane1.getTitleAt(idx).trim();
+                JTextArea area = chatViews.get(normalizeTabKey(cleanTitle));
+                if (area != null) {
+                    chatTextArea = area;
+                }
+            }
+        });
+
+        // Right-click context menu on tabs to close direct message tabs
+        jTabbedPane1.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                if (evt.getClickCount() == 2) {
-                    String target = OnlineUsers.getSelectedValue();
-                    if (target != null) {
-                        jTextField1.setText("@" + target + " ");
-                        jTextField1.requestFocusInWindow();
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                if (javax.swing.SwingUtilities.isRightMouseButton(e)) {
+                    int tabIndex = jTabbedPane1.indexAtLocation(e.getX(), e.getY());
+                    if (tabIndex >= 0) {
+                        String rawTitle = jTabbedPane1.getTitleAt(tabIndex);
+                        String clean = rawTitle.replace("• ", "").trim();
+                        if (clean.startsWith("@")) {
+                            JPopupMenu menu = new JPopupMenu();
+                            JMenuItem closeItem = new JMenuItem("Close Chat (" + clean + ")");
+                            closeItem.addActionListener(ev -> {
+                                chatViews.remove(clean.toLowerCase());
+                                jTabbedPane1.removeTabAt(tabIndex);
+                            });
+                            menu.add(closeItem);
+                            menu.show(jTabbedPane1, e.getX(), e.getY());
+                        }
                     }
                 }
             }
         });
 
-        // Load chat history from SQLite
-        try {
-            ArrayList<DatabaseManager.Message> history = DatabaseManager.getChatHistoryArrayList();
-            if (history != null && !history.isEmpty()) {
-                chatTextArea.append("--- Previous Chat History ---\n");
-                for (var msg : history) {
-                    chatTextArea.append("[" + msg.timestamp() + "] " + msg.sender() + ": " + msg.content() + "\n");
-                }
-                chatTextArea.append("-----------------------------\n");
-            }
-        } catch (Exception e) {
-            logger.log(java.util.logging.Level.FINE, "Chat history load: " + e.getMessage());
+        // Online users interaction: double click to chat, right click for options
+        setupUserListInteractions(OnlineUsers);
+        setupUserListInteractions(jList1);
+
+        // Select General room as default (index 1)
+        if (jTabbedPane1.getTabCount() > 1) {
+            jTabbedPane1.setSelectedIndex(1);
         }
+        updateInputPlaceholder();
 
         // Clean disconnect on close
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -504,13 +603,281 @@ public class Chat extends javax.swing.JFrame {
         });
     }
 
-    public void onMessageReceived(String message) {
-        java.awt.EventQueue.invokeLater(() -> {
-            if (chatTextArea != null) {
-                chatTextArea.append(message + "\n");
-                chatTextArea.setCaretPosition(chatTextArea.getDocument().getLength());
+    private void updateInputPlaceholder() {
+        int idx = jTabbedPane1.getSelectedIndex();
+        String activeTitle = idx >= 0 ? jTabbedPane1.getTitleAt(idx).replace("• ", "").trim() : "#General";
+        if (jTextField1.getText().trim().isEmpty() || jTextField1.getText().startsWith("type message here") || jTextField1.getText().startsWith("Message ")) {
+            jTextField1.setText("Message " + activeTitle + "...");
+        }
+    }
+
+    private String normalizeTabKey(String key) {
+        if (key == null) return "#general";
+        return key.replace("• ", "").trim().toLowerCase();
+    }
+
+    private JTextArea setupConversationTab(String conversationKey, JPanel panel) {
+        panel.setLayout(new BorderLayout());
+        JTextArea area = new JTextArea();
+        area.setEditable(false);
+        area.setBackground(new java.awt.Color(24, 24, 24));
+        area.setForeground(java.awt.Color.WHITE);
+        area.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
+        area.setLineWrap(true);
+        area.setWrapStyleWord(true);
+        JScrollPane scrollPane = new JScrollPane(area);
+        scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        panel.removeAll();
+        panel.add(scrollPane, BorderLayout.CENTER);
+        panel.revalidate();
+        panel.repaint();
+
+        String normalized = normalizeTabKey(conversationKey);
+        chatViews.put(normalized, area);
+        if ("#general".equals(normalized)) {
+            chatTextArea = area;
+        }
+        return area;
+    }
+
+    public JTextArea openDirectChat(String username, boolean selectTab) {
+        if (username == null || username.trim().isEmpty() || username.trim().equalsIgnoreCase(currentUser)) {
+            return null;
+        }
+        String targetUser = username.trim();
+        String tabTitle = "@" + targetUser;
+        String key = normalizeTabKey(tabTitle);
+
+        // Check if tab already exists
+        for (int i = 0; i < jTabbedPane1.getTabCount(); i++) {
+            String existingTitle = jTabbedPane1.getTitleAt(i).replace("• ", "").trim();
+            if (existingTitle.equalsIgnoreCase(tabTitle)) {
+                if (selectTab) {
+                    jTabbedPane1.setSelectedIndex(i);
+                }
+                return chatViews.get(key);
+            }
+        }
+
+        // Create new direct message panel and tab
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(new java.awt.Color(32, 32, 32));
+        JTextArea area = setupConversationTab(tabTitle, panel);
+        jTabbedPane1.addTab(tabTitle, panel);
+
+        // Load historical direct messages
+        try {
+            var history = DatabaseManager.getDirectMessageHistory(currentUser, targetUser);
+            if (history != null && !history.isEmpty()) {
+                area.append("--- Direct Messages with @" + targetUser + " ---\n");
+                for (var msg : history) {
+                    String senderLabel = msg.sender().equalsIgnoreCase(currentUser) ? "You" : msg.sender();
+                    area.append("[" + msg.timestamp() + "] " + senderLabel + ": " + msg.content() + "\n");
+                }
+                area.append("------------------------------------------\n");
+            } else {
+                area.append("--- Started Direct Chat with @" + targetUser + " ---\n");
+            }
+        } catch (Exception e) {
+            logger.log(java.util.logging.Level.FINE, "DM history error: " + e.getMessage());
+        }
+
+        if (selectTab) {
+            jTabbedPane1.setSelectedComponent(panel);
+        }
+        return area;
+    }
+
+    private void setupUserListInteractions(javax.swing.JList<String> list) {
+        list.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int index = list.locationToIndex(evt.getPoint());
+                if (index < 0) return;
+                String targetUser = list.getModel().getElementAt(index);
+                if (targetUser == null || targetUser.equalsIgnoreCase(currentUser)) return;
+
+                if (evt.getClickCount() == 2 && javax.swing.SwingUtilities.isLeftMouseButton(evt)) {
+                    openDirectChat(targetUser, true);
+                    jTextField1.requestFocusInWindow();
+                }
+            }
+
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                if (javax.swing.SwingUtilities.isRightMouseButton(evt)) {
+                    int index = list.locationToIndex(evt.getPoint());
+                    if (index >= 0) {
+                        list.setSelectedIndex(index);
+                        String targetUser = list.getModel().getElementAt(index);
+                        if (targetUser != null && !targetUser.equalsIgnoreCase(currentUser)) {
+                            JPopupMenu menu = new JPopupMenu();
+                            JMenuItem chatItem = new JMenuItem("Chat Privately (@" + targetUser + ")");
+                            chatItem.addActionListener(e -> {
+                                openDirectChat(targetUser, true);
+                                jTextField1.requestFocusInWindow();
+                            });
+                            JMenuItem fileItem = new JMenuItem("Send File to @" + targetUser + "...");
+                            fileItem.addActionListener(e -> sendFileToUser(targetUser));
+
+                            menu.add(chatItem);
+                            menu.add(fileItem);
+                            menu.show(list, evt.getX(), evt.getY());
+                        }
+                    }
+                }
             }
         });
+    }
+
+    public void onMessageReceived(String message) {
+        if (message == null) return;
+        java.awt.EventQueue.invokeLater(() -> {
+            if (message.startsWith("(system:users) ")) {
+                String usersString = message.substring("(system:users) ".length()).trim();
+                String[] users = usersString.split(",");
+                javax.swing.DefaultListModel<String> model = new javax.swing.DefaultListModel<>();
+                for (String u : users) {
+                    if (!u.trim().isEmpty()) {
+                        model.addElement(u.trim());
+                    }
+                }
+                OnlineUsers.setModel(model);
+                jList1.setModel(model);
+                return;
+            }
+
+            String time = new SimpleDateFormat("HH:mm:ss").format(new Date());
+
+            if (message.startsWith("ROOM:")) {
+                // Format: ROOM:<room>:<sender>:<content>
+                int firstColon = message.indexOf(':', 5);
+                if (firstColon != -1) {
+                    String room = message.substring(5, firstColon).trim();
+                    int secondColon = message.indexOf(':', firstColon + 1);
+                    if (secondColon != -1) {
+                        String sender = message.substring(firstColon + 1, secondColon).trim();
+                        String content = message.substring(secondColon + 1);
+
+                        JTextArea area = chatViews.get(normalizeTabKey(room));
+                        if (area == null && !room.startsWith("#")) {
+                            area = chatViews.get(normalizeTabKey("#" + room));
+                        }
+                        if (area == null) {
+                            area = chatViews.get("#general");
+                        }
+
+                        if (area != null) {
+                            String senderLabel = sender.equalsIgnoreCase(currentUser) ? "You" : sender;
+                            area.append("[" + time + "] " + senderLabel + ": " + content + "\n");
+                            area.setCaretPosition(area.getDocument().getLength());
+                        }
+
+                        badgeUnreadTab(room);
+                        return;
+                    }
+                }
+            } else if (message.startsWith("DM:")) {
+                // Incoming DM: DM:<sender>:<content>
+                int firstColon = message.indexOf(':', 3);
+                if (firstColon != -1) {
+                    String sender = message.substring(3, firstColon).trim();
+                    String content = message.substring(firstColon + 1);
+
+                    JTextArea area = openDirectChat(sender, false);
+                    if (area != null) {
+                        area.append("[" + time + "] " + sender + ": " + content + "\n");
+                        area.setCaretPosition(area.getDocument().getLength());
+                    }
+                    badgeUnreadTab("@" + sender);
+                    return;
+                }
+            } else if (message.startsWith("DM_SENT:")) {
+                // DM sent confirmation: DM_SENT:<recipient>:<content>
+                int firstColon = message.indexOf(':', 8);
+                if (firstColon != -1) {
+                    String recipient = message.substring(8, firstColon).trim();
+                    String content = message.substring(firstColon + 1);
+
+                    JTextArea area = openDirectChat(recipient, false);
+                    if (area != null) {
+                        area.append("[" + time + "] You: " + content + "\n");
+                        area.setCaretPosition(area.getDocument().getLength());
+                    }
+                    return;
+                }
+            } else if (message.startsWith("FILE:ROOM:")) {
+                // Group file incoming: FILE:ROOM:<room>:<sender>:<filename>:<base64Data>
+                int rColon = message.indexOf(':', 10);
+                if (rColon != -1) {
+                    String room = message.substring(10, rColon).trim();
+                    int sColon = message.indexOf(':', rColon + 1);
+                    if (sColon != -1) {
+                        String sender = message.substring(rColon + 1, sColon).trim();
+                        int fColon = message.indexOf(':', sColon + 1);
+                        if (fColon != -1) {
+                            String filename = message.substring(sColon + 1, fColon).trim();
+                            String base64Data = message.substring(fColon + 1);
+                            handleIncomingFile(sender, room, filename, base64Data, false);
+                            return;
+                        }
+                    }
+                }
+            } else if (message.startsWith("FILE:DM:")) {
+                // Direct file incoming: FILE:DM:<sender>:<filename>:<base64Data>
+                int sColon = message.indexOf(':', 8);
+                if (sColon != -1) {
+                    String sender = message.substring(8, sColon).trim();
+                    int fColon = message.indexOf(':', sColon + 1);
+                    if (fColon != -1) {
+                        String filename = message.substring(sColon + 1, fColon).trim();
+                        String base64Data = message.substring(fColon + 1);
+                        handleIncomingFile(sender, "@" + currentUser, filename, base64Data, true);
+                        return;
+                    }
+                }
+            } else if (message.startsWith("FILE_SENT:DM:")) {
+                // Sender confirmation of DM file: FILE_SENT:DM:<recipient>:<filename>
+                int rColon = message.indexOf(':', 13);
+                if (rColon != -1) {
+                    String recipient = message.substring(13, rColon).trim();
+                    String filename = message.substring(rColon + 1).trim();
+                    JTextArea area = openDirectChat(recipient, false);
+                    if (area != null) {
+                        area.append("[" + time + "] [FILE SENT] " + filename + " delivered to @" + recipient + "\n");
+                        area.setCaretPosition(area.getDocument().getLength());
+                    }
+                    return;
+                }
+            }
+
+            // Fallback for general server/system messages
+            JTextArea defaultArea = chatTextArea != null ? chatTextArea : chatViews.get("#general");
+            if (defaultArea != null) {
+                defaultArea.append(message + "\n");
+                defaultArea.setCaretPosition(defaultArea.getDocument().getLength());
+            }
+        });
+    }
+
+    private void badgeUnreadTab(String targetTab) {
+        String cleanTarget = targetTab.replace("• ", "").trim();
+        int activeIdx = jTabbedPane1.getSelectedIndex();
+        String activeTitle = activeIdx >= 0 ? jTabbedPane1.getTitleAt(activeIdx).replace("• ", "").trim() : "";
+        if (activeTitle.equalsIgnoreCase(cleanTarget)) {
+            return; // Currently viewing this tab, no badge needed
+        }
+
+        for (int i = 0; i < jTabbedPane1.getTabCount(); i++) {
+            String title = jTabbedPane1.getTitleAt(i).replace("• ", "").trim();
+            if (title.equalsIgnoreCase(cleanTarget)) {
+                if (!jTabbedPane1.getTitleAt(i).startsWith("• ")) {
+                    jTabbedPane1.setTitleAt(i, "• " + title);
+                }
+                break;
+            }
+        }
     }
 
     private void send_buttonActionPerformed(java.awt.event.ActionEvent evt) {
@@ -523,7 +890,7 @@ public class Chat extends javax.swing.JFrame {
 
     private void sendMessage() {
         String msg = jTextField1.getText().trim();
-        if (msg.isEmpty() || "type message here.".equals(msg)) {
+        if (msg.isEmpty() || msg.startsWith("type message here") || msg.startsWith("Message ")) {
             return;
         }
 
@@ -531,66 +898,425 @@ public class Chat extends javax.swing.JFrame {
             msg = "[Encrypted] " + msg;
         }
 
-        if (client != null && client.isConnected()) {
-            client.sendMessage(msg);
-        } else {
-            onMessageReceived(currentUser + ": " + msg);
+        int activeTabIndex = jTabbedPane1.getSelectedIndex();
+        String activeTab = activeTabIndex >= 0 ? jTabbedPane1.getTitleAt(activeTabIndex).replace("• ", "").trim() : "#General";
+
+        // Check if user specifically typed @User <content> from any room
+        if (msg.startsWith("@") && msg.indexOf(' ') > 1) {
+            int spaceIdx = msg.indexOf(' ');
+            String targetUser = msg.substring(1, spaceIdx).trim();
+            String content = msg.substring(spaceIdx + 1).trim();
+            if (!content.isEmpty()) {
+                openDirectChat(targetUser, true);
+                if (client != null && client.isConnected()) {
+                    client.sendMessage("DM:" + targetUser + ":" + content);
+                } else {
+                    JTextArea area = openDirectChat(targetUser, true);
+                    if (area != null) {
+                        String time = new SimpleDateFormat("HH:mm:ss").format(new Date());
+                        area.append("[" + time + "] [Offline] You: " + content + "\n");
+                    }
+                    try {
+                        DatabaseManager.logMessage(currentUser, targetUser, content);
+                    } catch (Exception ignored) {}
+                }
+                jTextField1.setText("");
+                updateInputPlaceholder();
+                return;
+            }
         }
 
-        // Store into database
-        try {
-            DatabaseManager.logMessage(currentUser, "General", msg);
-        } catch (Exception e) {
-            logger.log(java.util.logging.Level.WARNING, "Failed to log message to DB: " + e.getMessage());
+        // Route according to active tab
+        if (activeTab.startsWith("@")) {
+            String recipient = activeTab.substring(1);
+            if (client != null && client.isConnected()) {
+                client.sendMessage("DM:" + recipient + ":" + msg);
+            } else {
+                JTextArea area = chatViews.get(normalizeTabKey(activeTab));
+                if (area != null) {
+                    String time = new SimpleDateFormat("HH:mm:ss").format(new Date());
+                    area.append("[" + time + "] [Offline] You: " + msg + "\n");
+                }
+                try {
+                    DatabaseManager.logMessage(currentUser, recipient, msg);
+                } catch (Exception ignored) {}
+            }
+        } else {
+            // Group chat room
+            String roomName = activeTab.startsWith("#") ? activeTab : "#" + activeTab;
+            if (client != null && client.isConnected()) {
+                client.sendMessage("ROOM:" + roomName + ":" + msg);
+            } else {
+                JTextArea area = chatViews.get(normalizeTabKey(roomName));
+                if (area != null) {
+                    String time = new SimpleDateFormat("HH:mm:ss").format(new Date());
+                    area.append("[" + time + "] [Offline] You: " + msg + "\n");
+                }
+                try {
+                    DatabaseManager.logMessage(currentUser, roomName, msg);
+                } catch (Exception ignored) {}
+            }
         }
 
         jTextField1.setText("");
+        updateInputPlaceholder();
         jTextField1.requestFocusInWindow();
     }
 
-    private void Attach_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Attach_buttonActionPerformed
+    private void sendFileToActiveConversation() {
+        int activeTabIndex = jTabbedPane1.getSelectedIndex();
+        String activeTab = activeTabIndex >= 0 ? jTabbedPane1.getTitleAt(activeTabIndex).replace("• ", "").trim() : "#General";
+        if (activeTab.startsWith("@")) {
+            sendFileToUser(activeTab.substring(1));
+        } else {
+            sendFileToRoom(activeTab.startsWith("#") ? activeTab : "#General");
+        }
+    }
+
+    private void sendFileToUser(String targetUser) {
+        if (targetUser == null || targetUser.trim().isEmpty()) return;
         JFileChooser chooser = new JFileChooser();
-        chooser.setDialogTitle("Select file to share");
+        chooser.setDialogTitle("Select file to send to @" + targetUser);
         int result = chooser.showOpenDialog(this);
-        if (result == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = chooser.getSelectedFile();
-            String attachMsg = "[Attachment: " + selectedFile.getName() + " (" + selectedFile.length() + " bytes)]";
+        if (result != JFileChooser.APPROVE_OPTION) return;
+
+        File file = chooser.getSelectedFile();
+        if (file == null || !file.exists() || !file.isFile()) {
+            JOptionPane.showMessageDialog(this, "Selected file is invalid or does not exist.", "File Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        long size = file.length();
+        if (size > 20L * 1024 * 1024) {
+            int opt = JOptionPane.showConfirmDialog(
+                this,
+                "File size is " + FileHandling.formatFileSize(size) + ".\nFor quick LAN transmission, files under 20MB are recommended.\nDo you still want to send it?",
+                "Large File Warning",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+            );
+            if (opt != JOptionPane.YES_OPTION) return;
+        }
+
+        try {
+            String base64 = FileHandling.encodeFileToBase64(file);
+            String time = new SimpleDateFormat("HH:mm:ss").format(new Date());
+            SharedFileRecord record = new SharedFileRecord(file.getName(), size, currentUser, "@" + targetUser, base64, time);
+            sharedFiles.add(record);
+
             if (client != null && client.isConnected()) {
-                client.sendMessage(attachMsg);
+                client.sendMessage("FILE:DM:" + targetUser + ":" + file.getName() + ":" + base64);
             } else {
-                onMessageReceived(currentUser + ": " + attachMsg);
+                JOptionPane.showMessageDialog(this, "You are currently offline. File transfer requires an active connection.", "Offline", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            JTextArea area = openDirectChat(targetUser, true);
+            if (area != null) {
+                area.append("[" + time + "] [FILE] You sent file '" + file.getName() + "' (" + FileHandling.formatFileSize(size) + ") to @" + targetUser + "\n");
+                area.setCaretPosition(area.getDocument().getLength());
+            }
+
+            JOptionPane.showMessageDialog(this, "File '" + file.getName() + "' (" + FileHandling.formatFileSize(size) + ") sent to @" + targetUser + " successfully!", "File Sent", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Failed to send file: " + e.getMessage(), "Transfer Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void sendFileToRoom(String roomName) {
+        String cleanRoom = (roomName != null && roomName.startsWith("#")) ? roomName : "#General";
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Select file to share in " + cleanRoom);
+        int result = chooser.showOpenDialog(this);
+        if (result != JFileChooser.APPROVE_OPTION) return;
+
+        File file = chooser.getSelectedFile();
+        if (file == null || !file.exists() || !file.isFile()) {
+            JOptionPane.showMessageDialog(this, "Selected file is invalid or does not exist.", "File Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        long size = file.length();
+        if (size > 20L * 1024 * 1024) {
+            int opt = JOptionPane.showConfirmDialog(
+                this,
+                "File size is " + FileHandling.formatFileSize(size) + ".\nFor quick LAN transmission, files under 20MB are recommended.\nDo you still want to share it?",
+                "Large File Warning",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+            );
+            if (opt != JOptionPane.YES_OPTION) return;
+        }
+
+        try {
+            String base64 = FileHandling.encodeFileToBase64(file);
+            String time = new SimpleDateFormat("HH:mm:ss").format(new Date());
+            SharedFileRecord record = new SharedFileRecord(file.getName(), size, currentUser, cleanRoom, base64, time);
+            sharedFiles.add(record);
+
+            if (client != null && client.isConnected()) {
+                client.sendMessage("FILE:ROOM:" + cleanRoom + ":" + file.getName() + ":" + base64);
+            } else {
+                JOptionPane.showMessageDialog(this, "You are currently offline. File transfer requires an active connection.", "Offline", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            JTextArea area = chatViews.get(normalizeTabKey(cleanRoom));
+            if (area != null) {
+                area.append("[" + time + "] [FILE] You shared '" + file.getName() + "' (" + FileHandling.formatFileSize(size) + ") in " + cleanRoom + "\n");
+                area.setCaretPosition(area.getDocument().getLength());
+            }
+
+            JOptionPane.showMessageDialog(this, "File '" + file.getName() + "' (" + FileHandling.formatFileSize(size) + ") shared in " + cleanRoom + " successfully!", "File Shared", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Failed to share file: " + e.getMessage(), "Transfer Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void handleIncomingFile(String sender, String destination, String filename, String base64Data, boolean isDirect) {
+        long estimatedSize = (long) (base64Data.length() * 0.75);
+        String formattedSize = FileHandling.formatFileSize(estimatedSize);
+        String time = new SimpleDateFormat("HH:mm:ss").format(new Date());
+
+        SharedFileRecord record = new SharedFileRecord(filename, estimatedSize, sender, destination, base64Data, time);
+        sharedFiles.add(record);
+
+        // Append notice in corresponding chat tab
+        if (isDirect) {
+            JTextArea area = openDirectChat(sender, false);
+            if (area != null) {
+                area.append("[" + time + "] [FILE RECEIVED] " + sender + " sent '" + filename + "' (" + formattedSize + ") - Saved to Shared Files Hub\n");
+                area.setCaretPosition(area.getDocument().getLength());
+            }
+            badgeUnreadTab("@" + sender);
+        } else {
+            JTextArea area = chatViews.get(normalizeTabKey(destination));
+            if (area == null && !destination.startsWith("#")) {
+                area = chatViews.get(normalizeTabKey("#" + destination));
+            }
+            if (area != null) {
+                area.append("[" + time + "] [FILE RECEIVED] " + sender + " shared '" + filename + "' (" + formattedSize + ") - Saved to Shared Files Hub\n");
+                area.setCaretPosition(area.getDocument().getLength());
+            }
+            badgeUnreadTab(destination);
+        }
+
+        // Friendly option dialog for quick action
+        String[] options = { "Quick Save to Downloads", "Save As...", "Open Files Hub", "Decide Later" };
+        int choice = JOptionPane.showOptionDialog(
+            this,
+            "<html><b style='color:#FF8C00; font-size:13px;'>New File Received!</b><br><br>"
+            + "<b>File:</b> " + filename + " (" + formattedSize + ")<br>"
+            + "<b>From:</b> " + sender + (isDirect ? " (Direct Message)" : " (in room " + destination + ")") + "<br><br>"
+            + "How would you like to handle this file?</html>",
+            "File Received - " + filename,
+            JOptionPane.DEFAULT_OPTION,
+            JOptionPane.INFORMATION_MESSAGE,
+            null,
+            options,
+            options[0]
+        );
+
+        if (choice == 0) {
+            // Quick save to downloads
+            saveFileDirectly(filename, base64Data, FileHandling.getDefaultDownloadsDirectory());
+        } else if (choice == 1) {
+            // Save As...
+            saveFileWithChooser(filename, base64Data);
+        } else if (choice == 2) {
+            // Open Files Hub
+            openSharedFilesHub();
+        }
+    }
+
+    private void saveFileDirectly(String filename, String base64Data, File directory) {
+        try {
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+            File target = getNonCollidingFile(directory, filename);
+            FileHandling.saveBase64ToFile(base64Data, target);
+            JOptionPane.showMessageDialog(
+                this,
+                "File saved successfully to:\n" + target.getAbsolutePath(),
+                "File Saved",
+                JOptionPane.INFORMATION_MESSAGE
+            );
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Failed to save file: " + e.getMessage(), "Save Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void saveFileWithChooser(String filename, String base64Data) {
+        JFileChooser chooser = new JFileChooser(FileHandling.getDefaultDownloadsDirectory());
+        chooser.setSelectedFile(new File(filename));
+        int res = chooser.showSaveDialog(this);
+        if (res == JFileChooser.APPROVE_OPTION) {
+            File target = chooser.getSelectedFile();
+            try {
+                FileHandling.saveBase64ToFile(base64Data, target);
+                JOptionPane.showMessageDialog(
+                    this,
+                    "File saved successfully to:\n" + target.getAbsolutePath(),
+                    "File Saved",
+                    JOptionPane.INFORMATION_MESSAGE
+                );
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Failed to save file: " + e.getMessage(), "Save Error", JOptionPane.ERROR_MESSAGE);
             }
         }
-    }//GEN-LAST:event_Attach_buttonActionPerformed
+    }
 
-    private void files_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_files_buttonActionPerformed
-        Attach_buttonActionPerformed(evt);
-    }//GEN-LAST:event_files_buttonActionPerformed
+    private File getNonCollidingFile(File dir, String filename) {
+        File file = new File(dir, filename);
+        if (!file.exists()) return file;
 
-    private void chats_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chats_buttonActionPerformed
-        jTabbedPane1.setSelectedIndex(1);
-    }//GEN-LAST:event_chats_buttonActionPerformed
+        String name = filename;
+        String ext = "";
+        int dot = filename.lastIndexOf('.');
+        if (dot > 0) {
+            name = filename.substring(0, dot);
+            ext = filename.substring(dot);
+        }
+        int count = 1;
+        while (file.exists()) {
+            file = new File(dir, name + "_" + count + ext);
+            count++;
+        }
+        return file;
+    }
 
-    private void Settings_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Settings_buttonActionPerformed
+    private void openSharedFilesHub() {
+        JDialog dialog = new JDialog(this, "Shared Files Hub (" + sharedFiles.size() + " files)", true);
+        dialog.setLayout(new BorderLayout(10, 10));
+        dialog.setSize(680, 420);
+        dialog.setLocationRelativeTo(this);
+
+        String[] columnNames = { "Filename", "Size", "From", "To / Room", "Time" };
+        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        for (SharedFileRecord rec : sharedFiles) {
+            tableModel.addRow(new Object[] {
+                rec.filename(),
+                FileHandling.formatFileSize(rec.size()),
+                rec.sender(),
+                rec.target(),
+                rec.time()
+            });
+        }
+
+        JTable table = new JTable(tableModel);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.setRowHeight(24);
+        if (tableModel.getRowCount() > 0) {
+            table.setRowSelectionInterval(tableModel.getRowCount() - 1, tableModel.getRowCount() - 1);
+        }
+
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        JLabel headerLabel = new JLabel("Files shared and received in this IntraChat session:");
+        headerLabel.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 13));
+        topPanel.add(headerLabel);
+
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+
+        JButton downloadBtn = new JButton("Save / Download Selected");
+        downloadBtn.setBackground(new java.awt.Color(255, 140, 0));
+        downloadBtn.setForeground(java.awt.Color.WHITE);
+        downloadBtn.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow >= 0 && selectedRow < sharedFiles.size()) {
+                SharedFileRecord rec = sharedFiles.get(selectedRow);
+                saveFileWithChooser(rec.filename(), rec.base64Data());
+            } else {
+                JOptionPane.showMessageDialog(dialog, "Please select a file from the table first.", "Selection", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
+        JButton openDownloadsBtn = new JButton("Open Downloads Folder");
+        openDownloadsBtn.addActionListener(e -> {
+            try {
+                Desktop.getDesktop().open(FileHandling.getDefaultDownloadsDirectory());
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(dialog, "Downloads folder:\n" + FileHandling.getDefaultDownloadsDirectory().getAbsolutePath(), "Folder Path", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
+        JButton sendNewBtn = new JButton("Send New File...");
+        sendNewBtn.addActionListener(e -> {
+            dialog.dispose();
+            sendFileToActiveConversation();
+        });
+
+        JButton closeBtn = new JButton("Close");
+        closeBtn.addActionListener(e -> dialog.dispose());
+
+        bottomPanel.add(downloadBtn);
+        bottomPanel.add(openDownloadsBtn);
+        bottomPanel.add(sendNewBtn);
+        bottomPanel.add(closeBtn);
+
+        dialog.add(topPanel, BorderLayout.NORTH);
+        dialog.add(scrollPane, BorderLayout.CENTER);
+        dialog.add(bottomPanel, BorderLayout.SOUTH);
+        dialog.setVisible(true);
+    }
+
+    private void Attach_buttonActionPerformed(java.awt.event.ActionEvent evt) {
+        sendFileToActiveConversation();
+    }
+
+    private void files_buttonActionPerformed(java.awt.event.ActionEvent evt) {
+        openSharedFilesHub();
+    }
+
+    private void chats_buttonActionPerformed(java.awt.event.ActionEvent evt) {
+        if (jTabbedPane1.getTabCount() > 1) {
+            jTabbedPane1.setSelectedIndex(1);
+        }
+        jTextField1.requestFocusInWindow();
+    }
+
+    private void Settings_buttonActionPerformed(java.awt.event.ActionEvent evt) {
         String status = (client != null && client.isConnected()) ? "Connected (" + client.getServerIp() + ":" + client.getServerPort() + ")" : "Disconnected";
+        String lanIp = Server.getLocalLanIp();
+        String connCode = (client != null && client.isConnected())
+                ? com.IntraChat.security.AuthService.generateConnectionCode(client.getServerIp(), client.getServerPort())
+                : com.IntraChat.security.AuthService.generateConnectionCode(lanIp, Server.defaultPort);
         JOptionPane.showMessageDialog(
             this,
-            "Logged in as: " + currentUser + "\nNetwork Status: " + status + "\nDatabase: chat.db (SQLite)",
-            "Settings & Info",
-            JOptionPane.INFORMATION_MESSAGE
-        );
-    }//GEN-LAST:event_Settings_buttonActionPerformed
-
-    private void notifications_buttonActionPerformed(java.awt.event.ActionEvent evt) {
-        JOptionPane.showMessageDialog(
-            this,
-            "No unread notifications.",
-            "Notifications",
+            "Logged in as: " + currentUser
+            + "\nConnection Code: " + connCode
+            + "\nServer Address: " + status
+            + "\nThis Device's IP: " + lanIp
+            + "\n\nTip for connecting other devices on the same Wi-Fi/LAN:\n"
+            + "Tell other users to enter this Connection Code (" + connCode + ")\n"
+            + "into the 'Connection Code' field on their login screen.",
+            "Settings & Connection Info",
             JOptionPane.INFORMATION_MESSAGE
         );
     }
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void notifications_buttonActionPerformed(java.awt.event.ActionEvent evt) {
+        long unreadCount = 0;
+        for (int i = 0; i < jTabbedPane1.getTabCount(); i++) {
+            if (jTabbedPane1.getTitleAt(i).startsWith("• ")) {
+                unreadCount++;
+            }
+        }
+        String msg = (unreadCount > 0)
+            ? "You have unread messages in " + unreadCount + " conversation(s) marked with '•'."
+            : "No unread notifications.";
+        JOptionPane.showMessageDialog(this, msg, "Notifications", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
         String search = JOptionPane.showInputDialog(this, "Enter username to search:", "Search Users", JOptionPane.QUESTION_MESSAGE);
         if (search != null && !search.trim().isEmpty()) {
             var model = OnlineUsers.getModel();
@@ -600,6 +1326,16 @@ public class Chat extends javax.swing.JFrame {
                     OnlineUsers.setSelectedIndex(i);
                     OnlineUsers.ensureIndexIsVisible(i);
                     found = true;
+                    int opt = JOptionPane.showConfirmDialog(
+                        this,
+                        "User '" + model.getElementAt(i) + "' is online!\nWould you like to open a direct private chat?",
+                        "User Found",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE
+                    );
+                    if (opt == JOptionPane.YES_OPTION) {
+                        openDirectChat(model.getElementAt(i), true);
+                    }
                     break;
                 }
             }
@@ -607,28 +1343,32 @@ public class Chat extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "User '" + search + "' is not currently online.", "Search Result", JOptionPane.INFORMATION_MESSAGE);
             }
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }
 
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {
         if (jCheckBox1.isSelected()) {
             onMessageReceived("(system) End-to-end message encryption mode activated.");
         } else {
             onMessageReceived("(system) Message encryption mode deactivated.");
         }
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
+    }
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {
-        if (chatTextArea == null || chatTextArea.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Chat log is currently empty.", "Save Log", JOptionPane.INFORMATION_MESSAGE);
+        int idx = jTabbedPane1.getSelectedIndex();
+        String activeTitle = idx >= 0 ? jTabbedPane1.getTitleAt(idx).replace("• ", "").trim() : "General";
+        JTextArea currentArea = chatViews.get(normalizeTabKey(activeTitle));
+        if (currentArea == null || currentArea.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "The chat log for " + activeTitle + " is currently empty.", "Save Log", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
+        String safeFilename = "chat_log_" + activeTitle.replaceAll("[^a-zA-Z0-9_-]", "") + ".txt";
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setSelectedFile(new File("chat_log.txt"));
+        fileChooser.setSelectedFile(new File(safeFilename));
         if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             try (FileWriter writer = new FileWriter(fileChooser.getSelectedFile())) {
-                writer.write(chatTextArea.getText());
-                JOptionPane.showMessageDialog(this, "Chat log saved successfully!", "Save Log", JOptionPane.INFORMATION_MESSAGE);
+                writer.write(currentArea.getText());
+                JOptionPane.showMessageDialog(this, "Chat log for " + activeTitle + " saved successfully!", "Save Log", JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(this, "Failed to save file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }

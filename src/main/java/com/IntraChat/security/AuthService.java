@@ -93,10 +93,210 @@ public class AuthService {
         try{
             String[] fields = splitCode(serverKey, code);
             long expirationTime = Long.parseLong(fields[2]);
-            return fields[0].equals(serverIp.getHostAddress()) && fields[1].equals(username) && System.currentTimeMillis() < expirationTime;
+            return fields[0].equals(username) && fields[1].equals(serverIp.getHostAddress()) && System.currentTimeMillis() < expirationTime;
         } catch (GeneralSecurityException | NumberFormatException e){
             return false;
         }
+    }
+
+    public static final String CODE_PREFIX = "INTRA-";
+    private static final String BASE36_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    public record ConnectionTarget(String ip, int port) {
+        @Override
+        public String toString() {
+            return ip + ":" + port;
+        }
+    }
+
+    /**
+     * Converts a server IP address and port into a compact, human-friendly Connection Code.
+     * Example: "192.168.1.15" and 5000 -> "2334C-LQXZC" (10 alphanumeric chars)
+     */
+    public static String generateConnectionCode(String ip, int port) {
+        if (ip == null || ip.trim().isEmpty() || "localhost".equalsIgnoreCase(ip.trim())) {
+            ip = "127.0.0.1";
+        }
+        ip = ip.trim();
+        if (port <= 0 || port > 65535) {
+            port = com.IntraChat.network.Server.defaultPort;
+        }
+
+        // For standard IPv4 addresses, encode to compact 10-char Base36 (XXXXX-XXXXX)
+        String[] octets = ip.split("\\.");
+        if (octets.length == 4) {
+            try {
+                long b1 = Long.parseLong(octets[0].trim());
+                long b2 = Long.parseLong(octets[1].trim());
+                long b3 = Long.parseLong(octets[2].trim());
+                long b4 = Long.parseLong(octets[3].trim());
+                if (b1 >= 0 && b1 <= 255 && b2 >= 0 && b2 <= 255 && b3 >= 0 && b3 <= 255 && b4 >= 0 && b4 <= 255) {
+                    long val = (b1 << 40) | (b2 << 32) | (b3 << 24) | (b4 << 16) | (port & 0xFFFFL);
+                    StringBuilder sb = new StringBuilder();
+                    while (val > 0) {
+                        sb.insert(0, BASE36_CHARS.charAt((int) (val % 36)));
+                        val /= 36;
+                    }
+                    while (sb.length() < 10) {
+                        sb.insert(0, '0');
+                    }
+                    return sb.substring(0, 5) + "-" + sb.substring(5);
+                }
+            } catch (Exception ignored) {}
+        }
+
+        // Fallback for non-IPv4 hostnames: URL-safe Base64
+        String combined = ip + ":" + port;
+        return base64Encoder.encodeToString(combined.getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
+     * Parses a single input (Connection Code, Base64 token, Hex code, or raw IP/IP:port)
+     * back into the target IP address and port.
+     */
+    public static ConnectionTarget parseConnectionCode(String input) {
+        if (input == null || input.trim().isEmpty()) {
+            return new ConnectionTarget("127.0.0.1", com.IntraChat.network.Server.defaultPort);
+        }
+        input = input.trim();
+
+        // 1. Remove optional prefixes
+        String raw = input;
+        if (raw.toUpperCase().startsWith(CODE_PREFIX)) {
+            raw = raw.substring(CODE_PREFIX.length()).trim();
+        } else if (raw.toUpperCase().startsWith("IC-")) {
+            raw = raw.substring(3).trim();
+        } else if (raw.toUpperCase().startsWith("CODE-")) {
+            raw = raw.substring(5).trim();
+        }
+
+        // 2. Check compact Base36 code: "XXXXX-XXXXX" or "XXXXXXXXXX" (case-insensitive)
+        String noHyphen = raw.replace("-", "").trim();
+        if (noHyphen.length() == 10 && noHyphen.matches("^[0-9a-zA-Z]{10}$")) {
+            try {
+                long val = 0;
+                String upper = noHyphen.toUpperCase();
+                for (int i = 0; i < upper.length(); i++) {
+                    char c = upper.charAt(i);
+                    int digit = BASE36_CHARS.indexOf(c);
+                    if (digit == -1) {
+                        val = -1;
+                        break;
+                    }
+                    val = val * 36 + digit;
+                }
+                if (val >= 0 && val < (1L << 48)) {
+                    int b1 = (int) ((val >> 40) & 0xFF);
+                    int b2 = (int) ((val >> 32) & 0xFF);
+                    int b3 = (int) ((val >> 24) & 0xFF);
+                    int b4 = (int) ((val >> 16) & 0xFF);
+                    int portVal = (int) (val & 0xFFFF);
+                    if (portVal > 0 && portVal <= 65535) {
+                        return new ConnectionTarget(b1 + "." + b2 + "." + b3 + "." + b4, portVal);
+                    }
+                }
+            } catch (Exception ignored) {}
+        }
+
+        // 3. Check 12-char compact Hex format (4 bytes IPv4 + 2 bytes port)
+        if (noHyphen.matches("^[0-9a-fA-F]{12}$")) {
+            try {
+                int b1 = Integer.parseInt(noHyphen.substring(0, 2), 16);
+                int b2 = Integer.parseInt(noHyphen.substring(2, 4), 16);
+                int b3 = Integer.parseInt(noHyphen.substring(4, 6), 16);
+                int b4 = Integer.parseInt(noHyphen.substring(6, 8), 16);
+                int portVal = Integer.parseInt(noHyphen.substring(8, 12), 16);
+                if (portVal > 0 && portVal <= 65535) {
+                    return new ConnectionTarget(b1 + "." + b2 + "." + b3 + "." + b4, portVal);
+                }
+            } catch (Exception ignored) {}
+        }
+
+        // 4. Check 8-char 6-byte Base64 format
+        if (raw.length() == 8 && !raw.contains(":")) {
+            try {
+                byte[] decoded = base64Decoder.decode(raw);
+                if (decoded.length == 6) {
+                    int b1 = decoded[0] & 0xFF;
+                    int b2 = decoded[1] & 0xFF;
+                    int b3 = decoded[2] & 0xFF;
+                    int b4 = decoded[3] & 0xFF;
+                    int portVal = ((decoded[4] & 0xFF) << 8) | (decoded[5] & 0xFF);
+                    if (portVal > 0 && portVal <= 65535) {
+                        return new ConnectionTarget(b1 + "." + b2 + "." + b3 + "." + b4, portVal);
+                    }
+                }
+            } catch (Exception ignored) {}
+        }
+
+        // 5. Try Base64 / Base64URL decode
+        try {
+            byte[] decodedBytes = null;
+            try {
+                decodedBytes = base64Decoder.decode(raw);
+            } catch (Exception e) {
+                try {
+                    decodedBytes = Base64.getDecoder().decode(raw);
+                } catch (Exception ignored) {}
+            }
+
+            if (decodedBytes != null) {
+                String decodedStr = new String(decodedBytes, StandardCharsets.UTF_8);
+                if (decodedStr.contains(":")) {
+                    int lastColon = decodedStr.lastIndexOf(':');
+                    String ipPart = decodedStr.substring(0, lastColon).trim();
+                    String portPart = decodedStr.substring(lastColon + 1).trim();
+                    int portVal = Integer.parseInt(portPart);
+                    if (portVal > 0 && portVal <= 65535 && !ipPart.isEmpty()) {
+                        if (ipPart.equalsIgnoreCase("localhost")) ipPart = "127.0.0.1";
+                        return new ConnectionTarget(ipPart, portVal);
+                    }
+                } else if (!decodedStr.trim().isEmpty() && decodedStr.matches("^\\d+\\.\\d+\\.\\d+\\.\\d+$")) {
+                    return new ConnectionTarget(decodedStr.trim(), com.IntraChat.network.Server.defaultPort);
+                }
+            }
+        } catch (Exception ignored) {}
+
+        // 6. Check signed token: payload.signature
+        if (input.contains(".") && input.length() > 20) {
+            try {
+                String[] dotParts = input.split("\\.");
+                if (dotParts.length == 2) {
+                    String decodedPayload = new String(base64Decoder.decode(dotParts[0]), StandardCharsets.UTF_8);
+                    String[] payloadFields = decodedPayload.split("\\|", -1);
+                    if (payloadFields.length >= 2 && !payloadFields[1].isEmpty()) {
+                        String ip = payloadFields[1].trim();
+                        if (ip.equalsIgnoreCase("localhost")) ip = "127.0.0.1";
+                        return new ConnectionTarget(ip, com.IntraChat.network.Server.defaultPort);
+                    }
+                }
+            } catch (Exception ignored) {}
+        }
+
+        // 7. Check direct IP:port
+        if (input.contains(":")) {
+            try {
+                int lastColon = input.lastIndexOf(':');
+                String ipPart = input.substring(0, lastColon).trim();
+                String portPart = input.substring(lastColon + 1).trim();
+                int portVal = Integer.parseInt(portPart);
+                if (portVal > 0 && portVal <= 65535) {
+                    if (ipPart.isEmpty() || ipPart.equalsIgnoreCase("localhost")) ipPart = "127.0.0.1";
+                    return new ConnectionTarget(ipPart, portVal);
+                }
+            } catch (Exception ignored) {}
+        }
+
+        // 8. Direct IP or hostname
+        String ip = input;
+        if (ip.equalsIgnoreCase("localhost")) {
+            ip = "127.0.0.1";
+        }
+        return new ConnectionTarget(ip, com.IntraChat.network.Server.defaultPort);
+    }
+
+    public static String extractIpFromCodeOrInput(String input) {
+        return parseConnectionCode(input).ip();
     }
 
     //Verifies the signature, then returns username, ip, expirationTime. Throws GeneralSecurityException if the code is invalid or is malformed.
