@@ -1,13 +1,16 @@
 com/IntraChat/database/DatabaseManager$Message.class
 com/IntraChat/gui/Chat$4.class
 com/IntraChat/network/Server.class
+com/IntraChat/gui/Structure.class
 com/IntraChat/NetworkBackendTest.class
 com/IntraChat/gui/Chat.class
 com/IntraChat/IntraChat.class
 com/IntraChat/gui/Chat$1.class
 com/IntraChat/network/Client.class
 com/IntraChat/gui/Chat$6.class
+com/IntraChat/security/AuthService.class
 com/IntraChat/gui/Chat$3.class
+com/IntraChat/io/FileHandling.class
 com/IntraChat/gui/Admin.class
 com/IntraChat/gui/Chat$2.class
 com/IntraChat/network/ClientHandler.class

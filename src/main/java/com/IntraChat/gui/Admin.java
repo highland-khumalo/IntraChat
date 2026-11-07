@@ -8,14 +8,14 @@ import javax.swing.JTextArea;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 
 /**
  *
  * @author onele
  */
-public class Admin extends javax.swing.JPanel {
+public class Admin extends javax.swing.JFrame {
 
     private Server serverInstance;
 
@@ -71,7 +71,11 @@ public class Admin extends javax.swing.JPanel {
         jMenu2.setText("Edit");
         jMenuBar1.add(jMenu2);
 
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("IntraChat - Admin Console");
+
         setBackground(new java.awt.Color(0, 0, 0));
+        getContentPane().setBackground(new java.awt.Color(0, 0, 0));
 
         jPanel1.setBackground(new java.awt.Color(51, 51, 51));
 
@@ -294,8 +298,8 @@ public class Admin extends javax.swing.JPanel {
         label3.setForeground(new java.awt.Color(255, 153, 0));
         label3.setText("Intrachart");
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -337,6 +341,10 @@ public class Admin extends javax.swing.JPanel {
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
+
+        setJMenuBar(jMenuBar1);
+
+        pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -400,10 +408,30 @@ public class Admin extends javax.swing.JPanel {
         java.awt.EventQueue.invokeLater(() -> setVisible(true));
     }
 
-    public static void main(String[] args) {
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Admin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            Admin adminPanel = new Admin();
-            adminPanel.start();
+            new Admin().setVisible(true);
         });
     }
 
