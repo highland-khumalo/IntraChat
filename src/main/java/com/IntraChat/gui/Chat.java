@@ -28,51 +28,75 @@ public class Chat extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jButton7 = new javax.swing.JButton();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        OnlineUsers = new javax.swing.JList<>();
         rootPanel = new javax.swing.JPanel();
         iconsPanel = new javax.swing.JPanel();
-        chatsIcon = new javax.swing.JLabel();
-        contactsIcon = new javax.swing.JLabel();
-        settingsIcon = new javax.swing.JLabel();
-        unreadIcon = new javax.swing.JLabel();
-        userIcon = new javax.swing.JLabel();
-        roomsUsersP = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
-        jLabel3 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        files_button = new javax.swing.JButton();
+        notifications_button = new javax.swing.JButton();
+        chats_button = new javax.swing.JButton();
+        Settings_button = new javax.swing.JButton();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel1 = new javax.swing.JPanel();
+        chatPanel = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        chatrooms_label = new javax.swing.JLabel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        ChatRooms = new javax.swing.JList<>();
+        settings_label = new javax.swing.JLabel();
+        jScrollPane7 = new javax.swing.JScrollPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
-        jButton5 = new javax.swing.JButton();
-        chatPanel = new javax.swing.JPanel();
-        jLabel9 = new javax.swing.JLabel();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jButton8 = new javax.swing.JButton();
+        Onlineusers_label = new javax.swing.JLabel();
         jCheckBox1 = new javax.swing.JCheckBox();
-        jButton9 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        send_button = new javax.swing.JButton();
+        Logo = new javax.swing.JLabel();
+        IP_label = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        Attach_button = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+
+        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/save_res.png"))); // NOI18N
+        jButton7.setText("Save Chat Log");
+
+        OnlineUsers.setBackground(new java.awt.Color(32, 32, 32));
+        OnlineUsers.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, null, new java.awt.Color(255, 102, 0)));
+        OnlineUsers.setForeground(new java.awt.Color(255, 255, 255));
+        OnlineUsers.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Sipho", "Amila", "Thabo", "Letlogonolo", "Dumisani" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane8.setViewportView(OnlineUsers);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         rootPanel.setBackground(new java.awt.Color(15, 15, 15));
+        rootPanel.setForeground(new java.awt.Color(15, 15, 15));
 
-        iconsPanel.setBackground(new java.awt.Color(255, 140, 0));
-        iconsPanel.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 204, 51), 1, true));
+        iconsPanel.setBackground(new java.awt.Color(32, 32, 32));
+        iconsPanel.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 140, 0), 1, true));
 
-        chatsIcon.setText("jLabel4");
+        files_button.setBackground(new java.awt.Color(32, 32, 32));
+        files_button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/folder-white.png"))); // NOI18N
+        files_button.setBorder(null);
+        files_button.addActionListener(this::files_buttonActionPerformed);
 
-        contactsIcon.setText("jLabel5");
+        notifications_button.setBackground(new java.awt.Color(32, 32, 32));
+        notifications_button.setBorder(null);
 
-        settingsIcon.setText("jLabel6");
+        chats_button.setBackground(new java.awt.Color(32, 32, 32));
+        chats_button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/speech-bubble-white.png"))); // NOI18N
+        chats_button.setBorder(null);
+        chats_button.addActionListener(this::chats_buttonActionPerformed);
 
-        unreadIcon.setText("jLabel7");
-
-        userIcon.setText("jLabel8");
+        Settings_button.setBackground(new java.awt.Color(32, 32, 32));
+        Settings_button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/settings-white.png"))); // NOI18N
+        Settings_button.setBorder(null);
+        Settings_button.addActionListener(this::Settings_buttonActionPerformed);
 
         javax.swing.GroupLayout iconsPanelLayout = new javax.swing.GroupLayout(iconsPanel);
         iconsPanel.setLayout(iconsPanelLayout);
@@ -81,195 +105,255 @@ public class Chat extends javax.swing.JFrame {
             .addGroup(iconsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(iconsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(chatsIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(contactsIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(settingsIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(unreadIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(userIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(22, Short.MAX_VALUE))
+                    .addGroup(iconsPanelLayout.createSequentialGroup()
+                        .addComponent(Settings_button, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(notifications_button, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(chats_button, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(files_button, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         iconsPanelLayout.setVerticalGroup(
             iconsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(iconsPanelLayout.createSequentialGroup()
-                .addGap(46, 46, 46)
-                .addComponent(chatsIcon)
-                .addGap(38, 38, 38)
-                .addComponent(contactsIcon)
-                .addGap(36, 36, 36)
-                .addComponent(settingsIcon)
-                .addGap(40, 40, 40)
-                .addComponent(unreadIcon)
-                .addGap(51, 51, 51)
-                .addComponent(userIcon)
+                .addGap(35, 35, 35)
+                .addComponent(chats_button, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(files_button, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(17, 17, 17)
+                .addComponent(Settings_button, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(notifications_button, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        roomsUsersP.setBackground(new java.awt.Color(102, 102, 102));
-        roomsUsersP.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
+        jTabbedPane1.setBackground(new java.awt.Color(102, 102, 102));
+        jTabbedPane1.setForeground(new java.awt.Color(255, 140, 0));
+        jTabbedPane1.setPreferredSize(new java.awt.Dimension(150, 150));
 
-        jLabel2.setBackground(new java.awt.Color(102, 102, 102));
-        jLabel2.setFont(new java.awt.Font("Segoe UI Emoji", 1, 14)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("CHAT ROOMS");
+        jPanel1.setBackground(new java.awt.Color(32, 32, 32));
+        jPanel1.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(255, 140, 0)));
 
-        jLabel3.setBackground(new java.awt.Color(102, 102, 102));
-        jLabel3.setFont(new java.awt.Font("Segoe UI Emoji", 1, 14)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("ONLINE USERS");
-
-        jButton1.setText("jButton1");
-
-        jButton2.setText("jButton2");
-
-        jButton3.setText("jButton3");
-
-        jButton4.setText("jButton4");
-
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane1.setViewportView(jList1);
-
-        jButton5.setText("jButton5");
-
-        javax.swing.GroupLayout roomsUsersPLayout = new javax.swing.GroupLayout(roomsUsersP);
-        roomsUsersP.setLayout(roomsUsersPLayout);
-        roomsUsersPLayout.setHorizontalGroup(
-            roomsUsersPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
-            .addGroup(roomsUsersPLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(roomsUsersPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton5))
-                .addContainerGap(16, Short.MAX_VALUE))
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 649, Short.MAX_VALUE)
         );
-        roomsUsersPLayout.setVerticalGroup(
-            roomsUsersPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(roomsUsersPLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
-                .addGap(18, 18, 18)
-                .addComponent(jButton2)
-                .addGap(18, 18, 18)
-                .addComponent(jButton3)
-                .addGap(18, 18, 18)
-                .addComponent(jButton4)
-                .addGap(64, 64, 64)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(7, 7, 7)
-                .addComponent(jButton5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(67, Short.MAX_VALUE))
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 486, Short.MAX_VALUE)
         );
+
+        jTabbedPane1.addTab("#Maths", jPanel1);
 
         chatPanel.setBackground(new java.awt.Color(32, 32, 32));
         chatPanel.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(255, 140, 0)));
-
-        jLabel9.setForeground(new java.awt.Color(255, 140, 0));
-        jLabel9.setText("jLabel9");
-
-        jButton6.setText("jButton6");
-
-        jButton7.setText("jButton7");
-
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
-
-        jButton8.setText("jButton8");
-
-        jCheckBox1.setForeground(new java.awt.Color(255, 255, 255));
-        jCheckBox1.setText("Messsage encription");
-        jCheckBox1.addActionListener(this::jCheckBox1ActionPerformed);
-
-        jButton9.setText("jButton9");
 
         javax.swing.GroupLayout chatPanelLayout = new javax.swing.GroupLayout(chatPanel);
         chatPanel.setLayout(chatPanelLayout);
         chatPanelLayout.setHorizontalGroup(
             chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(chatPanelLayout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton6)
-                .addGap(84, 84, 84)
-                .addComponent(jButton7)
-                .addGap(51, 51, 51))
-            .addGroup(chatPanelLayout.createSequentialGroup()
-                .addGap(39, 39, 39)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 361, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
-                .addComponent(jCheckBox1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton9)
-                .addContainerGap())
+            .addGap(0, 649, Short.MAX_VALUE)
         );
         chatPanelLayout.setVerticalGroup(
             chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(chatPanelLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton6)
-                    .addComponent(jButton7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, chatPanelLayout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(24, 24, 24))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, chatPanelLayout.createSequentialGroup()
-                        .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton8)
-                            .addComponent(jCheckBox1)
-                            .addComponent(jButton9))
-                        .addGap(33, 33, 33))))
+            .addGap(0, 486, Short.MAX_VALUE)
         );
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/intra_logo.jpg"))); // NOI18N
+        jTabbedPane1.addTab("#General", chatPanel);
+
+        jPanel2.setBackground(new java.awt.Color(32, 32, 32));
+        jPanel2.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(255, 140, 0)));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 649, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 486, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("#ELC", jPanel2);
+
+        jPanel3.setBackground(new java.awt.Color(32, 32, 32));
+        jPanel3.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(255, 140, 0)));
+        jPanel3.setForeground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 649, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 486, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("#SDN", jPanel3);
+
+        chatrooms_label.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        chatrooms_label.setForeground(new java.awt.Color(242, 242, 242));
+        chatrooms_label.setText("Chat Rooms");
+
+        ChatRooms.setBackground(new java.awt.Color(32, 32, 32));
+        ChatRooms.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, null, new java.awt.Color(255, 102, 0)));
+        ChatRooms.setForeground(new java.awt.Color(255, 255, 255));
+        ChatRooms.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "#Maths", "#ELC", "#SDN", "#General" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane5.setViewportView(ChatRooms);
+
+        jScrollPane6.setViewportView(jScrollPane5);
+
+        settings_label.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        settings_label.setForeground(new java.awt.Color(242, 242, 242));
+        settings_label.setText("Settings");
+
+        jList1.setBackground(new java.awt.Color(32, 32, 32));
+        jList1.setForeground(new java.awt.Color(255, 255, 255));
+        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Sipho", "Amila", "Thabo", "Letlogonolo", "Dumisani" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(jList1);
+
+        jScrollPane7.setViewportView(jScrollPane1);
+
+        Onlineusers_label.setBackground(new java.awt.Color(32, 32, 32));
+        Onlineusers_label.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        Onlineusers_label.setForeground(new java.awt.Color(255, 255, 255));
+        Onlineusers_label.setText("OnlineUsers");
+
+        jCheckBox1.setBackground(new java.awt.Color(32, 32, 32));
+        jCheckBox1.setForeground(new java.awt.Color(255, 255, 255));
+        jCheckBox1.setText("Messsage encryption");
+        jCheckBox1.addActionListener(this::jCheckBox1ActionPerformed);
+
+        send_button.setBackground(new java.awt.Color(255, 140, 0));
+        send_button.setForeground(new java.awt.Color(255, 255, 255));
+        send_button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/send-2-white.png"))); // NOI18N
+        send_button.setText("send");
+
+        Logo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/final_logo.jpg"))); // NOI18N
+
+        IP_label.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        IP_label.setForeground(new java.awt.Color(255, 255, 255));
+        IP_label.setText("Connected | IP: 192.168.1.15");
+
+        jTextField1.setBackground(new java.awt.Color(32, 32, 32));
+        jTextField1.setForeground(new java.awt.Color(255, 255, 255));
+        jTextField1.setText("type message here.");
+        jTextField1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 140, 0), 1, true));
+
+        Attach_button.setBackground(new java.awt.Color(255, 140, 0));
+        Attach_button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Attatch-white.png"))); // NOI18N
+        Attach_button.addActionListener(this::Attach_buttonActionPerformed);
+
+        jButton1.setBackground(new java.awt.Color(32, 32, 32));
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/search_white.png"))); // NOI18N
+        jButton1.setText("search users");
+        jButton1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 140, 0), 1, true));
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         javax.swing.GroupLayout rootPanelLayout = new javax.swing.GroupLayout(rootPanel);
         rootPanel.setLayout(rootPanelLayout);
         rootPanelLayout.setHorizontalGroup(
             rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(rootPanelLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
                 .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(rootPanelLayout.createSequentialGroup()
-                        .addComponent(iconsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(rootPanelLayout.createSequentialGroup()
+                                .addGap(11, 11, 11)
+                                .addComponent(settings_label, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(rootPanelLayout.createSequentialGroup()
+                                .addGap(27, 27, 27)
+                                .addComponent(iconsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, 18)
-                        .addComponent(roomsUsersP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(chatPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(rootPanelLayout.createSequentialGroup()
+                                .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(Onlineusers_label, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(rootPanelLayout.createSequentialGroup()
+                                        .addGap(8, 8, 8)
+                                        .addComponent(chatrooms_label, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rootPanelLayout.createSequentialGroup()
+                                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(17, 17, 17)))
+                        .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 651, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(rootPanelLayout.createSequentialGroup()
+                                .addComponent(jTextField1)
+                                .addGap(18, 18, 18)
+                                .addComponent(Attach_button, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jCheckBox1)
+                                .addGap(18, 18, 18)
+                                .addComponent(send_button, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(34, 34, 34))))
+                    .addGroup(rootPanelLayout.createSequentialGroup()
+                        .addGap(520, 520, 520)
+                        .addComponent(IP_label, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(rootPanelLayout.createSequentialGroup()
+                        .addGap(11, 11, 11)
+                        .addComponent(Logo, javax.swing.GroupLayout.PREFERRED_SIZE, 436, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
         rootPanelLayout.setVerticalGroup(
             rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rootPanelLayout.createSequentialGroup()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(iconsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(roomsUsersP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(chatPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18))
+            .addGroup(rootPanelLayout.createSequentialGroup()
+                .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(rootPanelLayout.createSequentialGroup()
+                        .addGap(54, 54, 54)
+                        .addComponent(IP_label, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(rootPanelLayout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addComponent(Logo, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(rootPanelLayout.createSequentialGroup()
+                        .addGap(39, 39, 39)
+                        .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(chatrooms_label)
+                            .addComponent(settings_label))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(rootPanelLayout.createSequentialGroup()
+                                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(26, 26, 26)
+                                .addComponent(Onlineusers_label, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(iconsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(rootPanelLayout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 523, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(rootPanelLayout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(Attach_button, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
+                                    .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING)))
+                            .addGroup(rootPanelLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jCheckBox1)
+                                    .addComponent(send_button))
+                                .addGap(12, 12, 12)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -283,8 +367,9 @@ public class Chat extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(rootPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addContainerGap(19, Short.MAX_VALUE)
+                .addComponent(rootPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(53, 53, 53))
         );
 
         pack();
@@ -293,6 +378,26 @@ public class Chat extends javax.swing.JFrame {
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jCheckBox1ActionPerformed
+
+    private void Attach_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Attach_buttonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Attach_buttonActionPerformed
+
+    private void files_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_files_buttonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_files_buttonActionPerformed
+
+    private void chats_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chats_buttonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_chats_buttonActionPerformed
+
+    private void Settings_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Settings_buttonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Settings_buttonActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -320,33 +425,35 @@ public class Chat extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Attach_button;
+    private javax.swing.JList<String> ChatRooms;
+    private javax.swing.JLabel IP_label;
+    private javax.swing.JLabel Logo;
+    private javax.swing.JList<String> OnlineUsers;
+    private javax.swing.JLabel Onlineusers_label;
+    private javax.swing.JButton Settings_button;
     private javax.swing.JPanel chatPanel;
-    private javax.swing.JLabel chatsIcon;
-    private javax.swing.JLabel contactsIcon;
+    private javax.swing.JLabel chatrooms_label;
+    private javax.swing.JButton chats_button;
+    private javax.swing.JButton files_button;
     private javax.swing.JPanel iconsPanel;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
     private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JList<String> jList1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JPanel roomsUsersP;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JScrollPane jScrollPane8;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JButton notifications_button;
     private javax.swing.JPanel rootPanel;
-    private javax.swing.JLabel settingsIcon;
-    private javax.swing.JLabel unreadIcon;
-    private javax.swing.JLabel userIcon;
+    private javax.swing.JButton send_button;
+    private javax.swing.JLabel settings_label;
     // End of variables declaration//GEN-END:variables
 
