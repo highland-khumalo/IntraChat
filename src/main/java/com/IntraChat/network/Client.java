@@ -16,18 +16,24 @@ public class Client {
     private boolean isConnected;
     private java.util.function.Consumer<String> messageListener;
     private String lastErrorMessage;
-    private String initialWelcomeMessage;
+    private final java.util.Queue<String> pendingQueue = new java.util.concurrent.ConcurrentLinkedQueue<>();
 
     public Client(String serverIp, int serverPort) {
         this.serverIp = serverIp;
         this.serverPort = serverPort;
     }
 
-    public void setMessageListener(java.util.function.Consumer<String> listener) {
+    public synchronized void setMessageListener(java.util.function.Consumer<String> listener) {
         this.messageListener = listener;
-        if (listener != null && initialWelcomeMessage != null) {
-            listener.accept(initialWelcomeMessage);
-            initialWelcomeMessage = null;
+        if (listener != null) {
+            String pending;
+            while ((pending = pendingQueue.poll()) != null) {
+                try {
+                    listener.accept(pending);
+                } catch (Exception e) {
+                    System.err.println("(client error) Error dispatching pending message: " + e.getMessage());
+                }
+            }
         }
     }
 
@@ -57,7 +63,7 @@ public class Client {
                 socket.setSoTimeout(0);
                 isConnected = true;
                 lastErrorMessage = null;
-                initialWelcomeMessage = response;
+                pendingQueue.offer(response);
 
                 Thread listenerThread = new Thread(this::listenForMessages);
                 listenerThread.setDaemon(true);
@@ -81,15 +87,23 @@ public class Client {
             String incoming;
             while (isConnected && (incoming = in.readLine()) != null) {
                 System.out.println(incoming);
-                if (messageListener != null) {
-                    messageListener.accept(incoming);
+                synchronized (this) {
+                    if (messageListener != null) {
+                        messageListener.accept(incoming);
+                    } else {
+                        pendingQueue.offer(incoming);
+                    }
                 }
             }
         } catch (IOException e) {
             if (isConnected) {
                 System.out.println("(client) Disconnected from server.");
-                if (messageListener != null) {
-                    messageListener.accept("(system) Disconnected from server.");
+                synchronized (this) {
+                    if (messageListener != null) {
+                        messageListener.accept("(system) Disconnected from server.");
+                    } else {
+                        pendingQueue.offer("(system) Disconnected from server.");
+                    }
                 }
             }
         } finally {

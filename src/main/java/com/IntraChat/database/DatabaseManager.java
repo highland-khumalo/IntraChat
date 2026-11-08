@@ -366,6 +366,58 @@ public class DatabaseManager {
         return history;
     }
 
+    public static ArrayList<Message> getAllRoomMessages() {
+        String sql = "SELECT sender, recipient, content, timestamp FROM messages "
+                   + "WHERE recipient LIKE '#%' OR LOWER(recipient) IN ('general', 'maths', 'elc', 'sdn') "
+                   + "ORDER BY id ASC";
+        ArrayList<Message> history = new ArrayList<>();
+        try (Connection conn = connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                history.add(new Message(
+                    rs.getString("sender"),
+                    rs.getString("recipient"),
+                    rs.getString("content"),
+                    rs.getString("timestamp")
+                ));
+            }
+        } catch (SQLException e) {
+            System.err.println("(DB ERROR) Fetch all room history failed: " + e.getMessage());
+        }
+        return history;
+    }
+
+    public static ArrayList<Message> getAllDirectMessagesForUser(String username) {
+        String sql = "SELECT sender, recipient, content, timestamp FROM messages "
+                   + "WHERE (LOWER(sender) = LOWER(?) OR LOWER(recipient) = LOWER(?)) "
+                   + "  AND NOT (recipient LIKE '#%') "
+                   + "  AND LOWER(recipient) NOT IN ('general', 'maths', 'elc', 'sdn') "
+                   + "ORDER BY id ASC";
+        ArrayList<Message> history = new ArrayList<>();
+        if (username == null || username.trim().isEmpty()) {
+            return history;
+        }
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username.trim());
+            pstmt.setString(2, username.trim());
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    history.add(new Message(
+                        rs.getString("sender"),
+                        rs.getString("recipient"),
+                        rs.getString("content"),
+                        rs.getString("timestamp")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("(DB ERROR) Fetch user direct messages failed: " + e.getMessage());
+        }
+        return history;
+    }
+
     public static List<UserRecord> getAllUsers() {
         List<UserRecord> users = new ArrayList<>();
         String sql = "SELECT id, username, isAllowed, created_at FROM users ORDER BY id ASC";

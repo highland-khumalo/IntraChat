@@ -22,8 +22,6 @@ public class Structure extends javax.swing.JFrame {
     }
 
     private void customInit() {
-        loginBtn.addActionListener(this::loginBtnActionPerformed);
-
         String localIp = Server.getLocalLanIp();
         jLabel2.setText("Login to chat 👥 (Enter Connection Code below)");
         code.setText("Connection Code:");

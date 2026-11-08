@@ -63,11 +63,22 @@ public class ClientHandler implements Runnable {
             out.println("(system) Welcome to IntraChat, " + username + "!");
             server.broadcast("(server says) " + username + " joined the chat!", this);
             server.broadcastUserList();
+            sendChatHistory();
 
             String incomingMessage;
             while ((incomingMessage = in.readLine()) != null) {
                 if (incomingMessage.equalsIgnoreCase("/quit")) {
                     break;
+                }
+
+                if (incomingMessage.equalsIgnoreCase("GET_HISTORY")) {
+                    sendChatHistory();
+                    continue;
+                }
+
+                if (incomingMessage.equalsIgnoreCase("GET_USERS")) {
+                    server.broadcastUserList();
+                    continue;
                 }
 
                 if (incomingMessage.startsWith("ROOM:")) {
@@ -156,6 +167,38 @@ public class ClientHandler implements Runnable {
     public void sendMessage(String message) {
         if (out != null) {
             out.println(message);
+        }
+    }
+
+    public void sendChatHistory() {
+        try {
+            // 1. Group room messages
+            var roomMessages = DatabaseManager.getAllRoomMessages();
+            for (var m : roomMessages) {
+                String room = m.recipient();
+                if (room != null && !room.startsWith("#")) {
+                    room = "#" + room;
+                }
+                String ts = m.timestamp() != null ? m.timestamp() : "";
+                String safeContent = m.content() != null ? m.content().replace("\r", "").replace("\n", " ") : "";
+                sendMessage("HIST:ROOM:" + room + "|" + ts + "|" + m.sender() + "|" + safeContent);
+            }
+
+            // 2. Direct messages for this authenticated user
+            var dmMessages = DatabaseManager.getAllDirectMessagesForUser(this.username);
+            for (var m : dmMessages) {
+                String partner = m.sender().equalsIgnoreCase(this.username) ? m.recipient() : m.sender();
+                if (partner.startsWith("@")) {
+                    partner = partner.substring(1);
+                }
+                String ts = m.timestamp() != null ? m.timestamp() : "";
+                String safeContent = m.content() != null ? m.content().replace("\r", "").replace("\n", " ") : "";
+                sendMessage("HIST:DM:" + partner + "|" + ts + "|" + m.sender() + "|" + safeContent);
+            }
+
+            sendMessage("HIST:END");
+        } catch (Exception e) {
+            System.err.println("[HANDLER ERROR] Failed to send chat history: " + e.getMessage());
         }
     }
 
