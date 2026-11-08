@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.JButton;
@@ -47,6 +48,7 @@ public class Chat extends javax.swing.JFrame {
     public record SharedFileRecord(String filename, long size, String sender, String target, String base64Data, String time) {}
     private final List<SharedFileRecord> sharedFiles = new CopyOnWriteArrayList<>();
     private final Map<String, JTextArea> chatViews = new ConcurrentHashMap<>();
+    private final Set<String> seenMessageSignatures = java.util.Collections.synchronizedSet(new java.util.HashSet<>());
 
     /**
      * Creates new form Chat
@@ -465,22 +467,26 @@ public class Chat extends javax.swing.JFrame {
         setupConversationTab("#ELC", jPanel2);
         setupConversationTab("#SDN", jPanel3);
 
-        // Load room histories from SQLite
-        List<String> rooms = List.of("#General", "#Maths", "#ELC", "#SDN");
-        for (String room : rooms) {
-            try {
-                var history = DatabaseManager.getChatHistoryForRoom(room);
-                JTextArea area = chatViews.get(normalizeTabKey(room));
-                if (area != null && history != null && !history.isEmpty()) {
-                    area.append("--- " + room + " History ---\n");
-                    for (var msg : history) {
-                        String sender = msg.sender().equalsIgnoreCase(currentUser) ? "You" : msg.sender();
-                        area.append("[" + msg.timestamp() + "] " + sender + ": " + msg.content() + "\n");
+        // Load room histories from SQLite if in offline mode
+        if (client == null || !client.isConnected()) {
+            List<String> rooms = List.of("#General", "#Maths", "#ELC", "#SDN");
+            for (String room : rooms) {
+                try {
+                    var history = DatabaseManager.getChatHistoryForRoom(room);
+                    JTextArea area = chatViews.get(normalizeTabKey(room));
+                    if (area != null && history != null && !history.isEmpty()) {
+                        area.append("--- " + room + " History (Offline) ---\n");
+                        for (var msg : history) {
+                            String sig = "ROOM|" + normalizeTabKey(room) + "|" + msg.timestamp() + "|" + msg.sender() + "|" + msg.content();
+                            seenMessageSignatures.add(sig);
+                            String sender = msg.sender().equalsIgnoreCase(currentUser) ? "You" : msg.sender();
+                            area.append("[" + msg.timestamp() + "] " + sender + ": " + msg.content() + "\n");
+                        }
+                        area.append("-----------------------------\n");
                     }
-                    area.append("-----------------------------\n");
+                } catch (Exception e) {
+                    logger.log(java.util.logging.Level.FINE, "Room history error for " + room + ": " + e.getMessage());
                 }
-            } catch (Exception e) {
-                logger.log(java.util.logging.Level.FINE, "Room history error for " + room + ": " + e.getMessage());
             }
         }
 
@@ -502,6 +508,8 @@ public class Chat extends javax.swing.JFrame {
                 }
             });
             client.setMessageListener(this::onMessageReceived);
+            client.sendMessage("GET_USERS");
+            client.sendMessage("GET_HISTORY");
         } else {
             IP_label.setText("User: " + currentUser + " | Offline (Your IP: " + lanIp + ")");
         }
