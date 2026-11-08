@@ -40,7 +40,6 @@ public class ClientHandler implements Runnable {
 
             // Verify or register user in database
             try {
-                DatabaseManager.initializeDatabase();
                 if (DatabaseManager.userExists(username)) {
                     if (!DatabaseManager.authenticateUser(username, password)) {
                         out.println("(system) Authentication failed: Incorrect credentials.");
@@ -61,6 +60,7 @@ public class ClientHandler implements Runnable {
             }
 
             out.println("(system) Welcome to IntraChat, " + username + "!");
+            server.addClient(this);
             server.broadcast("(server says) " + username + " joined the chat!", this);
             server.broadcastUserList();
             sendChatHistory();

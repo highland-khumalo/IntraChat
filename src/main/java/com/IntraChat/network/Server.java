@@ -34,7 +34,6 @@ public class Server {
                 System.out.println("(server) New connection from: " + clientSocket.getRemoteSocketAddress());
 
                 ClientHandler handler = new ClientHandler(clientSocket, this);
-                clients.add(handler);
                 Thread handlerThread = new Thread(handler);
                 handlerThread.setDaemon(true);
                 handlerThread.start();
@@ -78,6 +77,13 @@ public class Server {
         String userListMsg = sb.toString();
         for (ClientHandler client : clients) {
             client.sendMessage(userListMsg);
+        }
+    }
+
+    public void addClient(ClientHandler client) {
+        if (client != null && !clients.contains(client)) {
+            clients.add(client);
+            System.out.println("(server) Client authenticated: " + client.getUsername() + ". Total active: " + clients.size());
         }
     }
 

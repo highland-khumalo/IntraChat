@@ -674,21 +674,25 @@ public class Chat extends javax.swing.JFrame {
         JTextArea area = setupConversationTab(tabTitle, panel);
         jTabbedPane1.addTab(tabTitle, panel);
 
-        // Load historical direct messages
-        try {
-            var history = DatabaseManager.getDirectMessageHistory(currentUser, targetUser);
-            if (history != null && !history.isEmpty()) {
-                area.append("--- Direct Messages with @" + targetUser + " ---\n");
-                for (var msg : history) {
-                    String senderLabel = msg.sender().equalsIgnoreCase(currentUser) ? "You" : msg.sender();
-                    area.append("[" + msg.timestamp() + "] " + senderLabel + ": " + msg.content() + "\n");
+        // Load historical direct messages if in offline mode
+        if (client == null || !client.isConnected()) {
+            try {
+                var history = DatabaseManager.getDirectMessageHistory(currentUser, targetUser);
+                if (history != null && !history.isEmpty()) {
+                    area.append("--- Direct Messages with @" + targetUser + " ---\n");
+                    for (var msg : history) {
+                        String sig = "DM|" + targetUser.toLowerCase() + "|" + msg.timestamp() + "|" + msg.sender() + "|" + msg.content();
+                        seenMessageSignatures.add(sig);
+                        String senderLabel = msg.sender().equalsIgnoreCase(currentUser) ? "You" : msg.sender();
+                        area.append("[" + msg.timestamp() + "] " + senderLabel + ": " + msg.content() + "\n");
+                    }
+                    area.append("------------------------------------------\n");
+                } else {
+                    area.append("--- Started Direct Chat with @" + targetUser + " ---\n");
                 }
-                area.append("------------------------------------------\n");
-            } else {
-                area.append("--- Started Direct Chat with @" + targetUser + " ---\n");
+            } catch (Exception e) {
+                logger.log(java.util.logging.Level.FINE, "DM history error: " + e.getMessage());
             }
-        } catch (Exception e) {
-            logger.log(java.util.logging.Level.FINE, "DM history error: " + e.getMessage());
         }
 
         if (selectTab) {
@@ -753,6 +757,61 @@ public class Chat extends javax.swing.JFrame {
                 }
                 OnlineUsers.setModel(model);
                 jList1.setModel(model);
+                return;
+            }
+
+            if (message.startsWith("HIST:ROOM:")) {
+                String payload = message.substring("HIST:ROOM:".length());
+                String[] parts = payload.split("\\|", 4);
+                if (parts.length == 4) {
+                    String room = parts[0].trim();
+                    String timestamp = parts[1].trim();
+                    String sender = parts[2].trim();
+                    String content = parts[3];
+
+                    String normRoom = normalizeTabKey(room.startsWith("#") ? room : "#" + room);
+                    String sig = "ROOM|" + normRoom + "|" + timestamp + "|" + sender + "|" + content;
+                    if (seenMessageSignatures.add(sig)) {
+                        JTextArea area = chatViews.get(normRoom);
+                        if (area == null) {
+                            area = chatViews.get("#general");
+                        }
+                        if (area != null) {
+                            String senderLabel = sender.equalsIgnoreCase(currentUser) ? "You" : sender;
+                            area.append("[" + timestamp + "] " + senderLabel + ": " + content + "\n");
+                        }
+                    }
+                }
+                return;
+            }
+
+            if (message.startsWith("HIST:DM:")) {
+                String payload = message.substring("HIST:DM:".length());
+                String[] parts = payload.split("\\|", 4);
+                if (parts.length == 4) {
+                    String partner = parts[0].trim();
+                    String timestamp = parts[1].trim();
+                    String sender = parts[2].trim();
+                    String content = parts[3];
+
+                    String sig = "DM|" + partner.toLowerCase() + "|" + timestamp + "|" + sender + "|" + content;
+                    if (seenMessageSignatures.add(sig)) {
+                        JTextArea area = openDirectChat(partner, false);
+                        if (area != null) {
+                            String senderLabel = sender.equalsIgnoreCase(currentUser) ? "You" : sender;
+                            area.append("[" + timestamp + "] " + senderLabel + ": " + content + "\n");
+                        }
+                    }
+                }
+                return;
+            }
+
+            if (message.equals("HIST:END")) {
+                for (JTextArea area : chatViews.values()) {
+                    if (area != null) {
+                        area.setCaretPosition(area.getDocument().getLength());
+                    }
+                }
                 return;
             }
 
