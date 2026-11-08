@@ -5,8 +5,17 @@ import java.util.Scanner;
 import com.IntraChat.network.Client;
 import com.IntraChat.network.Server;
 
+/**
+ *
+ * @author Bonginkosi
+ */
 public class NetworkBackendTest {
 
+    /**Entry point of the application
+     * prompts the user to choose between server and
+     * client mode and initializes the selected option.
+     * @param args
+     */
     public static void main(String[] args) {
         System.out.println("Network test..");
         System.out.println("Are you a Server? (y/n): ");
