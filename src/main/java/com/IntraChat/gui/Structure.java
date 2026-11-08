@@ -110,7 +110,7 @@ public class Structure extends javax.swing.JFrame {
         code.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
         code.setForeground(new java.awt.Color(255, 255, 255));
         code.setText("code:");
-        jPanel3.add(code, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 220, 37, -1));
+        jPanel3.add(code, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 220, 80, -1));
 
         password.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
         password.setForeground(new java.awt.Color(255, 255, 255));
@@ -138,10 +138,7 @@ public class Structure extends javax.swing.JFrame {
         Rootpanel.add(logo, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 180, -1, -1));
         Rootpanel.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 420, -1));
 
-        javax.swing.ImageIcon safeLogoIcon = getSafeIcon("/resources/logo.login.png");
-        if (safeLogoIcon != null) {
-            jLabel3.setIcon(safeLogoIcon);
-        }
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/logo.login.png"))); // NOI18N
         jLabel3.setText("jLabel3");
         Rootpanel.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
