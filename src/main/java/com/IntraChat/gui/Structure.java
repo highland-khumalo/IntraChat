@@ -64,7 +64,6 @@ public class Structure extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         startSeverBtn = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         logo = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
 
@@ -82,7 +81,7 @@ public class Structure extends javax.swing.JFrame {
         codeTF.setForeground(new java.awt.Color(255, 255, 255));
         codeTF.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(255, 255, 255)));
         codeTF.addActionListener(this::codeTFActionPerformed);
-        jPanel3.add(codeTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 250, 200, -1));
+        jPanel3.add(codeTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 250, 120, -1));
 
         passwordF.setBackground(new java.awt.Color(32, 32, 32));
         passwordF.setForeground(new java.awt.Color(255, 255, 255));
@@ -99,8 +98,9 @@ public class Structure extends javax.swing.JFrame {
         loginBtn.setBackground(new java.awt.Color(255, 140, 0));
         loginBtn.setFont(new java.awt.Font("Segoe UI Black", 3, 12)); // NOI18N
         loginBtn.setForeground(new java.awt.Color(255, 255, 255));
-        loginBtn.setText("login");
+        loginBtn.setText("Enter");
         loginBtn.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        loginBtn.addActionListener(this::loginBtnActionPerformed);
         jPanel3.add(loginBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 290, 130, 40));
 
         username.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
@@ -110,8 +110,8 @@ public class Structure extends javax.swing.JFrame {
 
         code.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
         code.setForeground(new java.awt.Color(255, 255, 255));
-        code.setText("Server IP / Code:");
-        jPanel3.add(code, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 220, 150, -1));
+        code.setText("code:");
+        jPanel3.add(code, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 220, 37, -1));
 
         password.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
         password.setForeground(new java.awt.Color(255, 255, 255));
@@ -120,8 +120,8 @@ public class Structure extends javax.swing.JFrame {
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setText("Welcome");
-        jPanel3.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, 120, 30));
+        jLabel5.setText("Welcome Back");
+        jPanel3.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, 250, 30));
 
         startSeverBtn.setBackground(new java.awt.Color(255, 140, 0));
         startSeverBtn.setFont(new java.awt.Font("Segoe UI Black", 3, 12)); // NOI18N
@@ -133,12 +133,7 @@ public class Structure extends javax.swing.JFrame {
 
         jLabel2.setForeground(new java.awt.Color(255, 140, 0));
         jLabel2.setText("Login to continue your conversation 👥");
-        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 50, 220, -1));
-
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("Back!");
-        jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 20, -1, 30));
+        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 50, 280, 20));
 
         Rootpanel.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 0, 340, 420));
         Rootpanel.add(logo, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 180, -1, -1));
@@ -170,13 +165,14 @@ public class Structure extends javax.swing.JFrame {
 
     private void startSeverBtnActionPerformedl(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startSeverBtnActionPerformedl
         Admin.openAdminConsole(Server.defaultPort);
+        this.dispose();
     }//GEN-LAST:event_startSeverBtnActionPerformedl
 
     private void usernameTFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameTFActionPerformed
         passwordF.requestFocusInWindow();
     }//GEN-LAST:event_usernameTFActionPerformed
 
-    private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {
+    private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
         String username = usernameTF.getText().trim();
         String password = new String(passwordF.getPassword()).trim();
         String code = codeTF.getText().trim();
@@ -252,7 +248,7 @@ public class Structure extends javax.swing.JFrame {
                 }
             });
         }).start();
-    }
+    } //GEN-LAST:event_loginBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -285,7 +281,6 @@ public class Structure extends javax.swing.JFrame {
     private javax.swing.JTextField codeTF;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JButton loginBtn;

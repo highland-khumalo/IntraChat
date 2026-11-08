@@ -33,6 +33,7 @@ public class Admin extends javax.swing.JFrame {
     private javax.swing.JButton deleteBtn;
     private javax.swing.JLabel portLabel;
     private javax.swing.JTextField portTF;
+    private javax.swing.Timer autoRefreshTimer;
 
     /**
      * Creates new form Admin
@@ -122,6 +123,9 @@ public class Admin extends javax.swing.JFrame {
             addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
                 public void windowClosing(java.awt.event.WindowEvent e) {
+                    if (autoRefreshTimer != null) {
+                        autoRefreshTimer.stop();
+                    }
                     AdminLockManager.releaseLock(currentPort);
                     if (serverInstance != null && serverInstance.isRunning()) {
                         serverInstance.stop();
@@ -129,9 +133,19 @@ public class Admin extends javax.swing.JFrame {
                 }
                 @Override
                 public void windowClosed(java.awt.event.WindowEvent e) {
+                    if (autoRefreshTimer != null) {
+                        autoRefreshTimer.stop();
+                    }
                     AdminLockManager.releaseLock(currentPort);
                 }
             });
+
+            autoRefreshTimer = new javax.swing.Timer(2500, evt -> {
+                if (isVisible()) {
+                    refreshData();
+                }
+            });
+            autoRefreshTimer.start();
 
             refreshData();
         } catch (Exception e) {
@@ -170,7 +184,22 @@ public class Admin extends javax.swing.JFrame {
                 data[i][2] = "true".equalsIgnoreCase(u.isAllowed()) ? "Active" : "Pending";
                 data[i][3] = u.createdAt();
             }
+
+            int selectedRow = jTable1.getSelectedRow();
+            Object selectedId = (selectedRow != -1 && selectedRow < jTable1.getRowCount())
+                    ? jTable1.getValueAt(selectedRow, 0)
+                    : null;
+
             jTable1.setModel(new javax.swing.table.DefaultTableModel(data, columnNames));
+
+            if (selectedId != null) {
+                for (int r = 0; r < jTable1.getRowCount(); r++) {
+                    if (selectedId.equals(jTable1.getValueAt(r, 0))) {
+                        jTable1.setRowSelectionInterval(r, r);
+                        break;
+                    }
+                }
+            }
 
             label9.setText("USER MANAGEMENT (" + activeFilter + ": " + filtered.size() + ")");
 
@@ -829,6 +858,9 @@ public class Admin extends javax.swing.JFrame {
 
     @Override
     public void dispose() {
+        if (autoRefreshTimer != null) {
+            autoRefreshTimer.stop();
+        }
         AdminLockManager.releaseLock(currentPort);
         super.dispose();
     }

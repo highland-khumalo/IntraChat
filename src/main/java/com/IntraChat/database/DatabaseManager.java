@@ -33,7 +33,7 @@ public class DatabaseManager {
                 + " id INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + " username TEXT NOT NULL UNIQUE,"
                 + " password TEXT NOT NULL,"
-                + " isAllowed TEXT NOT NULL DEFAULT 'true',"   
+                + " isAllowed TEXT NOT NULL DEFAULT 'false',"   
                 + " created_at TEXT DEFAULT CURRENT_TIMESTAMP"
                 + ");";
 
@@ -79,7 +79,7 @@ public class DatabaseManager {
     }
 
     public static void addUser(String username, String password) {
-        addUser(username, password, "true");
+        addUser(username, password, "false");
     }
 
     public static void addUser(String username, String password, String isAllowed) {

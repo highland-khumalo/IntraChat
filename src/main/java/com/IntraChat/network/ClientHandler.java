@@ -51,12 +51,10 @@ public class ClientHandler implements Runnable {
                         return;
                     }
                 } else {
-                    boolean firstUser = (DatabaseManager.getUserCount() == 0);
-                    DatabaseManager.addUser(username, password, firstUser ? "true" : "false");
-                    if (!firstUser) {
-                        out.println("(system) Account registered: Your account is pending administrator approval.");
-                        return;
-                    }
+                    // All newly registered users require administrator approval
+                    DatabaseManager.addUser(username, password, "false");
+                    out.println("(system) Account registered: Your account is pending administrator approval.");
+                    return;
                 }
             } catch (Exception e) {
                 System.err.println("[HANDLER WARNING] Database auth check: " + e.getMessage());
