@@ -11,6 +11,10 @@ import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Base64;
 
+/**
+ *
+ * @author Simanye
+ */
 public class AuthService {
     private static final SecureRandom secureRandom = new SecureRandom();
     private static final long Day = 24 * 60 * 60 * 1000L; // 24 hours in milliseconds
@@ -112,6 +116,7 @@ public class AuthService {
     /**
      * Converts a server IP address and port into a compact, human-friendly Connection Code.
      * Example: "192.168.1.15" and 5000 -> "2334C-LQXZC" (10 alphanumeric chars)
+     * @param ip
      */
     public static String generateConnectionCode(String ip, int port) {
         if (ip == null || ip.trim().isEmpty() || "localhost".equalsIgnoreCase(ip.trim())) {
@@ -153,6 +158,8 @@ public class AuthService {
     /**
      * Parses a single input (Connection Code, Base64 token, Hex code, or raw IP/IP:port)
      * back into the target IP address and port.
+     * @param input
+     * @return 
      */
     public static ConnectionTarget parseConnectionCode(String input) {
         if (input == null || input.trim().isEmpty()) {
@@ -342,6 +349,11 @@ public class AuthService {
     }
 
     //Demo
+
+    /**
+     *
+     * @param args
+     */
 
     public static void main(String[] args){
         try{
