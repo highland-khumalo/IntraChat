@@ -6,6 +6,10 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+/**
+ *
+ * @author Bonginkosi
+ */
 public class ClientHandler implements Runnable {
     private final Socket socket;
     private final Server server;
@@ -14,6 +18,14 @@ public class ClientHandler implements Runnable {
     private String username = "Anonymous";
     private String password = "password";
 
+    /**
+     * Creates a new client handler for a connected client.
+     * Initializes the input and output streams used
+     * for communication between the client and server
+     * 
+     * @param socket The client's socket connection.
+     * @param server The server managing the client connection
+     */
     public ClientHandler(Socket socket, Server server) {
         this.socket = socket;
         this.server = server;
@@ -24,7 +36,12 @@ public class ClientHandler implements Runnable {
             System.err.println("[HANDLER ERROR] Stream setup failed: " + e.getMessage());
         }
     }
-
+    
+    /**
+     * Handles communication with the connected client.
+     * Receives the client's login information and
+     * processes incoming messages throughout the session.
+     */
     @Override
     public void run() {
         try {
@@ -58,14 +75,22 @@ public class ClientHandler implements Runnable {
         }
     }
 
-
+    /**
+     * Sends a message to the connected client.
+     * @param message The message to be transmitted.
+     */
     public void sendMessage(String message) {
         if (out != null) {
             out.println(message);
         }
     }
 
-
+    /**
+     *  Closes the client's connection and removes the client
+     * from the server's active client list.
+     * A disconnect notification is broadcast to other users
+     * and all communication resources are released.
+     */
     public void closeConnection() {
         server.removeClient(this);
         server.broadcast("(server says) " + username + " left the chat.", this);
@@ -78,6 +103,10 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Retrieves the username associated with this client.
+     * @return The client's username
+     */
     public String getUsername() {
         return username;
     }

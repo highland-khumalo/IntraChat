@@ -6,6 +6,10 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+/**
+ *
+ * @author Bonginkosi
+ */
 public class Client {
 private final String serverIp;
     private final int serverPort;
@@ -14,11 +18,27 @@ private final String serverIp;
     private PrintWriter out;
     private boolean isConnected;
 
+    /**
+     * Creates a new client instance and stores the
+     * server connection details.
+     * @param serverIp The IP address of the server
+     * @param serverPort The port number used for communication
+     */
     public Client(String serverIp, int serverPort) {
         this.serverIp = serverIp;
         this.serverPort = serverPort;
     }
 
+    /**
+     *Establishes a connection to the server and
+     * initializes the communication streams.
+     * If the connection is successful, a background
+     * thread is started to listen for incoming messages.
+     * @param username The username used to identify the client
+     * @param password The password used for authentication
+     * @return true if the connection is successful:
+     * otherwise false
+     */
     public boolean connect(String username, String password) { //Note: add the Code parameter and convert it back to IP
         try {
             socket = new Socket(serverIp, serverPort);
@@ -53,12 +73,25 @@ private final String serverIp;
             disconnect();
         }
     }
+
+    /**
+     * Sends a message to the connected server.
+     * The message is transmitted only if the client
+     * is currently connected and the output stream
+     * is available.
+     * @param message
+     */
     public void sendMessage(String message) {
         if (out != null && isConnected) {
             out.println(message);
         }
     }
 
+    /**
+     * Closes the connection to the server and releases
+     * all associated network resources.
+     * The socket and communication streams are safely closed.
+     */
     public void disconnect() {
         isConnected = false;
         try {
