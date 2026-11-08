@@ -22,7 +22,7 @@ com/IntraChat/gui/Admin.class
 com/IntraChat/gui/Chat$SharedFileRecord.class
 com/IntraChat/gui/Chat$2.class
 com/IntraChat/gui/Chat$8.class
-com/IntraChat/Main.class
 com/IntraChat/network/ClientHandler.class
+com/IntraChat/Main.class
 com/IntraChat/database/DatabaseManager.class
 com/IntraChat/gui/Chat$5.class
