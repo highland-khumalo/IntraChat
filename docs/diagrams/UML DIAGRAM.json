@@ -1,0 +1,1085 @@
+{
+  "version": "32.7.0",
+  "data": "<mxfile host=\"app.diagrams.net\"><diagram id=\"xs5z7onZ2anN_aht1w1-\" name=\"Page-3\"><mxGraphModel dx=\"10113\" dy=\"8500\" grid=\"0\" gridSize=\"10\" guides=\"1\" tooltips=\"1\" connect=\"1\" arrows=\"1\" fold=\"1\" page=\"1\" pageScale=\"1\" pageWidth=\"850\" pageHeight=\"1100\" math=\"0\" shadow=\"0\"><root><mxCell id=\"0\"/><mxCell id=\"1\" parent=\"0\"/><UserObject label=\"\" mermaidData=\"{&#10;  &quot;data&quot;: &quot;classDiagram\\n    class DatabaseManager {\\n        &lt;&lt;class&gt;&gt;\\n        -String DB_URL\\n        +initializeDatabase\\(\\)$\\n        +connect\\(\\)$ Connection\\n        +userExists\\(String username\\)$ boolean\\n        +addUser\\(String username, String password\\)$\\n        +addUser\\(String username, String password, String isAllowed\\)$\\n        +authenticateUser\\(String username, String password\\)$ boolean\\n        +authenticateUser\\(String username, String password, String requiredIsAllowed\\)$ boolean\\n        +isUserAllowed\\(String username\\)$ boolean\\n        +updateUserAllowed\\(int userId, String isAllowed\\)$ boolean\\n        +updateUserAllowed\\(String username, String isAllowed\\)$ boolean\\n        +deleteUser\\(int userId\\)$ boolean\\n        +deleteUser\\(String username\\)$ boolean\\n        +updateUserPassword\\(int userId, String newPassword\\)$ boolean\\n        +updateUserPassword\\(String username, String newPassword\\)$ boolean\\n        +logMessage\\(String sender, String recipient, String content\\)$\\n        +displayChatHistory\\(\\)$\\n        +getChatHistoryArrayList\\(\\)$ ArrayList~Message~\\n        +getChatHistoryForRoom\\(String room\\)$ ArrayList~Message~\\n        +getDirectMessageHistory\\(String user1, String user2\\)$ ArrayList~Message~\\n        +getAllUsers\\(\\)$ List~UserRecord~\\n        +getUserCount\\(\\)$ int\\n        +getAcceptedUserCount\\(\\)$ int\\n        +getPendingUserCount\\(\\)$ int\\n    }\\n    \\n    class Message {\\n        +String sender\\n        +String recipient\\n        +String content\\n        +String timestamp\\n    }\\n\\n    class UserRecord {\\n        +int id\\n        +String username\\n        +String isAllowed\\n        +String createdAt\\n    }\\n\\n    DatabaseManager --&gt; Message : creates / returns\\n    DatabaseManager --&gt; UserRecord : creates / returns&quot;,&#10;  &quot;config&quot;: null,&#10;  &quot;version&quot;: &quot;12&quot;&#10;}\" id=\"D7bKodZVPGIpQxQWhXYU-73\"><mxCell connectable=\"0\" parent=\"1\" style=\"group;transparentBounds=1;editIcon=1;lockedGroup=0;groupPadding=10;\" vertex=\"1\"><mxGeometry as=\"geometry\"/></mxCell></UserObject><UserObject label=\"&lt;b&gt;Message&lt;/b&gt;\" mermaidId=\"n:Message\" mermaidBaseStyle=\"swimlane;html=1;fontStyle=1;fontSize=16;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=45;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#F0FDFA;whiteSpace=wrap;fillColor=#F0FDFA;strokeColor=#2DD4BF;fontColor=#28253D;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;\" mermaidBaseValue=\"&lt;b&gt;Message&lt;/b&gt;\" id=\"D7bKodZVPGIpQxQWhXYU-101\"><mxCell parent=\"D7bKodZVPGIpQxQWhXYU-73\" style=\"swimlane;html=1;fontStyle=1;fontSize=14;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=45;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#F0FDFA;whiteSpace=wrap;fillColor=#F0FDFA;strokeColor=#2DD4BF;fontColor=#28253D;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" vertex=\"1\"><mxGeometry height=\"177\" width=\"185\" x=\"-1038\" y=\"821\" as=\"geometry\"/></mxCell></UserObject><mxCell id=\"D7bKodZVPGIpQxQWhXYU-102\" parent=\"D7bKodZVPGIpQxQWhXYU-101\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+String sender\" vertex=\"1\"><mxGeometry height=\"21\" width=\"185\" y=\"57\" as=\"geometry\"/></mxCell><mxCell id=\"D7bKodZVPGIpQxQWhXYU-103\" parent=\"D7bKodZVPGIpQxQWhXYU-101\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+String recipient\" vertex=\"1\"><mxGeometry height=\"21\" width=\"185\" y=\"78\" as=\"geometry\"/></mxCell><mxCell id=\"D7bKodZVPGIpQxQWhXYU-104\" parent=\"D7bKodZVPGIpQxQWhXYU-101\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+String content\" vertex=\"1\"><mxGeometry height=\"21\" width=\"185\" y=\"99\" as=\"geometry\"/></mxCell><mxCell id=\"D7bKodZVPGIpQxQWhXYU-105\" parent=\"D7bKodZVPGIpQxQWhXYU-101\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+String timestamp\" vertex=\"1\"><mxGeometry height=\"21\" width=\"185\" y=\"120\" as=\"geometry\"/></mxCell><mxCell id=\"D7bKodZVPGIpQxQWhXYU-106\" parent=\"D7bKodZVPGIpQxQWhXYU-101\" style=\"line;strokeWidth=2;fillColor=none;spacingLeft=3;spacingRight=3;rotatable=0;points=[];strokeColor=inherit;\" vertex=\"1\"><mxGeometry height=\"24\" width=\"185\" y=\"141\" as=\"geometry\"/></mxCell><UserObject label=\"&lt;b&gt;UserRecord&lt;/b&gt;\" mermaidId=\"n:UserRecord\" mermaidBaseStyle=\"swimlane;html=1;fontStyle=1;fontSize=16;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=45;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#FFF7ED;whiteSpace=wrap;fillColor=#FFF7ED;strokeColor=#FB923C;fontColor=#28253D;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;\" mermaidBaseValue=\"&lt;b&gt;UserRecord&lt;/b&gt;\" id=\"D7bKodZVPGIpQxQWhXYU-107\"><mxCell parent=\"D7bKodZVPGIpQxQWhXYU-73\" style=\"swimlane;html=1;fontStyle=1;fontSize=14;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=45;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#FFF7ED;whiteSpace=wrap;fillColor=#FFF7ED;strokeColor=#FB923C;fontColor=#28253D;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" vertex=\"1\"><mxGeometry height=\"177\" width=\"188\" x=\"-807\" y=\"821\" as=\"geometry\"/></mxCell></UserObject><mxCell id=\"D7bKodZVPGIpQxQWhXYU-108\" parent=\"D7bKodZVPGIpQxQWhXYU-107\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+int id\" vertex=\"1\"><mxGeometry height=\"21\" width=\"188\" y=\"57\" as=\"geometry\"/></mxCell><mxCell id=\"D7bKodZVPGIpQxQWhXYU-109\" parent=\"D7bKodZVPGIpQxQWhXYU-107\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+String username\" vertex=\"1\"><mxGeometry height=\"21\" width=\"188\" y=\"78\" as=\"geometry\"/></mxCell><mxCell id=\"D7bKodZVPGIpQxQWhXYU-110\" parent=\"D7bKodZVPGIpQxQWhXYU-107\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+String isAllowed\" vertex=\"1\"><mxGeometry height=\"21\" width=\"188\" y=\"99\" as=\"geometry\"/></mxCell><mxCell id=\"D7bKodZVPGIpQxQWhXYU-111\" parent=\"D7bKodZVPGIpQxQWhXYU-107\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+String createdAt\" vertex=\"1\"><mxGeometry height=\"21\" width=\"188\" y=\"120\" as=\"geometry\"/></mxCell><mxCell id=\"D7bKodZVPGIpQxQWhXYU-112\" parent=\"D7bKodZVPGIpQxQWhXYU-107\" style=\"line;strokeWidth=2;fillColor=none;spacingLeft=3;spacingRight=3;rotatable=0;points=[];strokeColor=inherit;\" vertex=\"1\"><mxGeometry height=\"24\" width=\"188\" y=\"141\" as=\"geometry\"/></mxCell><UserObject label=\"creates / returns\" mermaidId=\"e:DatabaseManager-&gt;Message#0\" mermaidBaseStyle=\"edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=none;endArrow=classic;endSize=9;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=16;labelBackgroundColor=#ffffff;fontFamily=Recursive;fontColor=#28253D;exitX=0.34;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;\" mermaidBaseValue=\"creates / returns\" id=\"D7bKodZVPGIpQxQWhXYU-113\"><mxCell edge=\"1\" parent=\"D7bKodZVPGIpQxQWhXYU-73\" style=\"edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=none;endArrow=classic;endSize=9;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=14;labelBackgroundColor=#ffffff;fontFamily=Recursive;fontColor=#28253D;exitX=0.34;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" target=\"D7bKodZVPGIpQxQWhXYU-101\"><mxGeometry relative=\"1\" as=\"geometry\"><Array as=\"points\"><mxPoint x=\"-1220.2\" y=\"670.3\"/><mxPoint x=\"-945.5\" y=\"670.3\"/></Array><mxPoint x=\"-1220.2200000000003\" y=\"487\" as=\"sourcePoint\"/></mxGeometry></mxCell></UserObject><UserObject label=\"creates / returns\" mermaidId=\"e:DatabaseManager-&gt;UserRecord#0\" mermaidBaseStyle=\"edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=none;endArrow=classic;endSize=9;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=16;labelBackgroundColor=#ffffff;fontFamily=Recursive;fontColor=#28253D;exitX=0.66;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;\" mermaidBaseValue=\"creates / returns\" id=\"D7bKodZVPGIpQxQWhXYU-114\"><mxCell edge=\"1\" parent=\"D7bKodZVPGIpQxQWhXYU-73\" style=\"edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=none;endArrow=classic;endSize=9;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=14;labelBackgroundColor=#ffffff;fontFamily=Recursive;fontColor=#28253D;exitX=0.66;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" target=\"D7bKodZVPGIpQxQWhXYU-107\"><mxGeometry relative=\"1\" as=\"geometry\"><Array as=\"points\"/><mxPoint x=\"-990.7799999999997\" y=\"487\" as=\"sourcePoint\"/></mxGeometry></mxCell></UserObject><mxCell id=\"D7bKodZVPGIpQxQWhXYU-162\" edge=\"1\" parent=\"1\" style=\"edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=14;labelBackgroundColor=#ffffff;fontFamily=Recursive;fontColor=#28253D;strokeWidth=2;endSize=9;startArrow=diamondThin;startFill=0;startSize=16;endArrow=none;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.38;entryY=0;entryDx=0;entryDy=0;\" value=\"manages  (0..*)\"><mxGeometry relative=\"1\" as=\"geometry\"><mxPoint x=\"-278\" y=\"-1602\" as=\"sourcePoint\"/><mxPoint x=\"-277.94000000000005\" y=\"-363\" as=\"targetPoint\"/></mxGeometry></mxCell><mxCell id=\"D7bKodZVPGIpQxQWhXYU-163\" edge=\"1\" parent=\"1\" style=\"edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=14;labelBackgroundColor=#ffffff;fontFamily=Recursive;fontColor=#28253D;strokeWidth=2;endSize=9;startArrow=none;endArrow=open;endFill=0;exitX=0.7;exitY=0;exitDx=0;exitDy=0;entryX=0.483;entryY=1;entryDx=0;entryDy=0;\" value=\"references back\"><mxGeometry relative=\"1\" as=\"geometry\"><mxPoint x=\"-154.0999999999999\" y=\"-363\" as=\"sourcePoint\"/><mxPoint x=\"-154.04399999999987\" y=\"-1602\" as=\"targetPoint\"/></mxGeometry></mxCell><mxCell id=\"D7bKodZVPGIpQxQWhXYU-164\" edge=\"1\" parent=\"1\" style=\"edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=14;labelBackgroundColor=#ffffff;fontFamily=Recursive;fontColor=#28253D;strokeWidth=2;endSize=9;startArrow=none;endArrow=open;endFill=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.15;entryY=1;entryDx=0;entryDy=0;\" value=\"connects to socket / authenticates\"><mxGeometry relative=\"1\" as=\"geometry\"><mxPoint x=\"-553.4000000000001\" y=\"-1187\" as=\"sourcePoint\"/><mxPoint x=\"-331.1999999999998\" y=\"-1602\" as=\"targetPoint\"/></mxGeometry></mxCell><mxCell id=\"D7bKodZVPGIpQxQWhXYU-165\" edge=\"1\" parent=\"1\" style=\"edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=14;labelBackgroundColor=#ffffff;fontFamily=Recursive;fontColor=#28253D;strokeWidth=2;endSize=9;startArrow=none;endArrow=open;endFill=0;dashed=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.9;entryY=0;entryDx=0;entryDy=0;\" value=\"queries &amp; logs data\"><mxGeometry relative=\"1\" as=\"geometry\"><mxPoint x=\"-425\" y=\"-232.5\" as=\"sourcePoint\"/><mxPoint x=\"-818.6999999999998\" y=\"-89\" as=\"targetPoint\"/></mxGeometry></mxCell><mxCell id=\"D7bKodZVPGIpQxQWhXYU-166\" edge=\"1\" parent=\"1\" style=\"edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=14;labelBackgroundColor=#ffffff;fontFamily=Recursive;fontColor=#28253D;strokeWidth=2;endSize=9;startArrow=none;endArrow=open;endFill=0;dashed=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;\" value=\"generates/verifies codes\"><mxGeometry relative=\"1\" as=\"geometry\"><mxPoint x=\"-411\" y=\"-1735.499999999999\" as=\"sourcePoint\"/><mxPoint x=\"-2101\" y=\"-983\" as=\"targetPoint\"/></mxGeometry></mxCell><mxCell id=\"D7bKodZVPGIpQxQWhXYU-167\" edge=\"1\" parent=\"1\" style=\"edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=14;labelBackgroundColor=#ffffff;fontFamily=Recursive;fontColor=#28253D;strokeWidth=2;endSize=9;startArrow=none;endArrow=open;endFill=0;dashed=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;\" value=\"hashes passwords\"><mxGeometry relative=\"1\" as=\"geometry\"><mxPoint x=\"-1464\" y=\"199\" as=\"sourcePoint\"/><mxPoint x=\"-2101\" y=\"-617\" as=\"targetPoint\"/></mxGeometry></mxCell><mxCell id=\"D7bKodZVPGIpQxQWhXYU-168\" edge=\"1\" parent=\"1\" style=\"edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=14;labelBackgroundColor=#ffffff;fontFamily=Recursive;fontColor=#28253D;strokeWidth=2;endSize=9;startArrow=none;endArrow=open;endFill=0;dashed=1;exitX=0;exitY=0.665;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;\" value=\"manages users &amp; history\"><mxGeometry relative=\"1\" as=\"geometry\"><mxPoint x=\"265\" y=\"199.21500000000015\" as=\"sourcePoint\"/><mxPoint x=\"-747\" y=\"199\" as=\"targetPoint\"/></mxGeometry></mxCell><mxCell id=\"D7bKodZVPGIpQxQWhXYU-169\" edge=\"1\" parent=\"1\" style=\"edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=14;labelBackgroundColor=#ffffff;fontFamily=Recursive;fontColor=#28253D;strokeWidth=2;endSize=9;startArrow=none;endArrow=open;endFill=0;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;\" target=\"-HrDYycGPxUuRjg1_4Wm-19\" value=\"controls state\"><mxGeometry relative=\"1\" as=\"geometry\"><mxPoint x=\"455.5\" y=\"-114\" as=\"sourcePoint\"/><mxPoint x=\"121\" y=\"-1869\" as=\"targetPoint\"/></mxGeometry></mxCell><mxCell id=\"D7bKodZVPGIpQxQWhXYU-170\" edge=\"1\" parent=\"1\" style=\"edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=14;labelBackgroundColor=#ffffff;fontFamily=Recursive;fontColor=#28253D;strokeWidth=2;endSize=9;startArrow=none;endArrow=open;endFill=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;\" value=\"initializes connection\"><mxGeometry relative=\"1\" as=\"geometry\"><mxPoint x=\"-1601\" y=\"-2258\" as=\"sourcePoint\"/><mxPoint x=\"-760.9000000000001\" y=\"-1433\" as=\"targetPoint\"/></mxGeometry></mxCell><mxCell id=\"D7bKodZVPGIpQxQWhXYU-171\" edge=\"1\" parent=\"1\" style=\"edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=14;labelBackgroundColor=#ffffff;fontFamily=Recursive;fontColor=#28253D;strokeWidth=2;endSize=9;startArrow=none;endArrow=open;endFill=0;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.2;entryDx=0;entryDy=0;\" value=\"authenticates via socket\"><mxGeometry relative=\"1\" as=\"geometry\"><mxPoint x=\"-1335\" y=\"-2504\" as=\"sourcePoint\"/><mxPoint x=\"-411\" y=\"-2029.1999999999998\" as=\"targetPoint\"/></mxGeometry></mxCell><mxCell id=\"D7bKodZVPGIpQxQWhXYU-172\" edge=\"1\" parent=\"1\" style=\"edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=14;labelBackgroundColor=#ffffff;fontFamily=Recursive;fontColor=#28253D;strokeWidth=2;endSize=9;startArrow=none;endArrow=open;endFill=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;\" target=\"K78wqbBfcOv2sh3W8s4L-1\" value=\"boots GUI\"><mxGeometry relative=\"1\" x=\"-0.1962\" as=\"geometry\"><mxPoint x=\"-1597\" y=\"-3015\" as=\"sourcePoint\"/><mxPoint x=\"-1603.21\" y=\"-2750.58\" as=\"targetPoint\"/></mxGeometry></mxCell><UserObject label=\"&lt;b&gt;DatabaseManager&lt;/b&gt;\" mermaidId=\"n:DatabaseManager\" mermaidBaseStyle=\"swimlane;html=1;fontStyle=1;fontSize=16;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=66;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#FDF4FF;whiteSpace=wrap;spacingTop=24;fillColor=#FDF4FF;strokeColor=#E879F9;fontColor=#28253D;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;\" mermaidBaseValue=\"&lt;b&gt;DatabaseManager&lt;/b&gt;\" id=\"bUaQ_hOS6vuPKtYXJzSb-1\"><mxCell parent=\"1\" style=\"swimlane;html=1;fontStyle=1;fontSize=14;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=66;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#FDF4FF;whiteSpace=wrap;spacingTop=24;fillColor=#fa6800;strokeColor=#C73500;fontColor=#000000;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" vertex=\"1\"><mxGeometry height=\"576\" width=\"717\" x=\"-1441\" y=\"-92\" as=\"geometry\"/></mxCell></UserObject><mxCell id=\"bUaQ_hOS6vuPKtYXJzSb-2\" parent=\"bUaQ_hOS6vuPKtYXJzSb-1\" style=\"text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=14;movable=0;resizable=0;rotatable=0;points=[];fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"«class»\" vertex=\"1\"><mxGeometry height=\"24\" width=\"717\" y=\"12\" as=\"geometry\"/></mxCell><mxCell id=\"bUaQ_hOS6vuPKtYXJzSb-3\" parent=\"bUaQ_hOS6vuPKtYXJzSb-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"-String DB_URL\" vertex=\"1\"><mxGeometry height=\"21\" width=\"717\" y=\"36\" as=\"geometry\"/></mxCell><mxCell id=\"bUaQ_hOS6vuPKtYXJzSb-4\" parent=\"bUaQ_hOS6vuPKtYXJzSb-1\" style=\"line;strokeWidth=2;fillColor=none;spacingLeft=3;spacingRight=3;rotatable=0;points=[];strokeColor=inherit;\" vertex=\"1\"><mxGeometry height=\"24\" width=\"717\" y=\"57\" as=\"geometry\"/></mxCell><mxCell id=\"bUaQ_hOS6vuPKtYXJzSb-5\" parent=\"bUaQ_hOS6vuPKtYXJzSb-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontStyle=4;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+initializeDatabase()\" vertex=\"1\"><mxGeometry height=\"21\" width=\"717\" y=\"81\" as=\"geometry\"/></mxCell><mxCell id=\"bUaQ_hOS6vuPKtYXJzSb-6\" parent=\"bUaQ_hOS6vuPKtYXJzSb-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+connect()$ Connection\" vertex=\"1\"><mxGeometry height=\"21\" width=\"717\" y=\"102\" as=\"geometry\"/></mxCell><mxCell id=\"bUaQ_hOS6vuPKtYXJzSb-7\" parent=\"bUaQ_hOS6vuPKtYXJzSb-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+userExists(String username)$ boolean\" vertex=\"1\"><mxGeometry height=\"21\" width=\"717\" y=\"123\" as=\"geometry\"/></mxCell><mxCell id=\"bUaQ_hOS6vuPKtYXJzSb-8\" parent=\"bUaQ_hOS6vuPKtYXJzSb-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontStyle=4;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+addUser(String username, String password)\" vertex=\"1\"><mxGeometry height=\"21\" width=\"717\" y=\"144\" as=\"geometry\"/></mxCell><mxCell id=\"bUaQ_hOS6vuPKtYXJzSb-9\" parent=\"bUaQ_hOS6vuPKtYXJzSb-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontStyle=4;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+addUser(String username, String password, String isAllowed)\" vertex=\"1\"><mxGeometry height=\"21\" width=\"717\" y=\"165\" as=\"geometry\"/></mxCell><mxCell id=\"bUaQ_hOS6vuPKtYXJzSb-10\" parent=\"bUaQ_hOS6vuPKtYXJzSb-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+authenticateUser(String username, String password)$ boolean\" vertex=\"1\"><mxGeometry height=\"21\" width=\"717\" y=\"186\" as=\"geometry\"/></mxCell><mxCell id=\"bUaQ_hOS6vuPKtYXJzSb-11\" parent=\"bUaQ_hOS6vuPKtYXJzSb-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+authenticateUser(String username, String password, String requiredIsAllowed)$ boolean\" vertex=\"1\"><mxGeometry height=\"21\" width=\"717\" y=\"207\" as=\"geometry\"/></mxCell><mxCell id=\"bUaQ_hOS6vuPKtYXJzSb-12\" parent=\"bUaQ_hOS6vuPKtYXJzSb-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+isUserAllowed(String username)$ boolean\" vertex=\"1\"><mxGeometry height=\"21\" width=\"717\" y=\"228\" as=\"geometry\"/></mxCell><mxCell id=\"bUaQ_hOS6vuPKtYXJzSb-13\" parent=\"bUaQ_hOS6vuPKtYXJzSb-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+updateUserAllowed(int userId, String isAllowed)$ boolean\" vertex=\"1\"><mxGeometry height=\"21\" width=\"717\" y=\"249\" as=\"geometry\"/></mxCell><mxCell id=\"bUaQ_hOS6vuPKtYXJzSb-14\" parent=\"bUaQ_hOS6vuPKtYXJzSb-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+updateUserAllowed(String username, String isAllowed)$ boolean\" vertex=\"1\"><mxGeometry height=\"21\" width=\"717\" y=\"270\" as=\"geometry\"/></mxCell><mxCell id=\"bUaQ_hOS6vuPKtYXJzSb-15\" parent=\"bUaQ_hOS6vuPKtYXJzSb-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+deleteUser(int userId)$ boolean\" vertex=\"1\"><mxGeometry height=\"21\" width=\"717\" y=\"291\" as=\"geometry\"/></mxCell><mxCell id=\"bUaQ_hOS6vuPKtYXJzSb-16\" parent=\"bUaQ_hOS6vuPKtYXJzSb-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+deleteUser(String username)$ boolean\" vertex=\"1\"><mxGeometry height=\"21\" width=\"717\" y=\"312\" as=\"geometry\"/></mxCell><mxCell id=\"bUaQ_hOS6vuPKtYXJzSb-17\" parent=\"bUaQ_hOS6vuPKtYXJzSb-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+updateUserPassword(int userId, String newPassword)$ boolean\" vertex=\"1\"><mxGeometry height=\"21\" width=\"717\" y=\"333\" as=\"geometry\"/></mxCell><mxCell id=\"bUaQ_hOS6vuPKtYXJzSb-18\" parent=\"bUaQ_hOS6vuPKtYXJzSb-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+updateUserPassword(String username, String newPassword)$ boolean\" vertex=\"1\"><mxGeometry height=\"21\" width=\"717\" y=\"354\" as=\"geometry\"/></mxCell><mxCell id=\"bUaQ_hOS6vuPKtYXJzSb-19\" parent=\"bUaQ_hOS6vuPKtYXJzSb-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontStyle=4;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+logMessage(String sender, String recipient, String content)\" vertex=\"1\"><mxGeometry height=\"21\" width=\"717\" y=\"375\" as=\"geometry\"/></mxCell><mxCell id=\"bUaQ_hOS6vuPKtYXJzSb-20\" parent=\"bUaQ_hOS6vuPKtYXJzSb-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontStyle=4;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+displayChatHistory()\" vertex=\"1\"><mxGeometry height=\"21\" width=\"717\" y=\"396\" as=\"geometry\"/></mxCell><mxCell id=\"bUaQ_hOS6vuPKtYXJzSb-21\" parent=\"bUaQ_hOS6vuPKtYXJzSb-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+getChatHistoryArrayList()$ ArrayList&lt;Message&gt;\" vertex=\"1\"><mxGeometry height=\"21\" width=\"717\" y=\"417\" as=\"geometry\"/></mxCell><mxCell id=\"bUaQ_hOS6vuPKtYXJzSb-22\" parent=\"bUaQ_hOS6vuPKtYXJzSb-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+getChatHistoryForRoom(String room)$ ArrayList&lt;Message&gt;\" vertex=\"1\"><mxGeometry height=\"21\" width=\"717\" y=\"438\" as=\"geometry\"/></mxCell><mxCell id=\"bUaQ_hOS6vuPKtYXJzSb-23\" parent=\"bUaQ_hOS6vuPKtYXJzSb-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+getDirectMessageHistory(String user1, String user2)$ ArrayList&lt;Message&gt;\" vertex=\"1\"><mxGeometry height=\"21\" width=\"717\" y=\"459\" as=\"geometry\"/></mxCell><mxCell id=\"bUaQ_hOS6vuPKtYXJzSb-24\" parent=\"bUaQ_hOS6vuPKtYXJzSb-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+getAllUsers()$ List&lt;UserRecord&gt;\" vertex=\"1\"><mxGeometry height=\"21\" width=\"717\" y=\"480\" as=\"geometry\"/></mxCell><mxCell id=\"bUaQ_hOS6vuPKtYXJzSb-25\" parent=\"bUaQ_hOS6vuPKtYXJzSb-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+getUserCount()$ int\" vertex=\"1\"><mxGeometry height=\"21\" width=\"717\" y=\"501\" as=\"geometry\"/></mxCell><mxCell id=\"bUaQ_hOS6vuPKtYXJzSb-26\" parent=\"bUaQ_hOS6vuPKtYXJzSb-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+getAcceptedUserCount()$ int\" vertex=\"1\"><mxGeometry height=\"21\" width=\"717\" y=\"522\" as=\"geometry\"/></mxCell><mxCell id=\"bUaQ_hOS6vuPKtYXJzSb-27\" parent=\"bUaQ_hOS6vuPKtYXJzSb-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+getPendingUserCount()$ int\" vertex=\"1\"><mxGeometry height=\"21\" width=\"717\" y=\"543\" as=\"geometry\"/></mxCell><UserObject label=\"&lt;b&gt;Login&lt;/b&gt;\" mermaidId=\"n:Login\" mermaidBaseStyle=\"swimlane;html=1;fontStyle=1;fontSize=16;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=45;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#FDF4FF;whiteSpace=wrap;fillColor=#FDF4FF;strokeColor=#E879F9;fontColor=#28253D;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;\" mermaidBaseValue=\"&lt;b&gt;Login&lt;/b&gt;\" id=\"K78wqbBfcOv2sh3W8s4L-1\"><mxCell parent=\"1\" style=\"swimlane;html=1;fontStyle=1;fontSize=14;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=45;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#FDF4FF;whiteSpace=wrap;fillColor=#fa6800;strokeColor=#C73500;fontColor=#000000;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" vertex=\"1\"><mxGeometry height=\"492\" width=\"532\" x=\"-1868\" y=\"-2746\" as=\"geometry\"/></mxCell></UserObject><mxCell id=\"K78wqbBfcOv2sh3W8s4L-2\" parent=\"K78wqbBfcOv2sh3W8s4L-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JPanel Rootpanel\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"57\" as=\"geometry\"/></mxCell><mxCell id=\"K78wqbBfcOv2sh3W8s4L-3\" parent=\"K78wqbBfcOv2sh3W8s4L-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JPanel jPanel3\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"78\" as=\"geometry\"/></mxCell><mxCell id=\"K78wqbBfcOv2sh3W8s4L-4\" parent=\"K78wqbBfcOv2sh3W8s4L-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JTextField codeTF\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"99\" as=\"geometry\"/></mxCell><mxCell id=\"K78wqbBfcOv2sh3W8s4L-5\" parent=\"K78wqbBfcOv2sh3W8s4L-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JPasswordField passwordF\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"120\" as=\"geometry\"/></mxCell><mxCell id=\"K78wqbBfcOv2sh3W8s4L-6\" parent=\"K78wqbBfcOv2sh3W8s4L-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JTextField usernameTF\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"141\" as=\"geometry\"/></mxCell><mxCell id=\"K78wqbBfcOv2sh3W8s4L-7\" parent=\"K78wqbBfcOv2sh3W8s4L-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JButton loginBtn\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"162\" as=\"geometry\"/></mxCell><mxCell id=\"K78wqbBfcOv2sh3W8s4L-8\" parent=\"K78wqbBfcOv2sh3W8s4L-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JButton startSeverBtn\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"183\" as=\"geometry\"/></mxCell><mxCell id=\"K78wqbBfcOv2sh3W8s4L-9\" parent=\"K78wqbBfcOv2sh3W8s4L-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JLabel username\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"204\" as=\"geometry\"/></mxCell><mxCell id=\"K78wqbBfcOv2sh3W8s4L-10\" parent=\"K78wqbBfcOv2sh3W8s4L-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JLabel code\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"225\" as=\"geometry\"/></mxCell><mxCell id=\"K78wqbBfcOv2sh3W8s4L-11\" parent=\"K78wqbBfcOv2sh3W8s4L-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JLabel password\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"246\" as=\"geometry\"/></mxCell><mxCell id=\"K78wqbBfcOv2sh3W8s4L-12\" parent=\"K78wqbBfcOv2sh3W8s4L-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JLabel jLabel5\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"267\" as=\"geometry\"/></mxCell><mxCell id=\"K78wqbBfcOv2sh3W8s4L-13\" parent=\"K78wqbBfcOv2sh3W8s4L-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JLabel jLabel2\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"288\" as=\"geometry\"/></mxCell><mxCell id=\"K78wqbBfcOv2sh3W8s4L-14\" parent=\"K78wqbBfcOv2sh3W8s4L-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JLabel logo\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"309\" as=\"geometry\"/></mxCell><mxCell id=\"K78wqbBfcOv2sh3W8s4L-15\" parent=\"K78wqbBfcOv2sh3W8s4L-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JLabel jLabel1\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"330\" as=\"geometry\"/></mxCell><mxCell id=\"K78wqbBfcOv2sh3W8s4L-16\" parent=\"K78wqbBfcOv2sh3W8s4L-1\" style=\"line;strokeWidth=2;fillColor=none;spacingLeft=3;spacingRight=3;rotatable=0;points=[];strokeColor=inherit;\" vertex=\"1\"><mxGeometry height=\"24\" width=\"532\" y=\"351\" as=\"geometry\"/></mxCell><mxCell id=\"K78wqbBfcOv2sh3W8s4L-17\" parent=\"K78wqbBfcOv2sh3W8s4L-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+codeTFActionPerformed(ActionEvent evt)\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"375\" as=\"geometry\"/></mxCell><mxCell id=\"K78wqbBfcOv2sh3W8s4L-18\" parent=\"K78wqbBfcOv2sh3W8s4L-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+passwordFActionPerformed(ActionEvent evt)\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"396\" as=\"geometry\"/></mxCell><mxCell id=\"K78wqbBfcOv2sh3W8s4L-19\" parent=\"K78wqbBfcOv2sh3W8s4L-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+usernameTFActionPerformed(ActionEvent evt)\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"417\" as=\"geometry\"/></mxCell><mxCell id=\"K78wqbBfcOv2sh3W8s4L-20\" parent=\"K78wqbBfcOv2sh3W8s4L-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+loginBtnActionPerformed(ActionEvent evt)\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"438\" as=\"geometry\"/></mxCell><mxCell id=\"K78wqbBfcOv2sh3W8s4L-21\" parent=\"K78wqbBfcOv2sh3W8s4L-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+startSeverBtnActionPerformedl(ActionEvent evt)\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"459\" as=\"geometry\"/></mxCell><UserObject label=\"&lt;b&gt;Server&lt;/b&gt;\" mermaidId=\"n:Server\" mermaidBaseStyle=\"swimlane;html=1;fontStyle=1;fontSize=16;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=45;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#FDF4FF;whiteSpace=wrap;fillColor=#FDF4FF;strokeColor=#E879F9;fontColor=#28253D;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;\" mermaidBaseValue=\"&lt;b&gt;Server&lt;/b&gt;\" id=\"-HrDYycGPxUuRjg1_4Wm-1\"><mxCell parent=\"1\" style=\"swimlane;html=1;fontStyle=1;fontSize=14;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=45;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#FDF4FF;whiteSpace=wrap;fillColor=#fa6800;strokeColor=#C73500;fontColor=#000000;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" vertex=\"1\"><mxGeometry height=\"534\" width=\"532\" x=\"-468\" y=\"-2139\" as=\"geometry\"/></mxCell></UserObject><mxCell id=\"-HrDYycGPxUuRjg1_4Wm-2\" parent=\"-HrDYycGPxUuRjg1_4Wm-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"-int port\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"57\" as=\"geometry\"/></mxCell><mxCell id=\"-HrDYycGPxUuRjg1_4Wm-3\" parent=\"-HrDYycGPxUuRjg1_4Wm-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"-ServerSocket serverSocket\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"78\" as=\"geometry\"/></mxCell><mxCell id=\"-HrDYycGPxUuRjg1_4Wm-4\" parent=\"-HrDYycGPxUuRjg1_4Wm-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"-boolean isRunning\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"99\" as=\"geometry\"/></mxCell><mxCell id=\"-HrDYycGPxUuRjg1_4Wm-5\" parent=\"-HrDYycGPxUuRjg1_4Wm-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+int defaultPort\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"120\" as=\"geometry\"/></mxCell><mxCell id=\"-HrDYycGPxUuRjg1_4Wm-6\" parent=\"-HrDYycGPxUuRjg1_4Wm-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"-List&lt;ClientHandler&gt; clients\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"141\" as=\"geometry\"/></mxCell><mxCell id=\"-HrDYycGPxUuRjg1_4Wm-7\" parent=\"-HrDYycGPxUuRjg1_4Wm-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"-Object stopLock\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"162\" as=\"geometry\"/></mxCell><mxCell id=\"-HrDYycGPxUuRjg1_4Wm-8\" parent=\"-HrDYycGPxUuRjg1_4Wm-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"-boolean isStopped\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"183\" as=\"geometry\"/></mxCell><mxCell id=\"-HrDYycGPxUuRjg1_4Wm-9\" parent=\"-HrDYycGPxUuRjg1_4Wm-1\" style=\"line;strokeWidth=2;fillColor=none;spacingLeft=3;spacingRight=3;rotatable=0;points=[];strokeColor=inherit;\" vertex=\"1\"><mxGeometry height=\"24\" width=\"532\" y=\"204\" as=\"geometry\"/></mxCell><mxCell id=\"-HrDYycGPxUuRjg1_4Wm-10\" parent=\"-HrDYycGPxUuRjg1_4Wm-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+Server(int port)\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"228\" as=\"geometry\"/></mxCell><mxCell id=\"-HrDYycGPxUuRjg1_4Wm-11\" parent=\"-HrDYycGPxUuRjg1_4Wm-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+start()\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"249\" as=\"geometry\"/></mxCell><mxCell id=\"-HrDYycGPxUuRjg1_4Wm-12\" parent=\"-HrDYycGPxUuRjg1_4Wm-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+broadcast(String message, ClientHandler sender)\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"270\" as=\"geometry\"/></mxCell><mxCell id=\"-HrDYycGPxUuRjg1_4Wm-13\" parent=\"-HrDYycGPxUuRjg1_4Wm-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+sendMessageToUsername(String message, String username) boolean\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"291\" as=\"geometry\"/></mxCell><mxCell id=\"-HrDYycGPxUuRjg1_4Wm-14\" parent=\"-HrDYycGPxUuRjg1_4Wm-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+broadcastUserList()\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"312\" as=\"geometry\"/></mxCell><mxCell id=\"-HrDYycGPxUuRjg1_4Wm-15\" parent=\"-HrDYycGPxUuRjg1_4Wm-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+removeClient(ClientHandler client)\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"333\" as=\"geometry\"/></mxCell><mxCell id=\"-HrDYycGPxUuRjg1_4Wm-16\" parent=\"-HrDYycGPxUuRjg1_4Wm-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+getClients() List&lt;ClientHandler&gt;\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"354\" as=\"geometry\"/></mxCell><mxCell id=\"-HrDYycGPxUuRjg1_4Wm-17\" parent=\"-HrDYycGPxUuRjg1_4Wm-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+getServerIpAddress() String\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"375\" as=\"geometry\"/></mxCell><mxCell id=\"-HrDYycGPxUuRjg1_4Wm-18\" parent=\"-HrDYycGPxUuRjg1_4Wm-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+getLocalLanIp()$ String\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"396\" as=\"geometry\"/></mxCell><mxCell id=\"-HrDYycGPxUuRjg1_4Wm-19\" parent=\"-HrDYycGPxUuRjg1_4Wm-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+getAllLanIps()$ List&lt;String&gt;\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"417\" as=\"geometry\"/></mxCell><mxCell id=\"-HrDYycGPxUuRjg1_4Wm-20\" parent=\"-HrDYycGPxUuRjg1_4Wm-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+getPort() int\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"438\" as=\"geometry\"/></mxCell><mxCell id=\"-HrDYycGPxUuRjg1_4Wm-21\" parent=\"-HrDYycGPxUuRjg1_4Wm-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+isRunning() boolean\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"459\" as=\"geometry\"/></mxCell><mxCell id=\"-HrDYycGPxUuRjg1_4Wm-22\" parent=\"-HrDYycGPxUuRjg1_4Wm-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+stop()\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"480\" as=\"geometry\"/></mxCell><mxCell id=\"-HrDYycGPxUuRjg1_4Wm-23\" parent=\"-HrDYycGPxUuRjg1_4Wm-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+getConnectionCode() String\" vertex=\"1\"><mxGeometry height=\"21\" width=\"532\" y=\"501\" as=\"geometry\"/></mxCell><UserObject label=\"IntraChat\" mermaidId=\"n:Main\" mermaidBaseStyle=\"swimlane;html=1;fontStyle=1;fontSize=16;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=45;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#FDF4FF;whiteSpace=wrap;fillColor=#FDF4FF;strokeColor=#E879F9;fontColor=#28253D;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;\" mermaidBaseValue=\"&lt;b&gt;Main&lt;/b&gt;\" id=\"2LAK0ULxvmOg3hoj3ilv-1\"><mxCell parent=\"1\" style=\"swimlane;html=1;fontStyle=1;fontSize=14;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=45;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#FDF4FF;whiteSpace=wrap;fillColor=#fa6800;strokeColor=#C73500;fontColor=#000000;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" vertex=\"1\"><mxGeometry height=\"114\" width=\"192\" x=\"-1680\" y=\"-3129\" as=\"geometry\"/></mxCell></UserObject><mxCell id=\"2LAK0ULxvmOg3hoj3ilv-2\" parent=\"2LAK0ULxvmOg3hoj3ilv-1\" style=\"line;strokeWidth=2;fillColor=none;spacingLeft=3;spacingRight=3;rotatable=0;points=[];strokeColor=inherit;\" vertex=\"1\"><mxGeometry height=\"24\" width=\"192\" y=\"57\" as=\"geometry\"/></mxCell><mxCell id=\"2LAK0ULxvmOg3hoj3ilv-3\" parent=\"2LAK0ULxvmOg3hoj3ilv-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontStyle=4;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+main(String[] args)\" vertex=\"1\"><mxGeometry height=\"21\" width=\"192\" y=\"81\" as=\"geometry\"/></mxCell><UserObject label=\"\" mermaidData=\"{&#10;  &quot;data&quot;: &quot;classDiagram\\n    class AuthService {\\n        -SecureRandom secureRandom\\n        -long Day\\n        -String HMAC_ALGORITHM\\n        -String PBKDF2_ALGORITHM\\n        -int PBKDF2_ITERATIONS\\n        +byte[] generateSigningKey()\\n        +String hashPassword(String password)\\n        +boolean verifyPassword(String password, String stored)\\n        +String generateCode(byte[] serverKey, String username, InetAddress serverIp)\\n        +boolean verifyCode(byte[] serverKey, String code, String username, InetAddress serverIp)\\n        +String generateConnectionCode(String ip, int port)\\n        +ConnectionTarget parseConnectionCode(String input)\\n        +String[] splitCode(byte[] serverKey, String code)\\n    }&quot;,&#10;  &quot;config&quot;: null,&#10;  &quot;version&quot;: &quot;12&quot;&#10;}\" id=\"uAChJogsRD71zzMKSty0-1\"><mxCell connectable=\"0\" parent=\"1\" style=\"group;transparentBounds=1;editIcon=1;lockedGroup=0;groupPadding=10;\" vertex=\"1\"><mxGeometry as=\"geometry\"/></mxCell></UserObject><UserObject label=\"&lt;b&gt;AuthService&lt;/b&gt;\" mermaidId=\"n:AuthService\" mermaidBaseStyle=\"swimlane;html=1;fontStyle=1;fontSize=16;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=45;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#FDF4FF;whiteSpace=wrap;fillColor=#FDF4FF;strokeColor=#E879F9;fontColor=#28253D;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;\" mermaidBaseValue=\"&lt;b&gt;AuthService&lt;/b&gt;\" id=\"uAChJogsRD71zzMKSty0-2\"><mxCell parent=\"uAChJogsRD71zzMKSty0-1\" style=\"swimlane;html=1;fontStyle=1;fontSize=14;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=45;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#FDF4FF;whiteSpace=wrap;fillColor=#fa6800;strokeColor=#C73500;fontColor=#000000;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" vertex=\"1\"><mxGeometry height=\"366\" width=\"530\" x=\"-2328\" y=\"-986\" as=\"geometry\"/></mxCell></UserObject><mxCell id=\"uAChJogsRD71zzMKSty0-3\" parent=\"uAChJogsRD71zzMKSty0-2\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"-SecureRandom secureRandom\" vertex=\"1\"><mxGeometry height=\"21\" width=\"530\" y=\"57\" as=\"geometry\"/></mxCell><mxCell id=\"uAChJogsRD71zzMKSty0-4\" parent=\"uAChJogsRD71zzMKSty0-2\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"-long Day\" vertex=\"1\"><mxGeometry height=\"21\" width=\"530\" y=\"78\" as=\"geometry\"/></mxCell><mxCell id=\"uAChJogsRD71zzMKSty0-5\" parent=\"uAChJogsRD71zzMKSty0-2\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"-String HMAC_ALGORITHM\" vertex=\"1\"><mxGeometry height=\"21\" width=\"530\" y=\"99\" as=\"geometry\"/></mxCell><mxCell id=\"uAChJogsRD71zzMKSty0-6\" parent=\"uAChJogsRD71zzMKSty0-2\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"-String PBKDF2_ALGORITHM\" vertex=\"1\"><mxGeometry height=\"21\" width=\"530\" y=\"120\" as=\"geometry\"/></mxCell><mxCell id=\"uAChJogsRD71zzMKSty0-7\" parent=\"uAChJogsRD71zzMKSty0-2\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"-int PBKDF2_ITERATIONS\" vertex=\"1\"><mxGeometry height=\"21\" width=\"530\" y=\"141\" as=\"geometry\"/></mxCell><mxCell id=\"uAChJogsRD71zzMKSty0-8\" parent=\"uAChJogsRD71zzMKSty0-2\" style=\"line;strokeWidth=2;fillColor=none;spacingLeft=3;spacingRight=3;rotatable=0;points=[];strokeColor=inherit;\" vertex=\"1\"><mxGeometry height=\"24\" width=\"530\" y=\"162\" as=\"geometry\"/></mxCell><mxCell id=\"uAChJogsRD71zzMKSty0-9\" parent=\"uAChJogsRD71zzMKSty0-2\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+byte[] generateSigningKey()\" vertex=\"1\"><mxGeometry height=\"21\" width=\"530\" y=\"186\" as=\"geometry\"/></mxCell><mxCell id=\"uAChJogsRD71zzMKSty0-10\" parent=\"uAChJogsRD71zzMKSty0-2\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+String hashPassword(String password)\" vertex=\"1\"><mxGeometry height=\"21\" width=\"530\" y=\"207\" as=\"geometry\"/></mxCell><mxCell id=\"uAChJogsRD71zzMKSty0-11\" parent=\"uAChJogsRD71zzMKSty0-2\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+boolean verifyPassword(String password, String stored)\" vertex=\"1\"><mxGeometry height=\"21\" width=\"530\" y=\"228\" as=\"geometry\"/></mxCell><mxCell id=\"uAChJogsRD71zzMKSty0-12\" parent=\"uAChJogsRD71zzMKSty0-2\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+String generateCode(byte[] serverKey, String username, InetAddress serverIp)\" vertex=\"1\"><mxGeometry height=\"21\" width=\"530\" y=\"249\" as=\"geometry\"/></mxCell><mxCell id=\"uAChJogsRD71zzMKSty0-13\" parent=\"uAChJogsRD71zzMKSty0-2\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+boolean verifyCode(byte[] serverKey, String code, String username, InetAddress serverIp)\" vertex=\"1\"><mxGeometry height=\"21\" width=\"530\" y=\"270\" as=\"geometry\"/></mxCell><mxCell id=\"uAChJogsRD71zzMKSty0-14\" parent=\"uAChJogsRD71zzMKSty0-2\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+String generateConnectionCode(String ip, int port)\" vertex=\"1\"><mxGeometry height=\"21\" width=\"530\" y=\"291\" as=\"geometry\"/></mxCell><mxCell id=\"uAChJogsRD71zzMKSty0-15\" parent=\"uAChJogsRD71zzMKSty0-2\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+ConnectionTarget parseConnectionCode(String input)\" vertex=\"1\"><mxGeometry height=\"21\" width=\"530\" y=\"312\" as=\"geometry\"/></mxCell><mxCell id=\"uAChJogsRD71zzMKSty0-16\" parent=\"uAChJogsRD71zzMKSty0-2\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+String[] splitCode(byte[] serverKey, String code)\" vertex=\"1\"><mxGeometry height=\"21\" width=\"530\" y=\"333\" as=\"geometry\"/></mxCell><UserObject label=\"&lt;b&gt;AdminConsole&lt;/b&gt;\" mermaidId=\"n:AdminConsole\" mermaidBaseStyle=\"swimlane;html=1;fontStyle=1;fontSize=16;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=45;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#FDF4FF;whiteSpace=wrap;fillColor=#FDF4FF;strokeColor=#E879F9;fontColor=#28253D;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;\" mermaidBaseValue=\"&lt;b&gt;AdminConsole&lt;/b&gt;\" id=\"UUMYifxSa19834la0If0-1\"><mxCell parent=\"1\" style=\"swimlane;html=1;fontStyle=1;fontSize=14;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=45;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#FDF4FF;whiteSpace=wrap;fillColor=#fa6800;strokeColor=#C73500;fontColor=#000000;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" vertex=\"1\"><mxGeometry height=\"471\" width=\"381\" x=\"253\" y=\"-114\" as=\"geometry\"/></mxCell></UserObject><mxCell id=\"UUMYifxSa19834la0If0-2\" parent=\"UUMYifxSa19834la0If0-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JMenuBar jMenuBar1\" vertex=\"1\"><mxGeometry height=\"21\" width=\"381\" y=\"57\" as=\"geometry\"/></mxCell><mxCell id=\"UUMYifxSa19834la0If0-3\" parent=\"UUMYifxSa19834la0If0-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JPanel jPanel1\" vertex=\"1\"><mxGeometry height=\"21\" width=\"381\" y=\"78\" as=\"geometry\"/></mxCell><mxCell id=\"UUMYifxSa19834la0If0-4\" parent=\"UUMYifxSa19834la0If0-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JPanel jPanel2\" vertex=\"1\"><mxGeometry height=\"21\" width=\"381\" y=\"99\" as=\"geometry\"/></mxCell><mxCell id=\"UUMYifxSa19834la0If0-5\" parent=\"UUMYifxSa19834la0If0-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JScrollPane jScrollPane1\" vertex=\"1\"><mxGeometry height=\"21\" width=\"381\" y=\"120\" as=\"geometry\"/></mxCell><mxCell id=\"UUMYifxSa19834la0If0-6\" parent=\"UUMYifxSa19834la0If0-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JTable jTable1\" vertex=\"1\"><mxGeometry height=\"21\" width=\"381\" y=\"141\" as=\"geometry\"/></mxCell><mxCell id=\"UUMYifxSa19834la0If0-7\" parent=\"UUMYifxSa19834la0If0-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JTextField jTextField1\" vertex=\"1\"><mxGeometry height=\"21\" width=\"381\" y=\"162\" as=\"geometry\"/></mxCell><mxCell id=\"UUMYifxSa19834la0If0-8\" parent=\"UUMYifxSa19834la0If0-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JButton jButton1\" vertex=\"1\"><mxGeometry height=\"21\" width=\"381\" y=\"183\" as=\"geometry\"/></mxCell><mxCell id=\"UUMYifxSa19834la0If0-9\" parent=\"UUMYifxSa19834la0If0-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JButton jButton2\" vertex=\"1\"><mxGeometry height=\"21\" width=\"381\" y=\"204\" as=\"geometry\"/></mxCell><mxCell id=\"UUMYifxSa19834la0If0-10\" parent=\"UUMYifxSa19834la0If0-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JButton jButton3\" vertex=\"1\"><mxGeometry height=\"21\" width=\"381\" y=\"225\" as=\"geometry\"/></mxCell><mxCell id=\"UUMYifxSa19834la0If0-11\" parent=\"UUMYifxSa19834la0If0-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JButton jButton4\" vertex=\"1\"><mxGeometry height=\"21\" width=\"381\" y=\"246\" as=\"geometry\"/></mxCell><mxCell id=\"UUMYifxSa19834la0If0-12\" parent=\"UUMYifxSa19834la0If0-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JButton jButton5\" vertex=\"1\"><mxGeometry height=\"21\" width=\"381\" y=\"267\" as=\"geometry\"/></mxCell><mxCell id=\"UUMYifxSa19834la0If0-13\" parent=\"UUMYifxSa19834la0If0-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JButton jButton6\" vertex=\"1\"><mxGeometry height=\"21\" width=\"381\" y=\"288\" as=\"geometry\"/></mxCell><mxCell id=\"UUMYifxSa19834la0If0-14\" parent=\"UUMYifxSa19834la0If0-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JButton jButton7\" vertex=\"1\"><mxGeometry height=\"21\" width=\"381\" y=\"309\" as=\"geometry\"/></mxCell><mxCell id=\"UUMYifxSa19834la0If0-15\" parent=\"UUMYifxSa19834la0If0-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JButton jButton8\" vertex=\"1\"><mxGeometry height=\"21\" width=\"381\" y=\"330\" as=\"geometry\"/></mxCell><mxCell id=\"UUMYifxSa19834la0If0-16\" parent=\"UUMYifxSa19834la0If0-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+JButton jButton9\" vertex=\"1\"><mxGeometry height=\"21\" width=\"381\" y=\"351\" as=\"geometry\"/></mxCell><mxCell id=\"UUMYifxSa19834la0If0-17\" parent=\"UUMYifxSa19834la0If0-1\" style=\"line;strokeWidth=2;fillColor=none;spacingLeft=3;spacingRight=3;rotatable=0;points=[];strokeColor=inherit;\" vertex=\"1\"><mxGeometry height=\"24\" width=\"381\" y=\"372\" as=\"geometry\"/></mxCell><mxCell id=\"UUMYifxSa19834la0If0-18\" parent=\"UUMYifxSa19834la0If0-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+initComponents()\" vertex=\"1\"><mxGeometry height=\"21\" width=\"381\" y=\"396\" as=\"geometry\"/></mxCell><mxCell id=\"UUMYifxSa19834la0If0-19\" parent=\"UUMYifxSa19834la0If0-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+jButton3ActionPerformed(ActionEvent evt)\" vertex=\"1\"><mxGeometry height=\"21\" width=\"381\" y=\"417\" as=\"geometry\"/></mxCell><mxCell id=\"UUMYifxSa19834la0If0-20\" parent=\"UUMYifxSa19834la0If0-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+jButton9ActionPerformed(ActionEvent evt)\" vertex=\"1\"><mxGeometry height=\"21\" width=\"381\" y=\"438\" as=\"geometry\"/></mxCell><UserObject label=\"&lt;b&gt;ClientHandler&lt;/b&gt;\" mermaidId=\"n:ClientHandler\" mermaidBaseStyle=\"swimlane;html=1;fontStyle=1;fontSize=16;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=45;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#FDF4FF;whiteSpace=wrap;fillColor=#FDF4FF;strokeColor=#E879F9;fontColor=#28253D;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;\" mermaidBaseValue=\"&lt;b&gt;ClientHandler&lt;/b&gt;\" id=\"T3MvMCqmDczh_yxkCCT2-1\"><mxCell parent=\"1\" style=\"swimlane;html=1;fontStyle=1;fontSize=14;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=45;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#FDF4FF;whiteSpace=wrap;fillColor=#fa6800;strokeColor=#C73500;fontColor=#000000;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" vertex=\"1\"><mxGeometry height=\"261\" width=\"387\" x=\"-432\" y=\"-363\" as=\"geometry\"/></mxCell></UserObject><mxCell id=\"T3MvMCqmDczh_yxkCCT2-2\" parent=\"T3MvMCqmDczh_yxkCCT2-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"-Socket socket\" vertex=\"1\"><mxGeometry height=\"21\" width=\"387\" y=\"57\" as=\"geometry\"/></mxCell><mxCell id=\"T3MvMCqmDczh_yxkCCT2-3\" parent=\"T3MvMCqmDczh_yxkCCT2-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"-Server server\" vertex=\"1\"><mxGeometry height=\"21\" width=\"387\" y=\"78\" as=\"geometry\"/></mxCell><mxCell id=\"T3MvMCqmDczh_yxkCCT2-4\" parent=\"T3MvMCqmDczh_yxkCCT2-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"-BufferedReader in\" vertex=\"1\"><mxGeometry height=\"21\" width=\"387\" y=\"99\" as=\"geometry\"/></mxCell><mxCell id=\"T3MvMCqmDczh_yxkCCT2-5\" parent=\"T3MvMCqmDczh_yxkCCT2-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"-PrintWriter out\" vertex=\"1\"><mxGeometry height=\"21\" width=\"387\" y=\"120\" as=\"geometry\"/></mxCell><mxCell id=\"T3MvMCqmDczh_yxkCCT2-6\" parent=\"T3MvMCqmDczh_yxkCCT2-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"-String username\" vertex=\"1\"><mxGeometry height=\"21\" width=\"387\" y=\"141\" as=\"geometry\"/></mxCell><mxCell id=\"T3MvMCqmDczh_yxkCCT2-7\" parent=\"T3MvMCqmDczh_yxkCCT2-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"-String password\" vertex=\"1\"><mxGeometry height=\"21\" width=\"387\" y=\"162\" as=\"geometry\"/></mxCell><mxCell id=\"T3MvMCqmDczh_yxkCCT2-8\" parent=\"T3MvMCqmDczh_yxkCCT2-1\" style=\"line;strokeWidth=2;fillColor=none;spacingLeft=3;spacingRight=3;rotatable=0;points=[];strokeColor=inherit;\" vertex=\"1\"><mxGeometry height=\"24\" width=\"387\" y=\"183\" as=\"geometry\"/></mxCell><mxCell id=\"T3MvMCqmDczh_yxkCCT2-9\" parent=\"T3MvMCqmDczh_yxkCCT2-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+ClientHandler(Socket socket, Server server)\" vertex=\"1\"><mxGeometry height=\"21\" width=\"387\" y=\"207\" as=\"geometry\"/></mxCell><mxCell id=\"T3MvMCqmDczh_yxkCCT2-10\" parent=\"T3MvMCqmDczh_yxkCCT2-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+run()\" vertex=\"1\"><mxGeometry height=\"21\" width=\"387\" y=\"228\" as=\"geometry\"/></mxCell><UserObject label=\"&lt;b&gt;Client&lt;/b&gt;\" mermaidId=\"n:Client\" mermaidBaseStyle=\"swimlane;html=1;fontStyle=1;fontSize=16;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=45;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#FDF4FF;whiteSpace=wrap;fillColor=#FDF4FF;strokeColor=#E879F9;fontColor=#28253D;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;\" mermaidBaseValue=\"&lt;b&gt;Client&lt;/b&gt;\" id=\"mtGY3yq5O_7Ik7_ZASGh-1\"><mxCell parent=\"1\" style=\"swimlane;html=1;fontStyle=1;fontSize=14;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=45;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#FDF4FF;whiteSpace=wrap;fillColor=#fa6800;strokeColor=#C73500;fontColor=#000000;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" vertex=\"1\"><mxGeometry height=\"492\" width=\"415\" x=\"-947\" y=\"-1445\" as=\"geometry\"/></mxCell></UserObject><mxCell id=\"mtGY3yq5O_7Ik7_ZASGh-2\" parent=\"mtGY3yq5O_7Ik7_ZASGh-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"-String serverIp\" vertex=\"1\"><mxGeometry height=\"21\" width=\"415\" y=\"57\" as=\"geometry\"/></mxCell><mxCell id=\"mtGY3yq5O_7Ik7_ZASGh-3\" parent=\"mtGY3yq5O_7Ik7_ZASGh-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"-int serverPort\" vertex=\"1\"><mxGeometry height=\"21\" width=\"415\" y=\"78\" as=\"geometry\"/></mxCell><mxCell id=\"mtGY3yq5O_7Ik7_ZASGh-4\" parent=\"mtGY3yq5O_7Ik7_ZASGh-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"-Socket socket\" vertex=\"1\"><mxGeometry height=\"21\" width=\"415\" y=\"99\" as=\"geometry\"/></mxCell><mxCell id=\"mtGY3yq5O_7Ik7_ZASGh-5\" parent=\"mtGY3yq5O_7Ik7_ZASGh-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"-BufferedReader in\" vertex=\"1\"><mxGeometry height=\"21\" width=\"415\" y=\"120\" as=\"geometry\"/></mxCell><mxCell id=\"mtGY3yq5O_7Ik7_ZASGh-6\" parent=\"mtGY3yq5O_7Ik7_ZASGh-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"-PrintWriter out\" vertex=\"1\"><mxGeometry height=\"21\" width=\"415\" y=\"141\" as=\"geometry\"/></mxCell><mxCell id=\"mtGY3yq5O_7Ik7_ZASGh-7\" parent=\"mtGY3yq5O_7Ik7_ZASGh-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"-boolean isConnected\" vertex=\"1\"><mxGeometry height=\"21\" width=\"415\" y=\"162\" as=\"geometry\"/></mxCell><mxCell id=\"mtGY3yq5O_7Ik7_ZASGh-8\" parent=\"mtGY3yq5O_7Ik7_ZASGh-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"-Consumer&lt;String&gt; messageListener\" vertex=\"1\"><mxGeometry height=\"21\" width=\"415\" y=\"183\" as=\"geometry\"/></mxCell><mxCell id=\"mtGY3yq5O_7Ik7_ZASGh-9\" parent=\"mtGY3yq5O_7Ik7_ZASGh-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"-String lastErrorMessage\" vertex=\"1\"><mxGeometry height=\"21\" width=\"415\" y=\"204\" as=\"geometry\"/></mxCell><mxCell id=\"mtGY3yq5O_7Ik7_ZASGh-10\" parent=\"mtGY3yq5O_7Ik7_ZASGh-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"-Queue&lt;String&gt; pendingQueue\" vertex=\"1\"><mxGeometry height=\"21\" width=\"415\" y=\"225\" as=\"geometry\"/></mxCell><mxCell id=\"mtGY3yq5O_7Ik7_ZASGh-11\" parent=\"mtGY3yq5O_7Ik7_ZASGh-1\" style=\"line;strokeWidth=2;fillColor=none;spacingLeft=3;spacingRight=3;rotatable=0;points=[];strokeColor=inherit;\" vertex=\"1\"><mxGeometry height=\"24\" width=\"415\" y=\"246\" as=\"geometry\"/></mxCell><mxCell id=\"mtGY3yq5O_7Ik7_ZASGh-12\" parent=\"mtGY3yq5O_7Ik7_ZASGh-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+Client(String serverIp, int serverPort)\" vertex=\"1\"><mxGeometry height=\"21\" width=\"415\" y=\"270\" as=\"geometry\"/></mxCell><mxCell id=\"mtGY3yq5O_7Ik7_ZASGh-13\" parent=\"mtGY3yq5O_7Ik7_ZASGh-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+setMessageListener(Consumer&lt;String&gt; listener)\" vertex=\"1\"><mxGeometry height=\"21\" width=\"415\" y=\"291\" as=\"geometry\"/></mxCell><mxCell id=\"mtGY3yq5O_7Ik7_ZASGh-14\" parent=\"mtGY3yq5O_7Ik7_ZASGh-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+String getLastErrorMessage()\" vertex=\"1\"><mxGeometry height=\"21\" width=\"415\" y=\"312\" as=\"geometry\"/></mxCell><mxCell id=\"mtGY3yq5O_7Ik7_ZASGh-15\" parent=\"mtGY3yq5O_7Ik7_ZASGh-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+boolean connect(String username, String password)\" vertex=\"1\"><mxGeometry height=\"21\" width=\"415\" y=\"333\" as=\"geometry\"/></mxCell><mxCell id=\"mtGY3yq5O_7Ik7_ZASGh-16\" parent=\"mtGY3yq5O_7Ik7_ZASGh-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"-listenForMessages()\" vertex=\"1\"><mxGeometry height=\"21\" width=\"415\" y=\"354\" as=\"geometry\"/></mxCell><mxCell id=\"mtGY3yq5O_7Ik7_ZASGh-17\" parent=\"mtGY3yq5O_7Ik7_ZASGh-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+sendMessage(String message)\" vertex=\"1\"><mxGeometry height=\"21\" width=\"415\" y=\"375\" as=\"geometry\"/></mxCell><mxCell id=\"mtGY3yq5O_7Ik7_ZASGh-18\" parent=\"mtGY3yq5O_7Ik7_ZASGh-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+boolean isConnected()\" vertex=\"1\"><mxGeometry height=\"21\" width=\"415\" y=\"396\" as=\"geometry\"/></mxCell><mxCell id=\"mtGY3yq5O_7Ik7_ZASGh-19\" parent=\"mtGY3yq5O_7Ik7_ZASGh-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+String getServerIp()\" vertex=\"1\"><mxGeometry height=\"21\" width=\"415\" y=\"417\" as=\"geometry\"/></mxCell><mxCell id=\"mtGY3yq5O_7Ik7_ZASGh-20\" parent=\"mtGY3yq5O_7Ik7_ZASGh-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+int getServerPort()\" vertex=\"1\"><mxGeometry height=\"21\" width=\"415\" y=\"438\" as=\"geometry\"/></mxCell><mxCell id=\"mtGY3yq5O_7Ik7_ZASGh-21\" parent=\"mtGY3yq5O_7Ik7_ZASGh-1\" style=\"text;fontSize=14;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=12;spacingBottom=2;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Recursive;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;\" value=\"+disconnect()\" vertex=\"1\"><mxGeometry height=\"21\" width=\"415\" y=\"459\" as=\"geometry\"/></mxCell></root></mxGraphModel></diagram></mxfile>",
+  "pages": [
+    {
+      "id": "xs5z7onZ2anN_aht1w1-",
+      "name": "Page-3",
+      "cells": [
+        {
+          "id": "1",
+          "type": "layer"
+        },
+        {
+          "id": "D7bKodZVPGIpQxQWhXYU-73",
+          "type": "node",
+          "parent": "1",
+          "metadata": {
+            "mermaidData": "{\n  \"data\": \"classDiagram\\n    class DatabaseManager {\\n        <<class>>\\n        -String DB_URL\\n        +initializeDatabase\\(\\)$\\n        +connect\\(\\)$ Connection\\n        +userExists\\(String username\\)$ boolean\\n        +addUser\\(String username, String password\\)$\\n        +addUser\\(String username, String password, String isAllowed\\)$\\n        +authenticateUser\\(String username, String password\\)$ boolean\\n        +authenticateUser\\(String username, String password, String requiredIsAllowed\\)$ boolean\\n        +isUserAllowed\\(String username\\)$ boolean\\n        +updateUserAllowed\\(int userId, String isAllowed\\)$ boolean\\n        +updateUserAllowed\\(String username, String isAllowed\\)$ boolean\\n        +deleteUser\\(int userId\\)$ boolean\\n        +deleteUser\\(String username\\)$ boolean\\n        +updateUserPassword\\(int userId, String newPassword\\)$ boolean\\n        +updateUserPassword\\(String username, String newPassword\\)$ boolean\\n        +logMessage\\(String sender, String recipient, String content\\)$\\n        +displayChatHistory\\(\\)$\\n        +getChatHistoryArrayList\\(\\)$ ArrayList~Message~\\n        +getChatHistoryForRoom\\(String room\\)$ ArrayList~Message~\\n        +getDirectMessageHistory\\(String user1, String user2\\)$ ArrayList~Message~\\n        +getAllUsers\\(\\)$ List~UserRecord~\\n        +getUserCount\\(\\)$ int\\n        +getAcceptedUserCount\\(\\)$ int\\n        +getPendingUserCount\\(\\)$ int\\n    }\\n    \\n    class Message {\\n        +String sender\\n        +String recipient\\n        +String content\\n        +String timestamp\\n    }\\n\\n    class UserRecord {\\n        +int id\\n        +String username\\n        +String isAllowed\\n        +String createdAt\\n    }\\n\\n    DatabaseManager --> Message : creates / returns\\n    DatabaseManager --> UserRecord : creates / returns\",\n  \"config\": null,\n  \"version\": \"12\"\n}"
+          }
+        },
+        {
+          "id": "D7bKodZVPGIpQxQWhXYU-101",
+          "type": "node",
+          "parent": "D7bKodZVPGIpQxQWhXYU-73",
+          "label": "Message",
+          "html": "<b>Message</b>",
+          "metadata": {
+            "mermaidId": "n:Message",
+            "mermaidBaseStyle": "swimlane;html=1;fontStyle=1;fontSize=16;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=45;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#F0FDFA;whiteSpace=wrap;fillColor=#F0FDFA;strokeColor=#2DD4BF;fontColor=#28253D;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;",
+            "mermaidBaseValue": "<b>Message</b>"
+          }
+        },
+        {
+          "id": "D7bKodZVPGIpQxQWhXYU-102",
+          "type": "node",
+          "parent": "D7bKodZVPGIpQxQWhXYU-101",
+          "label": "+String sender"
+        },
+        {
+          "id": "D7bKodZVPGIpQxQWhXYU-103",
+          "type": "node",
+          "parent": "D7bKodZVPGIpQxQWhXYU-101",
+          "label": "+String recipient"
+        },
+        {
+          "id": "D7bKodZVPGIpQxQWhXYU-104",
+          "type": "node",
+          "parent": "D7bKodZVPGIpQxQWhXYU-101",
+          "label": "+String content"
+        },
+        {
+          "id": "D7bKodZVPGIpQxQWhXYU-105",
+          "type": "node",
+          "parent": "D7bKodZVPGIpQxQWhXYU-101",
+          "label": "+String timestamp"
+        },
+        {
+          "id": "D7bKodZVPGIpQxQWhXYU-106",
+          "type": "node",
+          "parent": "D7bKodZVPGIpQxQWhXYU-101"
+        },
+        {
+          "id": "D7bKodZVPGIpQxQWhXYU-107",
+          "type": "node",
+          "parent": "D7bKodZVPGIpQxQWhXYU-73",
+          "label": "UserRecord",
+          "html": "<b>UserRecord</b>",
+          "metadata": {
+            "mermaidId": "n:UserRecord",
+            "mermaidBaseStyle": "swimlane;html=1;fontStyle=1;fontSize=16;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=45;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#FFF7ED;whiteSpace=wrap;fillColor=#FFF7ED;strokeColor=#FB923C;fontColor=#28253D;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;",
+            "mermaidBaseValue": "<b>UserRecord</b>"
+          }
+        },
+        {
+          "id": "D7bKodZVPGIpQxQWhXYU-108",
+          "type": "node",
+          "parent": "D7bKodZVPGIpQxQWhXYU-107",
+          "label": "+int id"
+        },
+        {
+          "id": "D7bKodZVPGIpQxQWhXYU-109",
+          "type": "node",
+          "parent": "D7bKodZVPGIpQxQWhXYU-107",
+          "label": "+String username"
+        },
+        {
+          "id": "D7bKodZVPGIpQxQWhXYU-110",
+          "type": "node",
+          "parent": "D7bKodZVPGIpQxQWhXYU-107",
+          "label": "+String isAllowed"
+        },
+        {
+          "id": "D7bKodZVPGIpQxQWhXYU-111",
+          "type": "node",
+          "parent": "D7bKodZVPGIpQxQWhXYU-107",
+          "label": "+String createdAt"
+        },
+        {
+          "id": "D7bKodZVPGIpQxQWhXYU-112",
+          "type": "node",
+          "parent": "D7bKodZVPGIpQxQWhXYU-107"
+        },
+        {
+          "id": "D7bKodZVPGIpQxQWhXYU-113",
+          "type": "edge",
+          "parent": "D7bKodZVPGIpQxQWhXYU-73",
+          "target": "D7bKodZVPGIpQxQWhXYU-101",
+          "label": "creates / returns",
+          "metadata": {
+            "mermaidId": "e:DatabaseManager->Message#0",
+            "mermaidBaseStyle": "edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=none;endArrow=classic;endSize=9;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=16;labelBackgroundColor=#ffffff;fontFamily=Recursive;fontColor=#28253D;exitX=0.34;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;",
+            "mermaidBaseValue": "creates / returns"
+          }
+        },
+        {
+          "id": "D7bKodZVPGIpQxQWhXYU-114",
+          "type": "edge",
+          "parent": "D7bKodZVPGIpQxQWhXYU-73",
+          "target": "D7bKodZVPGIpQxQWhXYU-107",
+          "label": "creates / returns",
+          "metadata": {
+            "mermaidId": "e:DatabaseManager->UserRecord#0",
+            "mermaidBaseStyle": "edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=none;endArrow=classic;endSize=9;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=16;labelBackgroundColor=#ffffff;fontFamily=Recursive;fontColor=#28253D;exitX=0.66;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;",
+            "mermaidBaseValue": "creates / returns"
+          }
+        },
+        {
+          "id": "D7bKodZVPGIpQxQWhXYU-162",
+          "type": "edge",
+          "parent": "1",
+          "label": "manages  (0..*)"
+        },
+        {
+          "id": "D7bKodZVPGIpQxQWhXYU-163",
+          "type": "edge",
+          "parent": "1",
+          "label": "references back"
+        },
+        {
+          "id": "D7bKodZVPGIpQxQWhXYU-164",
+          "type": "edge",
+          "parent": "1",
+          "label": "connects to socket / authenticates"
+        },
+        {
+          "id": "D7bKodZVPGIpQxQWhXYU-165",
+          "type": "edge",
+          "parent": "1",
+          "label": "queries & logs data"
+        },
+        {
+          "id": "D7bKodZVPGIpQxQWhXYU-166",
+          "type": "edge",
+          "parent": "1",
+          "label": "generates/verifies codes"
+        },
+        {
+          "id": "D7bKodZVPGIpQxQWhXYU-167",
+          "type": "edge",
+          "parent": "1",
+          "label": "hashes passwords"
+        },
+        {
+          "id": "D7bKodZVPGIpQxQWhXYU-168",
+          "type": "edge",
+          "parent": "1",
+          "label": "manages users & history"
+        },
+        {
+          "id": "D7bKodZVPGIpQxQWhXYU-169",
+          "type": "edge",
+          "parent": "1",
+          "target": "-HrDYycGPxUuRjg1_4Wm-19",
+          "label": "controls state"
+        },
+        {
+          "id": "D7bKodZVPGIpQxQWhXYU-170",
+          "type": "edge",
+          "parent": "1",
+          "label": "initializes connection"
+        },
+        {
+          "id": "D7bKodZVPGIpQxQWhXYU-171",
+          "type": "edge",
+          "parent": "1",
+          "label": "authenticates via socket"
+        },
+        {
+          "id": "D7bKodZVPGIpQxQWhXYU-172",
+          "type": "edge",
+          "parent": "1",
+          "target": "K78wqbBfcOv2sh3W8s4L-1",
+          "label": "boots GUI"
+        },
+        {
+          "id": "bUaQ_hOS6vuPKtYXJzSb-1",
+          "type": "node",
+          "parent": "1",
+          "label": "DatabaseManager",
+          "html": "<b>DatabaseManager</b>",
+          "metadata": {
+            "mermaidId": "n:DatabaseManager",
+            "mermaidBaseStyle": "swimlane;html=1;fontStyle=1;fontSize=16;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=66;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#FDF4FF;whiteSpace=wrap;spacingTop=24;fillColor=#FDF4FF;strokeColor=#E879F9;fontColor=#28253D;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;",
+            "mermaidBaseValue": "<b>DatabaseManager</b>"
+          }
+        },
+        {
+          "id": "bUaQ_hOS6vuPKtYXJzSb-2",
+          "type": "node",
+          "parent": "bUaQ_hOS6vuPKtYXJzSb-1",
+          "label": "«class»"
+        },
+        {
+          "id": "bUaQ_hOS6vuPKtYXJzSb-3",
+          "type": "node",
+          "parent": "bUaQ_hOS6vuPKtYXJzSb-1",
+          "label": "-String DB_URL"
+        },
+        {
+          "id": "bUaQ_hOS6vuPKtYXJzSb-4",
+          "type": "node",
+          "parent": "bUaQ_hOS6vuPKtYXJzSb-1"
+        },
+        {
+          "id": "bUaQ_hOS6vuPKtYXJzSb-5",
+          "type": "node",
+          "parent": "bUaQ_hOS6vuPKtYXJzSb-1",
+          "label": "+initializeDatabase()"
+        },
+        {
+          "id": "bUaQ_hOS6vuPKtYXJzSb-6",
+          "type": "node",
+          "parent": "bUaQ_hOS6vuPKtYXJzSb-1",
+          "label": "+connect()$ Connection"
+        },
+        {
+          "id": "bUaQ_hOS6vuPKtYXJzSb-7",
+          "type": "node",
+          "parent": "bUaQ_hOS6vuPKtYXJzSb-1",
+          "label": "+userExists(String username)$ boolean"
+        },
+        {
+          "id": "bUaQ_hOS6vuPKtYXJzSb-8",
+          "type": "node",
+          "parent": "bUaQ_hOS6vuPKtYXJzSb-1",
+          "label": "+addUser(String username, String password)"
+        },
+        {
+          "id": "bUaQ_hOS6vuPKtYXJzSb-9",
+          "type": "node",
+          "parent": "bUaQ_hOS6vuPKtYXJzSb-1",
+          "label": "+addUser(String username, String password, String isAllowed)"
+        },
+        {
+          "id": "bUaQ_hOS6vuPKtYXJzSb-10",
+          "type": "node",
+          "parent": "bUaQ_hOS6vuPKtYXJzSb-1",
+          "label": "+authenticateUser(String username, String password)$ boolean"
+        },
+        {
+          "id": "bUaQ_hOS6vuPKtYXJzSb-11",
+          "type": "node",
+          "parent": "bUaQ_hOS6vuPKtYXJzSb-1",
+          "label": "+authenticateUser(String username, String password, String requiredIsAllowed)$ boolean"
+        },
+        {
+          "id": "bUaQ_hOS6vuPKtYXJzSb-12",
+          "type": "node",
+          "parent": "bUaQ_hOS6vuPKtYXJzSb-1",
+          "label": "+isUserAllowed(String username)$ boolean"
+        },
+        {
+          "id": "bUaQ_hOS6vuPKtYXJzSb-13",
+          "type": "node",
+          "parent": "bUaQ_hOS6vuPKtYXJzSb-1",
+          "label": "+updateUserAllowed(int userId, String isAllowed)$ boolean"
+        },
+        {
+          "id": "bUaQ_hOS6vuPKtYXJzSb-14",
+          "type": "node",
+          "parent": "bUaQ_hOS6vuPKtYXJzSb-1",
+          "label": "+updateUserAllowed(String username, String isAllowed)$ boolean"
+        },
+        {
+          "id": "bUaQ_hOS6vuPKtYXJzSb-15",
+          "type": "node",
+          "parent": "bUaQ_hOS6vuPKtYXJzSb-1",
+          "label": "+deleteUser(int userId)$ boolean"
+        },
+        {
+          "id": "bUaQ_hOS6vuPKtYXJzSb-16",
+          "type": "node",
+          "parent": "bUaQ_hOS6vuPKtYXJzSb-1",
+          "label": "+deleteUser(String username)$ boolean"
+        },
+        {
+          "id": "bUaQ_hOS6vuPKtYXJzSb-17",
+          "type": "node",
+          "parent": "bUaQ_hOS6vuPKtYXJzSb-1",
+          "label": "+updateUserPassword(int userId, String newPassword)$ boolean"
+        },
+        {
+          "id": "bUaQ_hOS6vuPKtYXJzSb-18",
+          "type": "node",
+          "parent": "bUaQ_hOS6vuPKtYXJzSb-1",
+          "label": "+updateUserPassword(String username, String newPassword)$ boolean"
+        },
+        {
+          "id": "bUaQ_hOS6vuPKtYXJzSb-19",
+          "type": "node",
+          "parent": "bUaQ_hOS6vuPKtYXJzSb-1",
+          "label": "+logMessage(String sender, String recipient, String content)"
+        },
+        {
+          "id": "bUaQ_hOS6vuPKtYXJzSb-20",
+          "type": "node",
+          "parent": "bUaQ_hOS6vuPKtYXJzSb-1",
+          "label": "+displayChatHistory()"
+        },
+        {
+          "id": "bUaQ_hOS6vuPKtYXJzSb-21",
+          "type": "node",
+          "parent": "bUaQ_hOS6vuPKtYXJzSb-1",
+          "label": "+getChatHistoryArrayList()$ ArrayList<Message>"
+        },
+        {
+          "id": "bUaQ_hOS6vuPKtYXJzSb-22",
+          "type": "node",
+          "parent": "bUaQ_hOS6vuPKtYXJzSb-1",
+          "label": "+getChatHistoryForRoom(String room)$ ArrayList<Message>"
+        },
+        {
+          "id": "bUaQ_hOS6vuPKtYXJzSb-23",
+          "type": "node",
+          "parent": "bUaQ_hOS6vuPKtYXJzSb-1",
+          "label": "+getDirectMessageHistory(String user1, String user2)$ ArrayList<Message>"
+        },
+        {
+          "id": "bUaQ_hOS6vuPKtYXJzSb-24",
+          "type": "node",
+          "parent": "bUaQ_hOS6vuPKtYXJzSb-1",
+          "label": "+getAllUsers()$ List<UserRecord>"
+        },
+        {
+          "id": "bUaQ_hOS6vuPKtYXJzSb-25",
+          "type": "node",
+          "parent": "bUaQ_hOS6vuPKtYXJzSb-1",
+          "label": "+getUserCount()$ int"
+        },
+        {
+          "id": "bUaQ_hOS6vuPKtYXJzSb-26",
+          "type": "node",
+          "parent": "bUaQ_hOS6vuPKtYXJzSb-1",
+          "label": "+getAcceptedUserCount()$ int"
+        },
+        {
+          "id": "bUaQ_hOS6vuPKtYXJzSb-27",
+          "type": "node",
+          "parent": "bUaQ_hOS6vuPKtYXJzSb-1",
+          "label": "+getPendingUserCount()$ int"
+        },
+        {
+          "id": "K78wqbBfcOv2sh3W8s4L-1",
+          "type": "node",
+          "parent": "1",
+          "label": "Login",
+          "html": "<b>Login</b>",
+          "metadata": {
+            "mermaidId": "n:Login",
+            "mermaidBaseStyle": "swimlane;html=1;fontStyle=1;fontSize=16;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=45;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#FDF4FF;whiteSpace=wrap;fillColor=#FDF4FF;strokeColor=#E879F9;fontColor=#28253D;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;",
+            "mermaidBaseValue": "<b>Login</b>"
+          }
+        },
+        {
+          "id": "K78wqbBfcOv2sh3W8s4L-2",
+          "type": "node",
+          "parent": "K78wqbBfcOv2sh3W8s4L-1",
+          "label": "+JPanel Rootpanel"
+        },
+        {
+          "id": "K78wqbBfcOv2sh3W8s4L-3",
+          "type": "node",
+          "parent": "K78wqbBfcOv2sh3W8s4L-1",
+          "label": "+JPanel jPanel3"
+        },
+        {
+          "id": "K78wqbBfcOv2sh3W8s4L-4",
+          "type": "node",
+          "parent": "K78wqbBfcOv2sh3W8s4L-1",
+          "label": "+JTextField codeTF"
+        },
+        {
+          "id": "K78wqbBfcOv2sh3W8s4L-5",
+          "type": "node",
+          "parent": "K78wqbBfcOv2sh3W8s4L-1",
+          "label": "+JPasswordField passwordF"
+        },
+        {
+          "id": "K78wqbBfcOv2sh3W8s4L-6",
+          "type": "node",
+          "parent": "K78wqbBfcOv2sh3W8s4L-1",
+          "label": "+JTextField usernameTF"
+        },
+        {
+          "id": "K78wqbBfcOv2sh3W8s4L-7",
+          "type": "node",
+          "parent": "K78wqbBfcOv2sh3W8s4L-1",
+          "label": "+JButton loginBtn"
+        },
+        {
+          "id": "K78wqbBfcOv2sh3W8s4L-8",
+          "type": "node",
+          "parent": "K78wqbBfcOv2sh3W8s4L-1",
+          "label": "+JButton startSeverBtn"
+        },
+        {
+          "id": "K78wqbBfcOv2sh3W8s4L-9",
+          "type": "node",
+          "parent": "K78wqbBfcOv2sh3W8s4L-1",
+          "label": "+JLabel username"
+        },
+        {
+          "id": "K78wqbBfcOv2sh3W8s4L-10",
+          "type": "node",
+          "parent": "K78wqbBfcOv2sh3W8s4L-1",
+          "label": "+JLabel code"
+        },
+        {
+          "id": "K78wqbBfcOv2sh3W8s4L-11",
+          "type": "node",
+          "parent": "K78wqbBfcOv2sh3W8s4L-1",
+          "label": "+JLabel password"
+        },
+        {
+          "id": "K78wqbBfcOv2sh3W8s4L-12",
+          "type": "node",
+          "parent": "K78wqbBfcOv2sh3W8s4L-1",
+          "label": "+JLabel jLabel5"
+        },
+        {
+          "id": "K78wqbBfcOv2sh3W8s4L-13",
+          "type": "node",
+          "parent": "K78wqbBfcOv2sh3W8s4L-1",
+          "label": "+JLabel jLabel2"
+        },
+        {
+          "id": "K78wqbBfcOv2sh3W8s4L-14",
+          "type": "node",
+          "parent": "K78wqbBfcOv2sh3W8s4L-1",
+          "label": "+JLabel logo"
+        },
+        {
+          "id": "K78wqbBfcOv2sh3W8s4L-15",
+          "type": "node",
+          "parent": "K78wqbBfcOv2sh3W8s4L-1",
+          "label": "+JLabel jLabel1"
+        },
+        {
+          "id": "K78wqbBfcOv2sh3W8s4L-16",
+          "type": "node",
+          "parent": "K78wqbBfcOv2sh3W8s4L-1"
+        },
+        {
+          "id": "K78wqbBfcOv2sh3W8s4L-17",
+          "type": "node",
+          "parent": "K78wqbBfcOv2sh3W8s4L-1",
+          "label": "+codeTFActionPerformed(ActionEvent evt)"
+        },
+        {
+          "id": "K78wqbBfcOv2sh3W8s4L-18",
+          "type": "node",
+          "parent": "K78wqbBfcOv2sh3W8s4L-1",
+          "label": "+passwordFActionPerformed(ActionEvent evt)"
+        },
+        {
+          "id": "K78wqbBfcOv2sh3W8s4L-19",
+          "type": "node",
+          "parent": "K78wqbBfcOv2sh3W8s4L-1",
+          "label": "+usernameTFActionPerformed(ActionEvent evt)"
+        },
+        {
+          "id": "K78wqbBfcOv2sh3W8s4L-20",
+          "type": "node",
+          "parent": "K78wqbBfcOv2sh3W8s4L-1",
+          "label": "+loginBtnActionPerformed(ActionEvent evt)"
+        },
+        {
+          "id": "K78wqbBfcOv2sh3W8s4L-21",
+          "type": "node",
+          "parent": "K78wqbBfcOv2sh3W8s4L-1",
+          "label": "+startSeverBtnActionPerformedl(ActionEvent evt)"
+        },
+        {
+          "id": "-HrDYycGPxUuRjg1_4Wm-1",
+          "type": "node",
+          "parent": "1",
+          "label": "Server",
+          "html": "<b>Server</b>",
+          "metadata": {
+            "mermaidId": "n:Server",
+            "mermaidBaseStyle": "swimlane;html=1;fontStyle=1;fontSize=16;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=45;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#FDF4FF;whiteSpace=wrap;fillColor=#FDF4FF;strokeColor=#E879F9;fontColor=#28253D;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;",
+            "mermaidBaseValue": "<b>Server</b>"
+          }
+        },
+        {
+          "id": "-HrDYycGPxUuRjg1_4Wm-2",
+          "type": "node",
+          "parent": "-HrDYycGPxUuRjg1_4Wm-1",
+          "label": "-int port"
+        },
+        {
+          "id": "-HrDYycGPxUuRjg1_4Wm-3",
+          "type": "node",
+          "parent": "-HrDYycGPxUuRjg1_4Wm-1",
+          "label": "-ServerSocket serverSocket"
+        },
+        {
+          "id": "-HrDYycGPxUuRjg1_4Wm-4",
+          "type": "node",
+          "parent": "-HrDYycGPxUuRjg1_4Wm-1",
+          "label": "-boolean isRunning"
+        },
+        {
+          "id": "-HrDYycGPxUuRjg1_4Wm-5",
+          "type": "node",
+          "parent": "-HrDYycGPxUuRjg1_4Wm-1",
+          "label": "+int defaultPort"
+        },
+        {
+          "id": "-HrDYycGPxUuRjg1_4Wm-6",
+          "type": "node",
+          "parent": "-HrDYycGPxUuRjg1_4Wm-1",
+          "label": "-List<ClientHandler> clients"
+        },
+        {
+          "id": "-HrDYycGPxUuRjg1_4Wm-7",
+          "type": "node",
+          "parent": "-HrDYycGPxUuRjg1_4Wm-1",
+          "label": "-Object stopLock"
+        },
+        {
+          "id": "-HrDYycGPxUuRjg1_4Wm-8",
+          "type": "node",
+          "parent": "-HrDYycGPxUuRjg1_4Wm-1",
+          "label": "-boolean isStopped"
+        },
+        {
+          "id": "-HrDYycGPxUuRjg1_4Wm-9",
+          "type": "node",
+          "parent": "-HrDYycGPxUuRjg1_4Wm-1"
+        },
+        {
+          "id": "-HrDYycGPxUuRjg1_4Wm-10",
+          "type": "node",
+          "parent": "-HrDYycGPxUuRjg1_4Wm-1",
+          "label": "+Server(int port)"
+        },
+        {
+          "id": "-HrDYycGPxUuRjg1_4Wm-11",
+          "type": "node",
+          "parent": "-HrDYycGPxUuRjg1_4Wm-1",
+          "label": "+start()"
+        },
+        {
+          "id": "-HrDYycGPxUuRjg1_4Wm-12",
+          "type": "node",
+          "parent": "-HrDYycGPxUuRjg1_4Wm-1",
+          "label": "+broadcast(String message, ClientHandler sender)"
+        },
+        {
+          "id": "-HrDYycGPxUuRjg1_4Wm-13",
+          "type": "node",
+          "parent": "-HrDYycGPxUuRjg1_4Wm-1",
+          "label": "+sendMessageToUsername(String message, String username) boolean"
+        },
+        {
+          "id": "-HrDYycGPxUuRjg1_4Wm-14",
+          "type": "node",
+          "parent": "-HrDYycGPxUuRjg1_4Wm-1",
+          "label": "+broadcastUserList()"
+        },
+        {
+          "id": "-HrDYycGPxUuRjg1_4Wm-15",
+          "type": "node",
+          "parent": "-HrDYycGPxUuRjg1_4Wm-1",
+          "label": "+removeClient(ClientHandler client)"
+        },
+        {
+          "id": "-HrDYycGPxUuRjg1_4Wm-16",
+          "type": "node",
+          "parent": "-HrDYycGPxUuRjg1_4Wm-1",
+          "label": "+getClients() List<ClientHandler>"
+        },
+        {
+          "id": "-HrDYycGPxUuRjg1_4Wm-17",
+          "type": "node",
+          "parent": "-HrDYycGPxUuRjg1_4Wm-1",
+          "label": "+getServerIpAddress() String"
+        },
+        {
+          "id": "-HrDYycGPxUuRjg1_4Wm-18",
+          "type": "node",
+          "parent": "-HrDYycGPxUuRjg1_4Wm-1",
+          "label": "+getLocalLanIp()$ String"
+        },
+        {
+          "id": "-HrDYycGPxUuRjg1_4Wm-19",
+          "type": "node",
+          "parent": "-HrDYycGPxUuRjg1_4Wm-1",
+          "label": "+getAllLanIps()$ List<String>"
+        },
+        {
+          "id": "-HrDYycGPxUuRjg1_4Wm-20",
+          "type": "node",
+          "parent": "-HrDYycGPxUuRjg1_4Wm-1",
+          "label": "+getPort() int"
+        },
+        {
+          "id": "-HrDYycGPxUuRjg1_4Wm-21",
+          "type": "node",
+          "parent": "-HrDYycGPxUuRjg1_4Wm-1",
+          "label": "+isRunning() boolean"
+        },
+        {
+          "id": "-HrDYycGPxUuRjg1_4Wm-22",
+          "type": "node",
+          "parent": "-HrDYycGPxUuRjg1_4Wm-1",
+          "label": "+stop()"
+        },
+        {
+          "id": "-HrDYycGPxUuRjg1_4Wm-23",
+          "type": "node",
+          "parent": "-HrDYycGPxUuRjg1_4Wm-1",
+          "label": "+getConnectionCode() String"
+        },
+        {
+          "id": "2LAK0ULxvmOg3hoj3ilv-1",
+          "type": "node",
+          "parent": "1",
+          "label": "IntraChat",
+          "metadata": {
+            "mermaidId": "n:Main",
+            "mermaidBaseStyle": "swimlane;html=1;fontStyle=1;fontSize=16;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=45;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#FDF4FF;whiteSpace=wrap;fillColor=#FDF4FF;strokeColor=#E879F9;fontColor=#28253D;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;",
+            "mermaidBaseValue": "<b>Main</b>"
+          }
+        },
+        {
+          "id": "2LAK0ULxvmOg3hoj3ilv-2",
+          "type": "node",
+          "parent": "2LAK0ULxvmOg3hoj3ilv-1"
+        },
+        {
+          "id": "2LAK0ULxvmOg3hoj3ilv-3",
+          "type": "node",
+          "parent": "2LAK0ULxvmOg3hoj3ilv-1",
+          "label": "+main(String[] args)"
+        },
+        {
+          "id": "uAChJogsRD71zzMKSty0-1",
+          "type": "node",
+          "parent": "1",
+          "metadata": {
+            "mermaidData": "{\n  \"data\": \"classDiagram\\n    class AuthService {\\n        -SecureRandom secureRandom\\n        -long Day\\n        -String HMAC_ALGORITHM\\n        -String PBKDF2_ALGORITHM\\n        -int PBKDF2_ITERATIONS\\n        +byte[] generateSigningKey()\\n        +String hashPassword(String password)\\n        +boolean verifyPassword(String password, String stored)\\n        +String generateCode(byte[] serverKey, String username, InetAddress serverIp)\\n        +boolean verifyCode(byte[] serverKey, String code, String username, InetAddress serverIp)\\n        +String generateConnectionCode(String ip, int port)\\n        +ConnectionTarget parseConnectionCode(String input)\\n        +String[] splitCode(byte[] serverKey, String code)\\n    }\",\n  \"config\": null,\n  \"version\": \"12\"\n}"
+          }
+        },
+        {
+          "id": "uAChJogsRD71zzMKSty0-2",
+          "type": "node",
+          "parent": "uAChJogsRD71zzMKSty0-1",
+          "label": "AuthService",
+          "html": "<b>AuthService</b>",
+          "metadata": {
+            "mermaidId": "n:AuthService",
+            "mermaidBaseStyle": "swimlane;html=1;fontStyle=1;fontSize=16;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=45;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#FDF4FF;whiteSpace=wrap;fillColor=#FDF4FF;strokeColor=#E879F9;fontColor=#28253D;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;",
+            "mermaidBaseValue": "<b>AuthService</b>"
+          }
+        },
+        {
+          "id": "uAChJogsRD71zzMKSty0-3",
+          "type": "node",
+          "parent": "uAChJogsRD71zzMKSty0-2",
+          "label": "-SecureRandom secureRandom"
+        },
+        {
+          "id": "uAChJogsRD71zzMKSty0-4",
+          "type": "node",
+          "parent": "uAChJogsRD71zzMKSty0-2",
+          "label": "-long Day"
+        },
+        {
+          "id": "uAChJogsRD71zzMKSty0-5",
+          "type": "node",
+          "parent": "uAChJogsRD71zzMKSty0-2",
+          "label": "-String HMAC_ALGORITHM"
+        },
+        {
+          "id": "uAChJogsRD71zzMKSty0-6",
+          "type": "node",
+          "parent": "uAChJogsRD71zzMKSty0-2",
+          "label": "-String PBKDF2_ALGORITHM"
+        },
+        {
+          "id": "uAChJogsRD71zzMKSty0-7",
+          "type": "node",
+          "parent": "uAChJogsRD71zzMKSty0-2",
+          "label": "-int PBKDF2_ITERATIONS"
+        },
+        {
+          "id": "uAChJogsRD71zzMKSty0-8",
+          "type": "node",
+          "parent": "uAChJogsRD71zzMKSty0-2"
+        },
+        {
+          "id": "uAChJogsRD71zzMKSty0-9",
+          "type": "node",
+          "parent": "uAChJogsRD71zzMKSty0-2",
+          "label": "+byte[] generateSigningKey()"
+        },
+        {
+          "id": "uAChJogsRD71zzMKSty0-10",
+          "type": "node",
+          "parent": "uAChJogsRD71zzMKSty0-2",
+          "label": "+String hashPassword(String password)"
+        },
+        {
+          "id": "uAChJogsRD71zzMKSty0-11",
+          "type": "node",
+          "parent": "uAChJogsRD71zzMKSty0-2",
+          "label": "+boolean verifyPassword(String password, String stored)"
+        },
+        {
+          "id": "uAChJogsRD71zzMKSty0-12",
+          "type": "node",
+          "parent": "uAChJogsRD71zzMKSty0-2",
+          "label": "+String generateCode(byte[] serverKey, String username, InetAddress serverIp)"
+        },
+        {
+          "id": "uAChJogsRD71zzMKSty0-13",
+          "type": "node",
+          "parent": "uAChJogsRD71zzMKSty0-2",
+          "label": "+boolean verifyCode(byte[] serverKey, String code, String username, InetAddress serverIp)"
+        },
+        {
+          "id": "uAChJogsRD71zzMKSty0-14",
+          "type": "node",
+          "parent": "uAChJogsRD71zzMKSty0-2",
+          "label": "+String generateConnectionCode(String ip, int port)"
+        },
+        {
+          "id": "uAChJogsRD71zzMKSty0-15",
+          "type": "node",
+          "parent": "uAChJogsRD71zzMKSty0-2",
+          "label": "+ConnectionTarget parseConnectionCode(String input)"
+        },
+        {
+          "id": "uAChJogsRD71zzMKSty0-16",
+          "type": "node",
+          "parent": "uAChJogsRD71zzMKSty0-2",
+          "label": "+String[] splitCode(byte[] serverKey, String code)"
+        },
+        {
+          "id": "UUMYifxSa19834la0If0-1",
+          "type": "node",
+          "parent": "1",
+          "label": "AdminConsole",
+          "html": "<b>AdminConsole</b>",
+          "metadata": {
+            "mermaidId": "n:AdminConsole",
+            "mermaidBaseStyle": "swimlane;html=1;fontStyle=1;fontSize=16;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=45;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#FDF4FF;whiteSpace=wrap;fillColor=#FDF4FF;strokeColor=#E879F9;fontColor=#28253D;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;",
+            "mermaidBaseValue": "<b>AdminConsole</b>"
+          }
+        },
+        {
+          "id": "UUMYifxSa19834la0If0-2",
+          "type": "node",
+          "parent": "UUMYifxSa19834la0If0-1",
+          "label": "+JMenuBar jMenuBar1"
+        },
+        {
+          "id": "UUMYifxSa19834la0If0-3",
+          "type": "node",
+          "parent": "UUMYifxSa19834la0If0-1",
+          "label": "+JPanel jPanel1"
+        },
+        {
+          "id": "UUMYifxSa19834la0If0-4",
+          "type": "node",
+          "parent": "UUMYifxSa19834la0If0-1",
+          "label": "+JPanel jPanel2"
+        },
+        {
+          "id": "UUMYifxSa19834la0If0-5",
+          "type": "node",
+          "parent": "UUMYifxSa19834la0If0-1",
+          "label": "+JScrollPane jScrollPane1"
+        },
+        {
+          "id": "UUMYifxSa19834la0If0-6",
+          "type": "node",
+          "parent": "UUMYifxSa19834la0If0-1",
+          "label": "+JTable jTable1"
+        },
+        {
+          "id": "UUMYifxSa19834la0If0-7",
+          "type": "node",
+          "parent": "UUMYifxSa19834la0If0-1",
+          "label": "+JTextField jTextField1"
+        },
+        {
+          "id": "UUMYifxSa19834la0If0-8",
+          "type": "node",
+          "parent": "UUMYifxSa19834la0If0-1",
+          "label": "+JButton jButton1"
+        },
+        {
+          "id": "UUMYifxSa19834la0If0-9",
+          "type": "node",
+          "parent": "UUMYifxSa19834la0If0-1",
+          "label": "+JButton jButton2"
+        },
+        {
+          "id": "UUMYifxSa19834la0If0-10",
+          "type": "node",
+          "parent": "UUMYifxSa19834la0If0-1",
+          "label": "+JButton jButton3"
+        },
+        {
+          "id": "UUMYifxSa19834la0If0-11",
+          "type": "node",
+          "parent": "UUMYifxSa19834la0If0-1",
+          "label": "+JButton jButton4"
+        },
+        {
+          "id": "UUMYifxSa19834la0If0-12",
+          "type": "node",
+          "parent": "UUMYifxSa19834la0If0-1",
+          "label": "+JButton jButton5"
+        },
+        {
+          "id": "UUMYifxSa19834la0If0-13",
+          "type": "node",
+          "parent": "UUMYifxSa19834la0If0-1",
+          "label": "+JButton jButton6"
+        },
+        {
+          "id": "UUMYifxSa19834la0If0-14",
+          "type": "node",
+          "parent": "UUMYifxSa19834la0If0-1",
+          "label": "+JButton jButton7"
+        },
+        {
+          "id": "UUMYifxSa19834la0If0-15",
+          "type": "node",
+          "parent": "UUMYifxSa19834la0If0-1",
+          "label": "+JButton jButton8"
+        },
+        {
+          "id": "UUMYifxSa19834la0If0-16",
+          "type": "node",
+          "parent": "UUMYifxSa19834la0If0-1",
+          "label": "+JButton jButton9"
+        },
+        {
+          "id": "UUMYifxSa19834la0If0-17",
+          "type": "node",
+          "parent": "UUMYifxSa19834la0If0-1"
+        },
+        {
+          "id": "UUMYifxSa19834la0If0-18",
+          "type": "node",
+          "parent": "UUMYifxSa19834la0If0-1",
+          "label": "+initComponents()"
+        },
+        {
+          "id": "UUMYifxSa19834la0If0-19",
+          "type": "node",
+          "parent": "UUMYifxSa19834la0If0-1",
+          "label": "+jButton3ActionPerformed(ActionEvent evt)"
+        },
+        {
+          "id": "UUMYifxSa19834la0If0-20",
+          "type": "node",
+          "parent": "UUMYifxSa19834la0If0-1",
+          "label": "+jButton9ActionPerformed(ActionEvent evt)"
+        },
+        {
+          "id": "T3MvMCqmDczh_yxkCCT2-1",
+          "type": "node",
+          "parent": "1",
+          "label": "ClientHandler",
+          "html": "<b>ClientHandler</b>",
+          "metadata": {
+            "mermaidId": "n:ClientHandler",
+            "mermaidBaseStyle": "swimlane;html=1;fontStyle=1;fontSize=16;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=45;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#FDF4FF;whiteSpace=wrap;fillColor=#FDF4FF;strokeColor=#E879F9;fontColor=#28253D;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;",
+            "mermaidBaseValue": "<b>ClientHandler</b>"
+          }
+        },
+        {
+          "id": "T3MvMCqmDczh_yxkCCT2-2",
+          "type": "node",
+          "parent": "T3MvMCqmDczh_yxkCCT2-1",
+          "label": "-Socket socket"
+        },
+        {
+          "id": "T3MvMCqmDczh_yxkCCT2-3",
+          "type": "node",
+          "parent": "T3MvMCqmDczh_yxkCCT2-1",
+          "label": "-Server server"
+        },
+        {
+          "id": "T3MvMCqmDczh_yxkCCT2-4",
+          "type": "node",
+          "parent": "T3MvMCqmDczh_yxkCCT2-1",
+          "label": "-BufferedReader in"
+        },
+        {
+          "id": "T3MvMCqmDczh_yxkCCT2-5",
+          "type": "node",
+          "parent": "T3MvMCqmDczh_yxkCCT2-1",
+          "label": "-PrintWriter out"
+        },
+        {
+          "id": "T3MvMCqmDczh_yxkCCT2-6",
+          "type": "node",
+          "parent": "T3MvMCqmDczh_yxkCCT2-1",
+          "label": "-String username"
+        },
+        {
+          "id": "T3MvMCqmDczh_yxkCCT2-7",
+          "type": "node",
+          "parent": "T3MvMCqmDczh_yxkCCT2-1",
+          "label": "-String password"
+        },
+        {
+          "id": "T3MvMCqmDczh_yxkCCT2-8",
+          "type": "node",
+          "parent": "T3MvMCqmDczh_yxkCCT2-1"
+        },
+        {
+          "id": "T3MvMCqmDczh_yxkCCT2-9",
+          "type": "node",
+          "parent": "T3MvMCqmDczh_yxkCCT2-1",
+          "label": "+ClientHandler(Socket socket, Server server)"
+        },
+        {
+          "id": "T3MvMCqmDczh_yxkCCT2-10",
+          "type": "node",
+          "parent": "T3MvMCqmDczh_yxkCCT2-1",
+          "label": "+run()"
+        },
+        {
+          "id": "mtGY3yq5O_7Ik7_ZASGh-1",
+          "type": "node",
+          "parent": "1",
+          "label": "Client",
+          "html": "<b>Client</b>",
+          "metadata": {
+            "mermaidId": "n:Client",
+            "mermaidBaseStyle": "swimlane;html=1;fontStyle=1;fontSize=16;align=center;verticalAlign=middle;horizontal=1;childLayout=stackLayout;startSize=45;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginTop=12;marginBottom=12;stackSpacing=0;swimlaneFillColor=#FDF4FF;whiteSpace=wrap;fillColor=#FDF4FF;strokeColor=#E879F9;fontColor=#28253D;fontFamily=Recursive;strokeWidth=2;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;",
+            "mermaidBaseValue": "<b>Client</b>"
+          }
+        },
+        {
+          "id": "mtGY3yq5O_7Ik7_ZASGh-2",
+          "type": "node",
+          "parent": "mtGY3yq5O_7Ik7_ZASGh-1",
+          "label": "-String serverIp"
+        },
+        {
+          "id": "mtGY3yq5O_7Ik7_ZASGh-3",
+          "type": "node",
+          "parent": "mtGY3yq5O_7Ik7_ZASGh-1",
+          "label": "-int serverPort"
+        },
+        {
+          "id": "mtGY3yq5O_7Ik7_ZASGh-4",
+          "type": "node",
+          "parent": "mtGY3yq5O_7Ik7_ZASGh-1",
+          "label": "-Socket socket"
+        },
+        {
+          "id": "mtGY3yq5O_7Ik7_ZASGh-5",
+          "type": "node",
+          "parent": "mtGY3yq5O_7Ik7_ZASGh-1",
+          "label": "-BufferedReader in"
+        },
+        {
+          "id": "mtGY3yq5O_7Ik7_ZASGh-6",
+          "type": "node",
+          "parent": "mtGY3yq5O_7Ik7_ZASGh-1",
+          "label": "-PrintWriter out"
+        },
+        {
+          "id": "mtGY3yq5O_7Ik7_ZASGh-7",
+          "type": "node",
+          "parent": "mtGY3yq5O_7Ik7_ZASGh-1",
+          "label": "-boolean isConnected"
+        },
+        {
+          "id": "mtGY3yq5O_7Ik7_ZASGh-8",
+          "type": "node",
+          "parent": "mtGY3yq5O_7Ik7_ZASGh-1",
+          "label": "-Consumer<String> messageListener"
+        },
+        {
+          "id": "mtGY3yq5O_7Ik7_ZASGh-9",
+          "type": "node",
+          "parent": "mtGY3yq5O_7Ik7_ZASGh-1",
+          "label": "-String lastErrorMessage"
+        },
+        {
+          "id": "mtGY3yq5O_7Ik7_ZASGh-10",
+          "type": "node",
+          "parent": "mtGY3yq5O_7Ik7_ZASGh-1",
+          "label": "-Queue<String> pendingQueue"
+        },
+        {
+          "id": "mtGY3yq5O_7Ik7_ZASGh-11",
+          "type": "node",
+          "parent": "mtGY3yq5O_7Ik7_ZASGh-1"
+        },
+        {
+          "id": "mtGY3yq5O_7Ik7_ZASGh-12",
+          "type": "node",
+          "parent": "mtGY3yq5O_7Ik7_ZASGh-1",
+          "label": "+Client(String serverIp, int serverPort)"
+        },
+        {
+          "id": "mtGY3yq5O_7Ik7_ZASGh-13",
+          "type": "node",
+          "parent": "mtGY3yq5O_7Ik7_ZASGh-1",
+          "label": "+setMessageListener(Consumer<String> listener)"
+        },
+        {
+          "id": "mtGY3yq5O_7Ik7_ZASGh-14",
+          "type": "node",
+          "parent": "mtGY3yq5O_7Ik7_ZASGh-1",
+          "label": "+String getLastErrorMessage()"
+        },
+        {
+          "id": "mtGY3yq5O_7Ik7_ZASGh-15",
+          "type": "node",
+          "parent": "mtGY3yq5O_7Ik7_ZASGh-1",
+          "label": "+boolean connect(String username, String password)"
+        },
+        {
+          "id": "mtGY3yq5O_7Ik7_ZASGh-16",
+          "type": "node",
+          "parent": "mtGY3yq5O_7Ik7_ZASGh-1",
+          "label": "-listenForMessages()"
+        },
+        {
+          "id": "mtGY3yq5O_7Ik7_ZASGh-17",
+          "type": "node",
+          "parent": "mtGY3yq5O_7Ik7_ZASGh-1",
+          "label": "+sendMessage(String message)"
+        },
+        {
+          "id": "mtGY3yq5O_7Ik7_ZASGh-18",
+          "type": "node",
+          "parent": "mtGY3yq5O_7Ik7_ZASGh-1",
+          "label": "+boolean isConnected()"
+        },
+        {
+          "id": "mtGY3yq5O_7Ik7_ZASGh-19",
+          "type": "node",
+          "parent": "mtGY3yq5O_7Ik7_ZASGh-1",
+          "label": "+String getServerIp()"
+        },
+        {
+          "id": "mtGY3yq5O_7Ik7_ZASGh-20",
+          "type": "node",
+          "parent": "mtGY3yq5O_7Ik7_ZASGh-1",
+          "label": "+int getServerPort()"
+        },
+        {
+          "id": "mtGY3yq5O_7Ik7_ZASGh-21",
+          "type": "node",
+          "parent": "mtGY3yq5O_7Ik7_ZASGh-1",
+          "label": "+disconnect()"
+        }
+      ]
+    }
+  ]
+}
