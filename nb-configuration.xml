@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-shared-configuration>
+    <!--
+This file contains additional configuration written by modules in the NetBeans IDE.
+The configuration is intended to be shared among all the users of project and
+therefore it is assumed to be part of version control checkout.
+Without this configuration present, some functionality in the IDE may be limited or fail altogether.
+-->
+    <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
+        <word>actualSignature</word>
+        <word>CurrentTime</word>
+        <word>DecodeBase</word>
+        <word>encodedPayload</word>
+        <word>expectedSignature</word>
+        <word>expirationTime</word>
+        <word>GenerateCode</word>
+        <word>GenerateHMAC</word>
+        <word>GenerateSigningKey</word>
+        <word>HashPassword</word>
+        <word>HMAC</word>
+        <word>NumberFormatException</word>
+        <word>PBKDF</word>
+        <word>PRE</word>
+        <word>requiredValidKey</word>
+        <word>SecurityException</word>
+        <word>serverIp</word>
+        <word>ServerKey</word>
+        <word>severKey</word>
+        <word>splitCode</word>
+        <word>storedPassword</word>
+        <word>testPassword</word>
+        <word>testUser</word>
+        <word>verifyCode</word>
+        <word>VerifyPassword</word>
+        <word>wrongIp</word>
+        <word>wrongPassword</word>
+        <word>wrongUser</word>
+    </spellchecker-wordlist>
+</project-shared-configuration>

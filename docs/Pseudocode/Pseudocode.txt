@@ -1,11 +1,11 @@
-CLASS NetworkBackendTest
+CLASS Network Back end Test
 
     METHOD main()
     DISPLAY "Network test"
     DISPLAY "Are you a server?(y/n)"
 
-    READ userInput from console
-    IF userInput is "y" THEN
+    READ user Input from console
+    IF user Input is "y" THEN
     DISPLAY "Starting Server..."
     SET default port number to 5000
     CREATE a server using the default port
@@ -18,7 +18,7 @@ ELSE
     PROMPT user to enter password
     READ password from console
     PROMPT user to enter server IP address
-    READ serverIp from console
+    READ server IP from console
     CREATE a client connection using the provided server IP and default port
 IF connection to the server using the provided username and password is successful THEN
      DISPLAY "Connected type your message below"
@@ -39,13 +39,13 @@ IF connection to the server using the provided username and password is successf
 END METHOD
 END CLASS
 
-CLASS DatabaseManager
+CLASS Database Manager
       METHOD connect
-        ESTABLIDH a connection to the database
+        ESTABLISH a connection to the database
         RETURN the connection object
     END METHOD
 
-    METHOD initializeDatabase
+    METHOD initialize Database
         DEFINE SQL statement for creating the Users table
 
         Users table contains:
@@ -67,36 +67,36 @@ CLASS DatabaseManager
         EXECUTE the SQL statement to create the Users table
         EXECUTE the SQL statement to create the Messages table
         DISPLAY "Database initialized successfully"
-        CATCH SQLException
+        CATCH SQL Exception
         DISPLAY "Error initializing database: " + exception message
         END TRY
     END METHOD
        
-       METHOD addUser(username, password)
+       METHOD add User(username, password)
         DEFINE SQL statement for inserting a new user into the Users table
         TRY
             CONNECT to the database
             PREPARE the SQL statement with the provided username and password
             EXECUTE the SQL statement to insert the new user
             DISPLAY "User added successfully"
-        CATCH SQLException
+        CATCH SQL Exception
             DISPLAY "Error adding user: " + exception message
         END TRY
     END METHOD
 
-        METHOD logMessage(sender, receiver, Content)
+        METHOD log Message(sender, receiver, Content)
         DEFINE SQL statement for inserting a new message into the Messages table
         TRY
             CONNECT to the database
             PREPARE the SQL statement with the provided sender, receiver, and content
             EXECUTE the SQL statement to insert the new message
             DISPLAY "Message logged successfully"
-        CATCH SQLException
+        CATCH SQL Exception
             DISPLAY "Error logging message: " + exception message
         END TRY
     END METHOD
         
-        METHOD dispalyChatHIstory()
+        METHOD display Chat HIstory()
         DEFINE SQL statement for retrieving chat history from the Messages table
         TRY
             CONNECT to the database
@@ -110,11 +110,11 @@ CLASS DatabaseManager
         Receiver
         Content
         END WHILE 
-        CATCH SQLException
+        CATCH SQL Exception
             DISPLAY "Fetch Failed:" 
         END TRY
 
-        METHOD authenticateUser(username, password)
+        METHOD authenticate User(username, password)
          DECLARE sql = "SELECT * FROM users WHERE username = ? AND password = ?"
 
          TRY
@@ -124,100 +124,100 @@ CLASS DatabaseManager
             SET the first parameter to username
             SET the second parameter to password
 
-            EXECUTE query and STORE reults in rs 
-            IF rs contains at teast one row THEN 
+            EXECUTE query and STORE results in rs 
+            IF rs contains at least one row THEN 
               RETURN TRUE
             ELSE 
                RETURN FALSE
     END IF
 
-    CATCH SQLException e
-    DISPALY error message
+    CATCH SQL Exception e
+    DISPLAY error message
         RETURN FALSE
 END TRY
 END METHOD
 
-     METHOD GetChatHistoryArrayList
+     METHOD Get Chat History Array List
         RETURNS  List of Messages
-        CREATE empty cahtHistory list
+        CREATE empty catch History list
 
         SET sql to 
-        "SELECT sender, receipient, content, timestamp FROM messages ORDER by id ASC"
+        "SELECT sender, recipient, content, timestamp FROM messages ORDER by id ASC"
 
         TRY 
         CONNECT to database
         EXECUTE sql query
-        WHILE  there is another record ofin the result set DO
+        WHILE  there is another record of in the result set DO
             READ sender
-            READ receipient
+            READ recipient
             READ content
             READ timestamp
 
     CREATE Message object using sender, content,timestamp
 
-    ADD Message object to cahtHistory
+    ADD Message object to chat History
     END WHILE
 CATCH database error
 
      DISPLAY "Fetch failed"
 END TRY
-     RETURN catchHistory
+     RETURN catch History
 END CLASS 
 
 CLASS Client
 
-    Declare serverIp AS String
-    Declare serverPort AS Integer
+    Declare serve IP AS String
+    Declare server Port AS Integer
     Declare socket AS Socket
-    Declare inputReader AS BufferedReader
-    Declare outputWriter AS PrintWriter
-    Declare isConnected AS Boolean
+    Declare input Reader AS Buffered Reader
+    Declare output Writer AS Print Writer
+    Declare is Connected AS Boolean
 
-    METHOD Client(serverIp, serverPort)
-        STORE serverIp
-        STORE serverPort
+    METHOD Client(server IP, server Port)
+        STORE server IP
+        STORE server Port
     END METHOD
 
     METHOD Connect(username, password)
         TRY
-            Create socket connection using serverIp and severPort
+            Create socket connection using server IP and sever Port
             Set the socket timeout to 1000 milliseconds
-            Create inputReader using socket's input stream 
-            Create outputWriter using socket's output stream
+            Create input Reader using socket's input stream 
+            Create output Writer using socket's output stream
             SET connection status to TRUE
-            SEND username to server using outputWriter
+            SEND username to server using output Writer
     START a new thread to listen to incoming messages
             RETURN TRUE
 
-        CATCH IOException
+        CATCH Communication error
            Set connection status to TRUE
            DISPLAY "Error while connecting to server"
             RETURN FALSE
         END TRY
     END METHOD
 
-    METHOD listenForMessages()
+    METHOD listen For Messages()
         TRY
             Create incoming as a String
             WHILE Connected and Message is received 
              READ incoming message
                 DISPLAY the message 
             END WHILE 
-        CATCH IOException
+        CATCH Communication error
            IF still marked as Connected
           DISPLAY "disconnected from server"
     END IF
         FINALLY 
-        Diconnect from server
+        Disconnect from server
     END TRY
 END METHOD
-     METHOD SendMessage(message)
-     IF outputWriter is not null AND isConnected is TRUE
-        WRITE message to outputWriter
-     SEND message to server using outputWriter
+     METHOD Send Message(message)
+     IF output Writer is not null AND is Connected is TRUE
+        WRITE message to output Writer
+     SEND message to server using output Writer
 END METHOD
     
-     METHOD diconnect()
+     METHOD disconnect()
 
         SET connection status to FALSE
         TRY 
@@ -230,69 +230,69 @@ END METHOD
         If socket exists
            close socket
         END IF
-        CATCH IOException
+        CATCH Communication error
             DISPLAY "Error while disconnecting from server"
         END TRY
         END METHOD 
     END CLASS
 
-CLASS ClientHandler
+CLASS Client Handler
 
      DECLARE socket AS Socket
      DECLARE server AS Server
-     DECLARE inputReader AS BufferedReader
-     DECLARE outputWriter AS PrintWriter
+     DECLARE input Reader AS Buffered Reader
+     DECLARE output Writer AS Print Writer
      DECLARE username AS String
      DECLARE password AS String
 
-    METHOD ClientHandler(socket, server)
+    METHOD Client Handler(socket, server)
         STORE socket
         STORE server
     TRY 
-      CREATE inputReader using socket's input stream
-      CREATE outputWriter using socket's output stream
+      CREATE input Reader using socket's input stream
+      CREATE output Writer using socket's output stream
     END TRY
-CATCH IOException
+CATCH Commination error
       DISPLAY "Error while creating input/output streams"
     END CATCH
 END METHOD
 
     METHOD run()
         TRY
-        READ initialName from inputReader
-        IF initialName is not null
-            SET username to initialName
+        READ initial Name from input  Reader
+        IF initial Name is not null
+            SET username to initial Name
      END IF
-        READ initialPassword from inputReader
-        IF initialPassword is not null
-            SET password to initialPassword
+        READ initial Password from input Reader
+        IF initial Password is not null
+            SET password to initial Password
         END IF
         BROADCAST that the user has joined the chat
         
-        DECLARE incomingMessage AS String
-        WHILE incomingMessage is not null
-            READ incomingMessage from inputReader
-            IF incomingMessage equals "/quit" THEN
-             TERMINATE the communictaion loop
+        DECLARE incoming Message AS String
+        WHILE incoming Message is not null
+            READ incoming Message from input Reader
+            IF incoming Message equals "/quit" THEN
+             TERMINATE the communication loop
             ELSE 
             FORMAT message using username and incoming message
             RECORD the formatted message in the server log
             BROADCAST the formatted message to all connected clients
             END IF
         END WHILE
-    CATCH IOException
+    CATCH Communication error
         DISPLAY a message indicating an error occurred while reading the message
-    FINALL
+    FINALLY
         CLOSE Connection
     END TRY 
 
-   METHOD sendMessage(message)       
-     IF outputWriter is not null
-        WRITE message to outputWriter
+   METHOD send Message(message)       
+     IF output Writer is not null
+        WRITE message to output Writer
     END IF
     END METHOD
 
-     METHOD closeConnection()
+     METHOD close Connection()
      REMOVE the client from the server's list of connected clients
      NOTIFY all connected clients that the user has left the chat
       TRY 
@@ -306,12 +306,12 @@ END METHOD
       IF socket exists AND socket is not closed THEN
       CLOSE socket
       END IF
-      CATCH IOException
+      CATCH Communication error
       DISPLAY error message indicating that the connection could not be closed properly
         END TRY
         END METHOD
 
-        METHOD getUsername()
+        METHOD get Username()
 
         Access the client's username
         Provide the username to the calling method
@@ -321,9 +321,9 @@ END CLASS
 CLASS Server
     
     DECLARE port AS Integer
-    DECLARE serverSocket AS ServerSocket
-    DECLARE isRunning AS Boolean
-    DECLARE clients AS List of ClientHandler
+    DECLARE server Socket AS Server Socket
+    DECLARE is Running AS Boolean
+    DECLARE clients AS List of Client Handler
     
     METHOD Server(port)
         STORE port
@@ -331,20 +331,20 @@ CLASS Server
     END METHOD
       
     METHOD start()
-      SET isRunning to TRUE
+      SET is Running to TRUE
       TRY
-         CREATE serverSocket using the specified port
+         CREATE server Socket using the specified port
          DISPLAY "Server started on port " + port + " and waiting for clients..."
-           WHILE isRunning
+           WHILE is Running
            Wait for a client connection
            ACCEPT the client connection 
-           CREATE a new ClientHandler for the connected client
-           ADD the new ClientHandler to the list of connected clients
+           CREATE a new Client Handler for the connected client
+           ADD the new Client Handler to the list of connected clients
            START a new thread to handle communication with the client
         END WHILE
 
-           CATCH IOException
-           IF the serverr is still running THEN
+           CATCH Communication error 
+           IF the server is still running THEN
             DISPLAY "Error while starting the server" 
         END IF
     FINALLY
@@ -354,24 +354,24 @@ CLASS Server
 
     METHOD broadcast(message, sender)
         FOR EACH client IN clients
-                SEND message to the client using sendMessage method
+                SEND message to the client using send Message method
             END IF
         END FOR
     END METHOD
 
-    METHOD removeClient(client)
+    METHOD remove Client(client)
     REMOVE the specified client from the list of connected clients
     DISPLAY the message indicating that the client has disconnected
     DISPLAY the total number of active clients
     END METHOD
 
     METHOD stop()
-        SET isRunning to FALSE
+        SET is Running to FALSE
         TRY
-            IF serverSocket exists AND serverSocket is not closed THEN
-                CLOSE serverSocket
+            IF server Socket exists AND server Socket is not closed THEN
+                CLOSE server Socket
             END IF
-        CATCH IOException
+        CATCH Communication error
              FOR each connected client in clients
              CLOSE the client's connection
              END FOR
@@ -381,6 +381,119 @@ CLASS Server
         END TRY
     END METHOD
 END CLASS
+
+CLASS Authentication Service
+   
+     CREATE Secure Random number generator
+     DEFINE one day as 24 hours in milliseconds
+
+     SET the HMAC_algorithm to "HMAC-SHA256"
+     SET PBKDF2 to "PBKDF2-With-HMAC-SHA256"
+     SET PBKDF2 iteration count to 210 000
+     SET salt size to 16 bytes
+     SET hash output size to 32 bytes
+     SET minimum key size to 32 bytes
+     INITIALIZE a Base64 URL encoder and a Base64 URL decoder
+      
+     METHOD Generate Signing key
+
+            CREATE empty byte array with a size of 32 bytes
+            GENERATE secure random values for key
+     RETURN key
+END METHOD
+     
+     METHOD HashPassword(password)
+        
+         IF password IS null THEN
+            THROW error "PAssword cannot be null"
+     END IF 
+      
+     GENERATE an empty byte array of 16 bytes and store in salt
+     GENERATE secure random values for salt 
+     COMPUTE hash equals PBKDF2 (password as char array, salt, RETURN PBKDF2 Iterations)
+
+     RETURN PBKDF2 iterations +":" + Base64(salt) +":" + Base64(hash)
+END METHOD
+
+     METHOD verify Password (password, stored)
+       IF password IS null OR stored IS null THEN
+         RETURN FALSE
+    END IF
+     TRY 
+       SPLIT stored by ":" INTO parts
+       IF parts length is not 3 THEN 
+         RETURN FALSE
+    END IF  
+     
+      SET iterations to parts [0]
+      SET salt to Base64-decode (parts[1])
+      SET expected Hash to Base64-decode (parts[2])
+      SET actual Hash to PBKDF2(password as char array, salt, iterations)
+   RETURN constant-time-compare(expected Hash, actual Hash)
+
+     CATCH security error
+       RETURN FALSE
+  END TRY
+END METHOD
+
+      METHOD PBKDF2(password,salt, iterations)
+        
+         CREATE a PRE key specification using:
+              password
+              salt
+              iterations
+              key length
+
+         TRY 
+            GENERATE secret key using the PBKDF2 algorithm
+            CONVERT secret key to byte array
+        RETURN derived key
+        FINALLY
+            CLEAR password from memory
+    END TRY
+END METHOD
+
+       METHOD Generate Code(server key, code, username, server IP)
+        
+        IF 
+          username IS null OR server IP is null THEN
+          THROW error "Username and server IP cannot be null"
+   END IF
+     SET expiration Time to current system time + 24 hours
+     ENCODE username using Base64
+
+     CREATE payload containing 
+      encoded Username
+      server IP address
+      expiration Time
+
+     ENCODE payload using Base64
+
+      GENERATE HMAC-SHA256 signature using :
+        ServerKey
+        encodedPayload
+   
+      CONVERT signature to Base64
+    RETURN encodedPayload + "." + signature
+END METHOD
+
+      METHOD verifyCode(ServerKey, code, username,serverIp)
+        IF
+          code IS null OR username IS null OR serverIp IS null THEN
+          RETURN FALSE
+        TRY 
+          SET fields to splitCode(ServerKey,code)
+          CONVERT expirationTime to long(fields[2])
+          RETURN 
+                SET fields[0] to
+                 ET fields[0] to
+
+      
+ 
+
+
+
+ 
 
 
 
