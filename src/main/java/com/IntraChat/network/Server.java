@@ -6,6 +6,10 @@ import java.net.Socket;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ *
+ * @author Bonginkosi
+ */
 public class Server {
 
     private final int port;
@@ -16,10 +20,21 @@ public class Server {
 
     private final List<ClientHandler> clients = new CopyOnWriteArrayList<>();
 
+    /**
+     * Creates a server instance and assigns
+     * the port number used for client connections.
+     *
+     * @param port The port on which the server listens.
+     */
     public Server(int port) {
         this.port = port;
     }
 
+    /**
+     * Starts the server and listens for incoming
+     * client connections. A new ClientHandler
+     * thread is created for each connected client.
+     */
     public void start() {
         synchronized (stopLock) {
             isRunning = true;
@@ -48,6 +63,13 @@ public class Server {
     }
 
     // Send a message to all connected clients (group)
+
+    /**
+     * Sends a message to all connected clients.
+     *
+     * @param message The message to be broadcast.
+     * @param sender The client that originated the message.
+     */
     public void broadcast(String message, ClientHandler sender) {
         for (ClientHandler client : clients) {
             client.sendMessage(message);
@@ -55,6 +77,15 @@ public class Server {
     }
 
     // Send a message to a specific client by username (private message)
+
+    /**
+     * Sends a private message to a specific user.
+     *
+     * @param message The message to send.
+     * @param username The recipient's username.
+     * @return true if the message was delivered;
+     *         otherwise false.
+     */
     public boolean sendMessageToUsername(String message, String username) {
         if (username == null) return false;
         for (ClientHandler client : clients) {
@@ -66,6 +97,10 @@ public class Server {
         return false;
     }
 
+    /**
+     * Sends the current list of connected users
+     * to all active clients.
+     */
     public void broadcastUserList() {
         StringBuilder sb = new StringBuilder("(system:users) ");
         for (int i = 0; i < clients.size(); i++) {
@@ -80,6 +115,12 @@ public class Server {
         }
     }
 
+    /**
+     * Adds a newly authenticated client to the
+     * list of active server connections.
+     *
+     * @param client The client to be added.
+     */
     public void addClient(ClientHandler client) {
         if (client != null && !clients.contains(client)) {
             clients.add(client);
@@ -87,22 +128,44 @@ public class Server {
         }
     }
 
+    /**
+     * Removes a client from the list of active
+     * server connections.
+     *
+     * @param client The client to be removed.
+     */
     public void removeClient(ClientHandler client) {
         clients.remove(client);
         System.out.println("(server) Client disconnected. Total active: " + clients.size());
     }
 
+    /**
+     * Retrieves all currently connected clients.
+     *
+     * @return A list of active client handlers.
+     */
     public List<ClientHandler> getClients() {
         return clients;
     }
 
+    /**
+     * Retrieves the server's local LAN IP address.
+     *
+     * @return The IP address used by clients to
+     *         connect to the server.
+     */
     public String getServerIpAddress() {
         return getLocalLanIp();
     }
 
     /**
-     * Resolves the real reachable LAN IPv4 address (e.g. 192.168.x.x, 10.x.x.x)
-     * so devices on the same Wi-Fi / LAN network can connect to this machine.
+     * Determines the server's reachable LAN IPv4 address.
+     * The method first attempts to detect the active
+     * network interface and then falls back to scanning
+     * available interfaces if necessary.
+     *
+     * @return The detected LAN IPv4 address, or
+     *         127.0.0.1 if no valid address is found. 
      */
     public static String getLocalLanIp() {
         // 1. Try finding outbound interface using UDP routing resolution
@@ -161,7 +224,13 @@ public class Server {
     }
 
     /**
-     * Returns a list of all detected IPv4 addresses on this machine.
+     * Retrieves all valid IPv4 LAN addresses
+     * available on the local machine.
+     * Virtual, loop back, and inactive network
+     * interfaces are excluded.
+     *
+     * @return A list containing all detected
+     *         LAN IP addresses.
      */
     public static java.util.List<String> getAllLanIps() {
         java.util.List<String> list = new java.util.ArrayList<>();
@@ -192,10 +261,21 @@ public class Server {
         return list;
     }
 
+    /**
+     *  Retrieves the port number currently used
+     * by the server.
+     *
+     * @return The server's port number.
+     */
     public int getPort() {
         return port;
     }
-
+    /**
+     * Checks whether the server is currently running.
+     *
+     * @return true if the server is active;
+     *         otherwise false.
+     */
     public boolean isRunning() {
         return isRunning;
     }
@@ -203,6 +283,11 @@ public class Server {
     private final Object stopLock = new Object();
     private boolean isStopped = false;
 
+    /**
+     * Stops the server and disconnects all connected
+     * clients. Network resources are released and
+     * the server is marked as no longer running.
+     */
     public void stop() {
         synchronized (stopLock) {
             if (isStopped) {
@@ -227,6 +312,15 @@ public class Server {
         System.out.println("(server) Server stopped.");
     }
 
+    /**
+     * Generates a connection code containing the
+     * server's IP address and port number.
+     * The code can be shared with clients to
+     * simplify connection setup.
+     *
+     * @return A formatted connection code for
+     *         joining the server
+     */
     public String getConnectionCode() {
         return com.IntraChat.security.AuthService.generateConnectionCode(getServerIpAddress(), port);
     }

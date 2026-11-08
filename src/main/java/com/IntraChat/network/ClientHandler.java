@@ -7,6 +7,10 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import com.IntraChat.database.DatabaseManager;
 
+/**
+ *
+ * @author Bonginkosi
+ */
 public class ClientHandler implements Runnable {
     private final Socket socket;
     private final Server server;
@@ -15,6 +19,14 @@ public class ClientHandler implements Runnable {
     private String username = "Anonymous";
     private String password = "password";
 
+    /**
+     * Creates a new client handler responsible for
+     * managing communication between a connected
+     * client and the server.
+     *
+     * @param socket The socket associated with the client.
+     * @param server The server managing the connection.
+     */
     public ClientHandler(Socket socket, Server server) {
         this.socket = socket;
         this.server = server;
@@ -26,6 +38,12 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Handles client authentication and processes
+     * messages received from the connected client.
+     * This method runs in a separate thread for
+     * each active client connection.
+     */
     @Override
     public void run() {
         try {
@@ -164,12 +182,23 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Sends a message to the connected client
+     * through the output stream.
+     *
+     * @param message The message to be sent.
+     */
     public void sendMessage(String message) {
         if (out != null) {
             out.println(message);
         }
     }
 
+    /**
+     * Sends the authenticated user's chat history
+     * to the client. This includes both room messages
+     * and direct messages.
+     */
     public void sendChatHistory() {
         try {
             // 1. Group room messages
@@ -202,6 +231,12 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Closes the client connection and removes the
+     * client from the list of active server users.
+     * Connected users are notified of the disconnection
+     * and all communication resources are released
+     */
     public synchronized void closeConnection() {
         server.removeClient(this);
         if (server.isRunning()) {
@@ -217,6 +252,12 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Retrieves the username associated with
+     * this client connection.
+     *
+     * @return The client's username.
+     */
     public String getUsername() {
         return username;
     }

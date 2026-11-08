@@ -10,6 +10,13 @@ import com.IntraChat.gui.Structure;
  */
 public class IntraChat {
 
+    /**
+     *Entry point of the IntraChat application.
+     * Initializes the user interface theme and
+     * launches the login window.
+     *
+     * @param args Command-line argument
+     */
     public static void main(String[] args) {
         try {
             com.formdev.flatlaf.FlatDarkLaf.setup();

@@ -10,10 +10,30 @@ import java.util.ArrayList;
 import java.util.List;
 import com.IntraChat.security.AuthService;
 
+/**
+ *
+ * @author Bonginkosi
+ */
 public class DatabaseManager {
 
     private static final String DB_URL = "jdbc:sqlite:chat.db";
+    /**
+     * Represents a chat message stored in the database.
+     *
+     * @param sender The user who sent the message.
+     * @param recipient The receiving user or chat room.
+     * @param content The message content.
+     * @param timestamp The date and time the message was sent.
+     */
     public record Message(String sender, String recipient, String content, String timestamp) {}
+  /**  
+   * Represents a user account stored in the database.
+   *
+   * @param id Unique user identifier.
+   * @param username User account name.
+   * @param isAllowed Indicates whether the account is approved.
+   * @param createdAt Account creation timestamp.
+   */
     public record UserRecord(int id, String username, String isAllowed, String createdAt) {}
 
     static {
@@ -23,7 +43,14 @@ public class DatabaseManager {
             System.err.println("(DB WARNING) SQLite JDBC driver not found: " + e.getMessage());
         }
     }
-
+    /**
+     Establishes a connection to the SQLite database.
+ * Database settings are configured to improve
+ * concurrency and responsiveness.
+ *
+ * @return An active database connection.
+ * @throws SQLException If the connection cannot be established.
+ */
     public static Connection connect() throws SQLException {
         Connection conn = DriverManager.getConnection(DB_URL);
         try (Statement stmt = conn.createStatement()) {
@@ -33,6 +60,11 @@ public class DatabaseManager {
         return conn;
     }
 
+    /**
+     * Creates the required database tables if they
+     * do not already exist. This method is executed
+     * during system initialization.
+     */
     public static void initializeDatabase() {
         String createUsersTable = "CREATE TABLE IF NOT EXISTS users ("
                 + " id INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -70,6 +102,13 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * * Checks whether a user with the specified
+     * username already exists in the database.
+     *
+     * @param username The username to search for.
+     * @return true if the user exists; otherwise false
+     */
     public static boolean userExists(String username) {
         String sql = "SELECT id FROM users WHERE username = ?";
         try (Connection conn = connect();
@@ -83,10 +122,27 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Creates a new user account with the
+     * default approval status of false.
+     *
+     * @param username The user's username.
+     * @param password The user's password
+     */
     public static void addUser(String username, String password) {
         addUser(username, password, "false");
     }
 
+    /**
+     * * Adds a new user to the database.
+     * The password is hashed before being stored
+     * and the user's approval status is recorded.
+     *
+     * @param username The user's username.
+     * @param password The user's password.
+     * @param isAllowed Indicates whether the account
+     *                  has been approved.
+     */
     public static void addUser(String username, String password, String isAllowed) {
         String sql = "INSERT INTO users(username, password, isAllowed) VALUES(?, ?, ?)";
 
@@ -111,10 +167,31 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Authenticates a user using the supplied
+     * username and password.
+     *
+     * @param username The username to authenticate.
+     * @param password The password provided by the user.
+     * @return true if authentication succeeds;
+     *         otherwise false.
+     */
     public static boolean authenticateUser(String username, String password) {
         return authenticateUser(username, password, null);
     }
 
+    /**
+     * Authenticates a user and optionally verifies
+     * the user's approval status.
+     *
+     * @param username The username to authenticate.
+     * @param password The password provided by the user.
+     * @param requiredIsAllowed Required account status
+     *                          (e.g. "true"), or null
+     *                          to skip the status check.
+     * @return true if the credentials and approval
+     *         requirements are satisfied; otherwise false.
+      */
     public static boolean authenticateUser(String username, String password, String requiredIsAllowed) {
         String sql = "SELECT password, isAllowed FROM users WHERE username = ?";
 
@@ -155,6 +232,14 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Checks whether a user has been approved
+     * to access the chat system.
+     *
+     * @param username The username to check.
+     * @return true if the user's account is approved;
+     *         otherwise false.
+     */
     public static boolean isUserAllowed(String username) {
         String sql = "SELECT isAllowed FROM users WHERE username = ?";
         try (Connection conn = connect();
@@ -172,6 +257,14 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Updates the approval status of a user account.
+     *
+     * @param userId The ID of the user to update.
+     * @param isAllowed The new approval status.
+     * @return true if the update was successful;
+     *         otherwise false.
+     */
     public static boolean updateUserAllowed(int userId, String isAllowed) {
         String sql = "UPDATE users SET isAllowed = ? WHERE id = ?";
         try (Connection conn = connect();
@@ -186,6 +279,15 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Updates the approval status of a user account
+     * using the username as the identifier.
+     *
+     * @param username The username of the account to update.
+     * @param isAllowed The new approval status.
+     * @return true if the update was successful;
+     *         otherwise false.
+     */
     public static boolean updateUserAllowed(String username, String isAllowed) {
         String sql = "UPDATE users SET isAllowed = ? WHERE username = ?";
         try (Connection conn = connect();
@@ -200,6 +302,14 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Deletes a user account from the database
+     * using the user's unique ID.
+     *
+     * @param userId The ID of the user to delete.
+     * @return true if the user was successfully deleted;
+     *         otherwise false.
+     */
     public static boolean deleteUser(int userId) {
         String sql = "DELETE FROM users WHERE id = ?";
         try (Connection conn = connect();
@@ -213,6 +323,14 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Deletes a user account from the database
+     * using the username.
+     *
+     * @param username The username of the account to delete.
+     * @return true if the user was successfully deleted;
+     *         otherwise false.
+     */
     public static boolean deleteUser(String username) {
         String sql = "DELETE FROM users WHERE username = ?";
         try (Connection conn = connect();
@@ -226,6 +344,16 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Updates a user's password in the database.
+     * T*e password is hashed before being stored.
+     *
+     * @param userId The ID *f the user whose password
+     *             will be updated.
+     * @param newPassword The new password to assign.
+     * @return true if the update was successful;
+     *         otherwise false.
+     */
     public static boolean updateUserPassword(int userId, String newPassword) {
         String sql = "UPDATE users SET password = ? WHERE id = ?";
         String storedPassword = newPassword;
@@ -247,6 +375,16 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Updates a user's password using their username.
+     * The new password is hashed before being stored
+     * in the database.
+     *
+     * @param username The username of the account.
+     * @param newPassword The new password to assign.
+     * @return true if the password was updated successfully;
+     *         otherwise false.
+     */
     public static boolean updateUserPassword(String username, String newPassword) {
         String sql = "UPDATE users SET password = ? WHERE username = ?";
         String storedPassword = newPassword;
@@ -268,6 +406,13 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Stores a chat message in the database.
+     *
+     * @param sender The user who sent the message.
+     * @param recipient The receiving user or chat room.
+     * @param content The content of the message.
+     */
     public static void logMessage(String sender, String recipient, String content) {
         String sql = "INSERT INTO messages(sender, recipient, content) VALUES(?, ?, ?)";
 
@@ -284,6 +429,11 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Retrieves and displays the complete chat history
+     * stored in the database. Messages are displayed
+     * in chronological order.
+     */
     public static void displayChatHistory() {
         String sql = "SELECT sender, recipient, content, timestamp FROM messages ORDER BY id ASC";
 
@@ -306,6 +456,12 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Retrieves all chat messages from the database
+     * and returns them as a collection of Message objects.
+     *
+     * @return An ArrayList containing the stored chat history.
+     */
     public static ArrayList<Message> getChatHistoryArrayList() {
         String sql = "SELECT sender, recipient, content, timestamp FROM messages ORDER BY id ASC";
         ArrayList<Message> chatHistory = new ArrayList<>();
@@ -330,6 +486,14 @@ public class DatabaseManager {
         return chatHistory;
     }
 
+    /**
+     * Retrieves the chat history for a specific room.
+     * Messages are returned in chronological order.
+     *
+     * @param room The chat room whose history is required.
+     * @return An ArrayList containing all messages
+     *         associated with the specified room.
+     */
     public static ArrayList<Message> getChatHistoryForRoom(String room) {
         String cleanRoom = (room != null && room.startsWith("#")) ? room.substring(1) : (room != null ? room : "General");
         String sql = "SELECT sender, recipient, content, timestamp FROM messages "
@@ -350,6 +514,15 @@ public class DatabaseManager {
         return history;
     }
 
+    /**
+     * Retrieves the direct message history between
+     * two users.
+     *
+     * @param user1 The first user.
+     * @param user2 The second user.
+     * @return An ArrayList containing all direct
+     *         messages exchanged between the users.
+     */
     public static ArrayList<Message> getDirectMessageHistory(String user1, String user2) {
         String sql = "SELECT sender, recipient, content, timestamp FROM messages "
                    + "WHERE (sender = ? AND recipient = ?) OR (sender = ? AND recipient = ?) ORDER BY id ASC";
@@ -371,6 +544,12 @@ public class DatabaseManager {
         return history;
     }
 
+    /**
+     * Retrieves all messages belonging to public chat rooms.
+     * Messages are returned in chronological order.
+     *
+     * @return An ArrayList containing all room messages.
+     */
     public static ArrayList<Message> getAllRoomMessages() {
         String sql = "SELECT sender, recipient, content, timestamp FROM messages "
                    + "WHERE recipient LIKE '#%' OR LOWER(recipient) IN ('general', 'maths', 'elc', 'sdn') "
@@ -393,6 +572,16 @@ public class DatabaseManager {
         return history;
     }
 
+    /**
+     * Retrieves all direct messages associated with
+     * a specific user. Messages sent and received by
+     * the user are included.
+     *
+     * @param username The username whose direct
+     *                 message history is required.
+     * @return An ArrayList containing all direct
+     *         messages involving the specified user.
+     */
     public static ArrayList<Message> getAllDirectMessagesForUser(String username) {
         String sql = "SELECT sender, recipient, content, timestamp FROM messages "
                    + "WHERE (LOWER(sender) = LOWER(?) OR LOWER(recipient) = LOWER(?)) "
@@ -423,6 +612,12 @@ public class DatabaseManager {
         return history;
     }
 
+    /**
+     * Retrieves all registered users from the database.
+     *
+     * @return A list containing all user records
+     *         ordered by user ID.
+     */
     public static List<UserRecord> getAllUsers() {
         List<UserRecord> users = new ArrayList<>();
         String sql = "SELECT id, username, isAllowed, created_at FROM users ORDER BY id ASC";
@@ -443,6 +638,13 @@ public class DatabaseManager {
         return users;
     }
 
+    /**
+     * Retrieves the total number of registered users
+     * stored in the database.
+     *
+     * @return The total user count, or 0 if the
+     *         operation fails
+     */
     public static int getUserCount() {
         String sql = "SELECT COUNT(*) FROM users";
         try (Connection conn = connect();
@@ -453,6 +655,12 @@ public class DatabaseManager {
         return 0;
     }
 
+    /**
+     * Retrieves the total number of approved users
+     * in the database.
+     *
+     * @return The number of approved user accounts
+     */
     public static int getAcceptedUserCount() {
         String sql = "SELECT COUNT(*) FROM users WHERE isAllowed = 'true'";
         try (Connection conn = connect();
@@ -463,6 +671,12 @@ public class DatabaseManager {
         return 0;
     }
 
+    /**
+     * Retrieves the total number of users whose
+     * accounts are still awaiting approval.
+     *
+     * @return The number of pending user accounts
+     */
     public static int getPendingUserCount() {
         String sql = "SELECT COUNT(*) FROM users WHERE isAllowed = 'false'";
         try (Connection conn = connect();

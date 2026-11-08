@@ -39,6 +39,10 @@ import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
+/**
+ *
+ * @author Liyabona
+ */
 public class Chat extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Chat.class.getName());
@@ -54,13 +58,22 @@ public class Chat extends javax.swing.JFrame {
     private boolean isUpdatingTabTitle = false;
 
     /**
-     * Creates new form Chat
+     * Creates a new chat window and initializes
+     * the graphical user interface components.
      */
     public Chat() {
         initComponents();
         customInit();
     }
 
+    /**
+     * Creates a chat window for an authenticated user.
+     * Stores the client connection and initializes
+     * the chat interface.
+     *
+     * @param client The client connected to the server.
+     * @param username The username of the logged-in user
+     */
     public Chat(Client client, String username) {
         this.client = client;
         this.currentUser = (username != null && !username.trim().isEmpty()) ? username.trim() : "Anonymous";

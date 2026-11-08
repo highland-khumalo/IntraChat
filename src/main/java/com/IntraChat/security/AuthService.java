@@ -11,6 +11,10 @@ import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Base64;
 
+/**
+ *
+ * @author Simanye
+ */
 public class AuthService {
     private static final SecureRandom secureRandom = new SecureRandom();
     private static final long Day = 24 * 60 * 60 * 1000L; // 24 hours in milliseconds
@@ -26,6 +30,13 @@ public class AuthService {
     private static final Base64.Decoder base64Decoder = Base64.getUrlDecoder();
 
     //Server code. Generatesa random signing key. Generate it once, store it securely and reuses it. If it changes or is lost, every issued token becomes invalid.
+
+    /**
+     * Generates a secure random signing key used
+     * for creating and verifying authentication codes.
+     *
+     * @return A randomly generated signing key.
+     */
     public static byte[] generateSigningKey() {
         byte[] key = new byte[MIN_KEY_BYTES]; // 256 bits
         secureRandom.nextBytes(key);
@@ -33,6 +44,16 @@ public class AuthService {
     }
 
     //Password hashing (storing returned string, never the password itself). Returns a string containing the salt and the hash, separated by a colon.
+
+    /**
+     * Generates a secure hash of a password using
+     * PBKDF2 with a random salt.
+     *
+     * @param password The password to hash.
+     * @return A string containing the iteration count,
+     *         salt, and hash value.
+     * @throws GeneralSecurityException If hashing fails.
+     */
     public static String hashPassword(String password) throws GeneralSecurityException {
         if(password == null){
             throw new IllegalArgumentException("Password cannot be null");
@@ -44,6 +65,17 @@ public class AuthService {
     }
 
     //Password verification. Takes the stored string (salt:hash) and the password to verify. Returns true if the password is correct, false otherwise.
+
+    /**
+     * Verifies that a password matches a previously
+     * stored PBKDF2 password hash.
+     *
+     * @param password The password entered by the user.
+     * @param stored The stored password hash.
+     * @return true if the password is valid;
+     *         otherwise false.
+     * @throws GeneralSecurityException If verification fails.
+     */
     public static boolean verifyPassword(String password, String stored) throws GeneralSecurityException {
         if(password == null || stored == null){
             return false;
@@ -72,6 +104,19 @@ public class AuthService {
     }
 
     //Creates a code "payload.signature" that binds a user to an IP address and expires after 24 hours. The payload is signed, not encrypted, so it can be read by anyone, but cannot be tampered with without invalidating the signature. 
+
+    /**
+     * Generates a secure authentication code
+     * containing the username, server IP address,
+     * and an expiration timestamp.
+     *
+     * @param serverKey The signing key used to
+     *                  generate the code signature.
+     * @param username The username associated with the code.
+     * @param serverIp The server IP address.
+     * @return A signed authentication code.
+     * @throws GeneralSecurityException If code generation fails.
+     */
     public static String generateCode(byte[] serverKey, String username, InetAddress serverIp) throws GeneralSecurityException{
         requiredValidKey(serverKey);
         if (username == null || serverIp == null){
@@ -86,6 +131,16 @@ public class AuthService {
     }
 
     //Verifies a code. Returns true if the code is valid, false otherwise.
+
+    /**
+     * Verifies the authenticity and validity
+     * of a generated authentication code
+     * @param serverKey
+     * @param code
+     * @param username
+     * @param serverIp
+     * @return
+     */
     public static boolean verifyCode(byte[] serverKey, String code, String username, InetAddress serverIp){
         if (code == null || username == null || serverIp == null){
             return false;
@@ -112,6 +167,9 @@ public class AuthService {
     /**
      * Converts a server IP address and port into a compact, human-friendly Connection Code.
      * Example: "192.168.1.15" and 5000 -> "2334C-LQXZC" (10 alphanumeric chars)
+     * @param ip
+     * @param port
+     * @return 
      */
     public static String generateConnectionCode(String ip, int port) {
         if (ip == null || ip.trim().isEmpty() || "localhost".equalsIgnoreCase(ip.trim())) {
@@ -153,6 +211,8 @@ public class AuthService {
     /**
      * Parses a single input (Connection Code, Base64 token, Hex code, or raw IP/IP:port)
      * back into the target IP address and port.
+     * @param input
+     * @return 
      */
     public static ConnectionTarget parseConnectionCode(String input) {
         if (input == null || input.trim().isEmpty()) {
@@ -342,6 +402,11 @@ public class AuthService {
     }
 
     //Demo
+
+    /**
+     *
+     * @param args
+     */
 
     public static void main(String[] args){
         try{
