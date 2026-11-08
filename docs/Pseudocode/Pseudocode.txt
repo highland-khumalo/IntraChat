@@ -485,11 +485,111 @@ END METHOD
           SET fields to splitCode(ServerKey,code)
           CONVERT expirationTime to long(fields[2])
           RETURN 
-                SET fields[0] to
-                 ET fields[0] to
+                SET fields[0] to serverIp AND
+                SET fields[1] to username AND
+                SET CurrentTime in milliseconds to expirationTime
 
-      
+    CATCH Security error
+           RETURN FALSE
+
+          METHOD splitCode(ServerKey,code)
+              IF code IS null THEN
+              THROW error "Code cannot be null"
+
+              TRY 
+                SET parts to split to "."
+                 IF parts length is not 2 THEN
+                   THROW error "Malformed payload"
+              END IF
+              
+              DECODE fields [0] from Base64
+              STORE the result AS username
+        RETURN 
+             username + fields[1] + fields [2]
+         CATCH 
+              THROW error "Malformed code"
+    END TRY 
+END METHOD
+     
+      METHOD requiredValidKey(ServerKey)  
+            IF ServerKey IS null OR ServerKey length < 32 bytes THEN
+              THROW error "Invalid server key: " + 32 bytes + "bytes required"
+       END IF
+    END METHOD
+
+       METHOD HMAC-SHA256(key, data)
+         CREATE HMAC object using HMAC-SHA256 algorithm
+         CREATE secret key specification from key
+         INITIALIZE HMAC object with secret key
+         CONVERT data to UTF-8 bytes
+         COMPUTE HMAC hash of data
+       RETURN hash
+END METHOD
+  
+      METHOD Main
+         TRY 
+            SET username TO testUser
+            INITIALIZE serverIp address
+            INITIALIZE wrongIp address
+            SET password TO testPassword
+  
+            Hash password 
+            Verify correct password 
+            Verify incorrect password
+             
+            GENERATE signing key
+            GENERATE authentication code
+    
+            Verify code using correct details
+            Verify code using incorrect IP address
+            Verify code using incorrect username
+   
+      MODIFY code to simulate tampering 
+      Verify tampered code
  
+     SPLIT code into components
+     DISPLAY username,  IP address,tampered code
+      
+     SET fields TO splitCode(ServerKey, code)
+     DISPLAY "Split code: username=", + fields[0] + ",IP=" + fields[1] +", expirationTime=" + fields[2]
+     CATCH exception
+        DISPLAY error details
+      END TRY
+   END METHOD
+END CLASS
+              
+ CLASS File Handling
+ 
+       METHOD main
+          PROMPT user to enter username
+          READ username
+          PROMPT user to enter password 
+          READ password
+          PROMPT user to enter code
+          READ code
+
+       TRY 
+          IF user data file does not exist THEN
+              CREATE user data file
+          END IF
+         
+       OPEN file in append mode
+        WRITE username, password, and code to file
+      CLOSE file
+    
+      DISPLAY "User data saved successfully"
+
+      CATCH exception
+       DISPLAY error message
+     END IF
+   END TRY
+ END METHOD
+END CLASS
+
+CLASS Chat
+
+     METHOD Chat
+           
 
 
 

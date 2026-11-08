@@ -7,29 +7,140 @@ therefore it is assumed to be part of version control checkout.
 Without this configuration present, some functionality in the IDE may be limited or fail altogether.
 -->
     <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
+        <word>acceptBtnActionPerformed</word>
+        <word>acquireLock</word>
+        <word>activeFilter</word>
+        <word>activePorts</word>
+        <word>activeRoom</word>
+        <word>actualHash</word>
         <word>actualSignature</word>
+        <word>addUser</word>
+        <word>AdminLockManager</word>
+        <word>authenticateUser</word>
+        <word>AuthService</word>
+        <word>AUTOINCREMENT</word>
+        <word>autoRefreshTimer</word>
+        <word>broadcastUserList</word>
+        <word>BufferedReader</word>
+        <word>chatViews</word>
+        <word>ClientHandler</word>
+        <word>clientSocket</word>
+        <word>closeConnection</word>
+        <word>codeTF</word>
+        <word>connectionResult</word>
+        <word>ConnectionTarget</word>
+        <word>ConversationKey</word>
+        <word>createdAt</word>
+        <word>currentPort</word>
         <word>CurrentTime</word>
+        <word>currentUser</word>
+        <word>DatabaeManager</word>
+        <word>DatabaseManager</word>
+        <word>DatagramSocket</word>
         <word>DecodeBase</word>
+        <word>defaultPort</word>
+        <word>deleteBtnActionPerformed</word>
+        <word>deleteUser</word>
+        <word>ELC</word>
         <word>encodedPayload</word>
+        <word>encodeFileToBase</word>
+        <word>expectedHash</word>
         <word>expectedSignature</word>
         <word>expirationTime</word>
+        <word>FileChooser</word>
+        <word>FileHandling</word>
+        <word>formatFileSize</word>
         <word>GenerateCode</word>
+        <word>generateConnectionCode</word>
         <word>GenerateHMAC</word>
         <word>GenerateSigningKey</word>
+        <word>getAllUsers</word>
+        <word>getChatHistoryArrayList</word>
+        <word>getChatHistoryForRoom</word>
+        <word>getConnectionCode</word>
+        <word>getDefaultDownloadsDirectory</word>
+        <word>getDirectMessageHistory</word>
+        <word>getLocalLanIp</word>
+        <word>hashedPassword</word>
         <word>HashPassword</word>
         <word>HMAC</word>
+        <word>incomingMessage</word>
+        <word>initialName</word>
+        <word>initialPassword</word>
+        <word>INTRA</word>
+        <word>IntraChat</word>
+        <word>IOException</word>
+        <word>IPv</word>
+        <word>isAllowed</word>
+        <word>isAllowedStatus</word>
+        <word>isConected</word>
+        <word>isConnected</word>
+        <word>isRunning</word>
+        <word>isUserAllowed</word>
+        <word>jdbc</word>
+        <word>JScrollPane</word>
+        <word>JTextArea</word>
+        <word>lastErrorMessage</word>
+        <word>listenForMessages</word>
+        <word>loginBtnActionPerformed</word>
+        <word>logMessage</word>
+        <word>loopback</word>
+        <word>Maths</word>
+        <word>messageListener</word>
+        <word>newPassword</word>
         <word>NumberFormatException</word>
+        <word>onMessageReceived</word>
+        <word>openAdminConsole</word>
+        <word>openSharedFilesHub</word>
+        <word>parseConnectionCode</word>
+        <word>passwordF</word>
         <word>PBKDF</word>
         <word>PRE</word>
+        <word>PrintWriter</word>
+        <word>refreshData</word>
+        <word>rejectBtnActionPerformed</word>
+        <word>releaseLock</word>
+        <word>removeClient</word>
+        <word>requiredIsAllowed</word>
         <word>requiredValidKey</word>
+        <word>saveBase</word>
+        <word>scrollability</word>
+        <word>SDN</word>
         <word>SecurityException</word>
+        <word>sendFileToActiveConversation</word>
+        <word>sendMessage</word>
+        <word>sendMessageToUsername</word>
+        <word>serverInstance</word>
         <word>serverIp</word>
         <word>ServerKey</word>
+        <word>serverPort</word>
+        <word>serverSocket</word>
+        <word>setPasswordBtnActionPerformed</word>
         <word>severKey</word>
+        <word>SharedFileRecord</word>
+        <word>sharedFiles</word>
         <word>splitCode</word>
+        <word>sql</word>
+        <word>sqlite</word>
+        <word>startSeverBtnActionPerformed</word>
+        <word>storedHash</word>
         <word>storedPassword</word>
+        <word>targetFile</word>
         <word>testPassword</word>
         <word>testUser</word>
+        <word>textfield</word>
+        <word>textfields</word>
+        <word>ToFile</word>
+        <word>toggleServerBtnActionPerformed</word>
+        <word>UI</word>
+        <word>UNREGISTER</word>
+        <word>updateUserAllowed</word>
+        <word>updateUserPassword</word>
+        <word>userExists</word>
+        <word>userId</word>
+        <word>usernameTF</word>
+        <word>UserRecord</word>
+        <word>UTF</word>
         <word>verifyCode</word>
         <word>VerifyPassword</word>
         <word>wrongIp</word>

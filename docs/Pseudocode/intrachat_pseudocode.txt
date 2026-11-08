@@ -1,0 +1,835 @@
+================================================================================
+CLASS: Network Back end Test (Main Launcher / Entry Point)
+================================================================================
+    METHOD main()
+        TRY
+            Apply Flat Dark Look and Feel theme
+        CATCH theme setup error
+            DISPLAY "unable to use Flat Dark"
+        END TRY
+
+        CREATE Structure window instance
+        CALL Structure.start() to display Login UI
+    END METHOD
+END CLASS
+
+
+================================================================================
+CLASS: Authentication Service (Auth Service)
+================================================================================
+    DECLARE PBKDF2_ITERATIONS AS 210000
+    DECLARE SALT_BYTES AS 16
+    DECLARE HASH_BYTES AS 32
+
+    RECORD Connection Target
+        IP AS String
+        port AS Integer
+    END RECORD
+
+    METHOD HashPassword(password)
+        IF password IS NULL THEN
+            THROW Exception "Password cannot be null"
+        END IF
+
+        GENERATE 16 random salt bytes
+        COMPUTE PBKDF2 hash using HMAC-SHA256 with 210,000 iterations
+        CONVERT salt and hash to Base64 strings
+
+        RETURN PBKDF2_ITERATIONS + ":" + Base64(salt) + ":" + Base64(hash)
+    END METHOD
+
+    METHOD VerifyPassword(password, storedHash)
+        IF password IS NULL OR storedHash IS NULL THEN
+            RETURN FALSE
+        END IF
+
+        SPLIT storedHash BY ":" INTO parts
+        IF parts length IS NOT EQUAL TO 3 THEN
+            RETURN FALSE
+        END IF
+
+        CONVERT parts[0] TO iterations
+        DECODE parts[1] FROM Base64 TO salt
+        DECODE parts[2] FROM Base64 TO expectedHash
+
+        COMPUTE actualHash using PBKDF2 with (password, salt, iterations)
+        RETURN constant-time comparison of (expectedHash, actualHash)
+    CATCH security error
+        RETURN FALSE
+    END METHOD
+
+    METHOD generateConnectionCode(ip, port)
+        CONVERT IP + ":" + port TO UTF-8 bytes
+        ENCODE bytes TO Base64 URL Safe string (stripped of padding '=')
+        RETURN "INTRA-" + base64String
+    END METHOD
+
+    METHOD parseConnectionCode(code)
+        IF code IS NULL OR code is empty THEN
+            RETURN ConnectionTarget("127.0.0.1", 5000)
+        END IF
+
+        TRIM and STRIP "INTRA-" prefix if present
+        DECODE Base64 string TO raw text (IP:port)
+        SPLIT raw text BY ":" INTO IP and port
+        
+        RETURN ConnectionTarget(IP, port)
+    CATCH parsing error
+        RETURN ConnectionTarget(code, 5000)
+    END METHOD
+END CLASS
+
+
+================================================================================
+CLASS: Database Manager (DatabaseManager)
+================================================================================
+    DECLARE DB_URL AS "jdbc:sqlite:chat.db"
+
+    RECORD Message
+        sender AS String
+        recipient AS String
+        content AS String
+        timestamp AS String
+    END RECORD
+
+    RECORD UserRecord
+        id AS Integer
+        username AS String
+        isAllowed AS String
+        createdAt AS String
+    END RECORD
+
+    METHOD connect()
+        ESTABLISH connection to SQLite database at DB_URL
+        RETURN connection object
+    END METHOD
+
+    METHOD initialize Database()
+        DEFINE SQL statement for Users table:
+            (id INTEGER PK AUTOINCREMENT, username TEXT UNIQUE, password TEXT, isAllowed TEXT DEFAULT 'false', created_at TIMESTAMP)
+            
+        DEFINE SQL statement for Messages table:
+            (id INTEGER PK AUTOINCREMENT, sender TEXT, recipient TEXT, content TEXT, timestamp TIMESTAMP)
+
+        TRY
+            CONNECT to database
+            EXECUTE SQL statement for Users table
+            EXECUTE SQL statement for Messages table
+            ALTER Users table TO ADD isAllowed column IF NOT EXISTS
+            DISPLAY "Database tables initialized successfully"
+        CATCH SQL Exception e
+            DISPLAY "Table creation failed: " + e.message
+        END TRY
+    END METHOD
+
+    METHOD user Exists(username)
+        DECLARE sql = "SELECT id FROM users WHERE username = ?"
+        TRY
+            CONNECT to database
+            PREPARE SQL statement with username
+            EXECUTE query
+            RETURN TRUE if record exists, ELSE FALSE
+        CATCH SQL Exception
+            RETURN FALSE
+        END TRY
+    END METHOD
+
+    METHOD add User(username, password, isAllowed)
+        DECLARE sql = "INSERT INTO users(username, password, isAllowed) VALUES(?, ?, ?)"
+        HASH password using AuthService.HashPassword(password)
+        TRY
+            CONNECT to database
+            PREPARE SQL statement with (username, hashedPassword, isAllowed)
+            EXECUTE statement
+            DISPLAY "User registered: " + username
+        CATCH SQL Exception e
+            DISPLAY "Could not add user: " + e.message
+        END TRY
+    END METHOD
+
+    METHOD authenticateUser(username, password, requiredIsAllowed)
+        DECLARE sql = "SELECT password, isAllowed FROM users WHERE username = ?"
+        TRY
+            CONNECT to database
+            PREPARE SQL statement with username
+            EXECUTE query AND STORE in rs
+
+            IF rs HAS record THEN
+                GET storedPassword AND isAllowed FROM rs
+                IF requiredIsAllowed IS NOT NULL AND isAllowed != requiredIsAllowed THEN
+                    RETURN FALSE
+                END IF
+                IF storedPassword contains ":" THEN
+                    RETURN AuthService.VerifyPassword(password, storedPassword)
+                ELSE
+                    RETURN storedPassword EQUALS password  // Fallback for legacy plain text
+                END IF
+            END IF
+            RETURN FALSE
+        CATCH SQL Exception
+            RETURN FALSE
+        END TRY
+    END METHOD
+
+    METHOD isUserAllowed(username)
+        DECLARE sql = "SELECT isAllowed FROM users WHERE username = ?"
+        TRY
+            CONNECT to database
+            PREPARE SQL statement with username
+            EXECUTE query
+            IF record exists THEN
+                RETURN isAllowed EQUALS "true"
+            END IF
+            RETURN FALSE
+        CATCH SQL Exception
+            RETURN FALSE
+        END TRY
+    END METHOD
+
+    METHOD updateUserAllowed(userId, isAllowedStatus)
+        DECLARE sql = "UPDATE users SET isAllowed = ? WHERE id = ?"
+        TRY
+            CONNECT to database
+            PREPARE statement with (isAllowedStatus, userId)
+            EXECUTE update
+            RETURN TRUE if affected rows > 0
+        CATCH SQL Exception
+            RETURN FALSE
+        END TRY
+    END METHOD
+
+    METHOD updateUserPassword(userId or username, newPassword)
+        DECLARE sql = "UPDATE users SET password = ? WHERE [id|username] = ?"
+        HASH newPassword using AuthService.HashPassword(newPassword)
+        TRY
+            CONNECT to database
+            PREPARE statement with (hashedPassword, identifier)
+            EXECUTE update
+            RETURN TRUE if affected rows > 0
+        CATCH SQL Exception
+            RETURN FALSE
+        END TRY
+    END METHOD
+
+    METHOD deleteUser(userId or username)
+        DECLARE sql = "DELETE FROM users WHERE [id|username] = ?"
+        TRY
+            CONNECT to database
+            PREPARE statement with identifier
+            EXECUTE statement
+            RETURN TRUE if deleted rows > 0
+        CATCH SQL Exception
+            RETURN FALSE
+        END TRY
+    END METHOD
+
+    METHOD logMessage(sender, recipient, content)
+        DECLARE sql = "INSERT INTO messages(sender, recipient, content) VALUES(?, ?, ?)"
+        TRY
+            CONNECT to database
+            PREPARE statement with (sender, recipient, content)
+            EXECUTE update
+        CATCH SQL Exception e
+            DISPLAY "Could not log message: " + e.message
+        END TRY
+    END METHOD
+
+    METHOD getChatHistoryArrayList()
+        DECLARE sql = "SELECT sender, recipient, content, timestamp FROM messages ORDER BY id ASC"
+        CREATE empty list of Messages
+        TRY
+            CONNECT to database
+            EXECUTE SQL query
+            WHILE result set HAS NEXT row DO
+                READ sender, recipient, content, timestamp
+                CREATE Message object and ADD to list
+            END WHILE
+        CATCH SQL Exception
+            DISPLAY "Fetch failed"
+        END TRY
+        RETURN list of Messages
+    END METHOD
+
+    METHOD getChatHistoryForRoom(room)
+        DECLARE sql = "SELECT sender, recipient, content, timestamp FROM messages WHERE recipient = ? OR recipient = ? ORDER BY id ASC"
+        CREATE empty list of Messages
+        TRY
+            CONNECT to database
+            PREPARE statement with room (with and without '#' prefix)
+            EXECUTE query
+            WHILE result set HAS NEXT DO
+                READ sender, recipient, content, timestamp
+                ADD Message object to list
+            END WHILE
+        CATCH SQL Exception
+            DISPLAY "Fetch room history failed"
+        END TRY
+        RETURN list of Messages
+    END METHOD
+
+    METHOD getDirectMessageHistory(user1, user2)
+        DECLARE sql = "SELECT sender, recipient, content, timestamp FROM messages WHERE (sender = ? AND recipient = ?) OR (sender = ? AND recipient = ?) ORDER BY id ASC"
+        CREATE empty list of Messages
+        TRY
+            CONNECT to database
+            PREPARE statement with (user1, user2, user2, user1)
+            EXECUTE query
+            WHILE result set HAS NEXT DO
+                ADD Message object to list
+            END WHILE
+        CATCH SQL Exception
+            DISPLAY "Fetch DM history failed"
+        END TRY
+        RETURN list of Messages
+    END METHOD
+
+    METHOD getAllUsers()
+        DECLARE sql = "SELECT id, username, isAllowed, created_at FROM users ORDER BY id ASC"
+        CREATE empty list of UserRecord
+        TRY
+            CONNECT to database
+            EXECUTE query
+            WHILE result set HAS NEXT DO
+                ADD UserRecord object to list
+            END WHILE
+        CATCH SQL Exception
+            DISPLAY "Failed to fetch users"
+        END TRY
+        RETURN list of UserRecord
+    END METHOD
+END CLASS
+
+
+================================================================================
+CLASS: Server
+================================================================================
+    DECLARE port AS Integer
+    DECLARE serverSocket AS Server Socket
+    DECLARE isRunning AS Boolean
+    DECLARE defaultPort AS 5000
+    DECLARE clients AS Thread-safe List of ClientHandler
+
+    METHOD Server(port)
+        STORE port
+        INITIALIZE clients as an empty thread-safe list
+    END METHOD
+
+    METHOD start()
+        SET isRunning to TRUE
+        TRY
+            CREATE serverSocket bound to port
+            DISPLAY "Server started on IP: " + getLocalLanIp() + " port: " + port
+
+            WHILE isRunning DO
+                WAIT for incoming client connection
+                ACCEPT client Socket
+                CREATE new ClientHandler(clientSocket, THIS)
+                ADD handler to clients list
+                START handler in a new background daemon thread
+            END WHILE
+        CATCH IOException e
+            IF isRunning THEN DISPLAY error message END IF
+        FINALLY
+            CALL stop()
+        END TRY
+    END METHOD
+
+    METHOD broadcast(message, sender)
+        FOR EACH client IN clients DO
+            SEND message to client using client.sendMessage(message)
+        END FOR
+    END METHOD
+
+    METHOD sendMessageToUsername(message, username)
+        FOR EACH client IN clients DO
+            IF client's username EQUALS username THEN
+                SEND message to client
+                RETURN TRUE
+            END IF
+        END FOR
+        RETURN FALSE
+    END METHOD
+
+    METHOD broadcastUserList()
+        BUILD comma-separated string of all connected client usernames: "(system:users) user1,user2,..."
+        FOR EACH client IN clients DO
+            SEND user list string to client
+        END FOR
+    END METHOD
+
+    METHOD removeClient(client)
+        REMOVE client from clients list
+        DISPLAY "Client disconnected. Total active: " + clients length
+    END METHOD
+
+    METHOD getLocalLanIp()
+        TRY
+            CONNECT temporary DatagramSocket to external IP (8.8.8.8)
+            RETRIEVE local socket IP address
+            IF valid non-loopback IPv4 address THEN
+                RETURN IPv4 address
+            END IF
+        CATCH Exception
+            SCAN network interfaces for active, non-loopback IPv4 address
+            RETURN discovered LAN IP OR "127.0.0.1"
+        END TRY
+    END METHOD
+
+    METHOD stop()
+        SET isRunning to FALSE
+        TRY
+            IF serverSocket IS NOT NULL AND NOT closed THEN
+                CLOSE serverSocket
+            END IF
+        CATCH IOException
+            DISPLAY "Error closing server"
+        END TRY
+
+        FOR EACH client IN clients DO
+            CLOSE client connection
+        END FOR
+        CLEAR clients list
+        DISPLAY "Server stopped."
+    END METHOD
+
+    METHOD getConnectionCode()
+        RETURN AuthService.generateConnectionCode(getLocalLanIp(), port)
+    END METHOD
+END CLASS
+
+
+================================================================================
+CLASS: ClientHandler (Implements Runnable)
+================================================================================
+    DECLARE socket AS Socket
+    DECLARE server AS Server
+    DECLARE in AS BufferedReader
+    DECLARE out AS PrintWriter
+    DECLARE username AS String DEFAULT "Anonymous"
+    DECLARE password AS String DEFAULT "password"
+
+    METHOD ClientHandler(socket, server)
+        STORE socket, server
+        TRY
+            CREATE input Reader from socket input stream
+            CREATE output Writer from socket output stream
+        CATCH IOException
+            DISPLAY "Stream setup failed"
+        END TRY
+    END METHOD
+
+    METHOD run()
+        TRY
+            READ initialName FROM in
+            IF initialName IS NOT NULL THEN SET username = initialName END IF
+
+            READ initialPassword FROM in
+            IF initialPassword IS NOT NULL THEN SET password = initialPassword END IF
+
+            INITIALIZE DatabaseManager
+            IF userExists(username) THEN
+                IF NOT authenticateUser(username, password) THEN
+                    SEND "(system) Authentication failed: Incorrect credentials." TO out
+                    RETURN
+                END IF
+                IF NOT isUserAllowed(username) THEN
+                    SEND "(system) Account pending: Your account is awaiting administrator approval in Admin Console." TO out
+                    RETURN
+                END IF
+            ELSE
+                addUser(username, password, "false")
+                SEND "(system) Account registered: Your account is pending administrator approval." TO out
+                RETURN
+            END IF
+
+            SEND "(system) Welcome to IntraChat, " + username TO out
+            server.broadcast("(server says) " + username + " joined the chat!", THIS)
+            server.broadcastUserList()
+
+            DECLARE incomingMessage AS String
+            WHILE (READ incomingMessage FROM in) IS NOT NULL DO
+                IF incomingMessage EQUALS "/quit" THEN
+                    BREAK loop
+                ELSE IF incomingMessage STARTS WITH "ROOM:" THEN
+                    PARSE room AND content FROM incomingMessage
+                    DatabaseManager.logMessage(username, room, content)
+                    server.broadcast("ROOM:" + room + ":" + username + ":" + content, THIS)
+                ELSE IF incomingMessage STARTS WITH "DM:" THEN
+                    PARSE recipient AND content FROM incomingMessage
+                    DatabaseManager.logMessage(username, recipient, content)
+                    SET delivered = server.sendMessageToUsername("DM:" + username + ":" + content, recipient)
+                    SEND "DM_SENT:" + recipient + ":" + content TO out
+                    IF NOT delivered THEN
+                        SEND "(system) User offline. Message saved to history." TO out
+                    END IF
+                ELSE IF incomingMessage STARTS WITH "FILE:ROOM:" THEN
+                    PARSE room, filename, base64Data FROM incomingMessage
+                    DatabaseManager.logMessage(username, room, "[File: " + filename + "]")
+                    server.broadcast("FILE:ROOM:" + room + ":" + username + ":" + filename + ":" + base64Data, THIS)
+                ELSE IF incomingMessage STARTS WITH "FILE:DM:" THEN
+                    PARSE recipient, filename, base64Data FROM incomingMessage
+                    DatabaseManager.logMessage(username, recipient, "[File: " + filename + "]")
+                    SET delivered = server.sendMessageToUsername("FILE:DM:" + username + ":" + filename + ":" + base64Data, recipient)
+                    SEND "FILE_SENT:DM:" + recipient + ":" + filename TO out
+                ELSE
+                    DatabaseManager.logMessage(username, "General", incomingMessage)
+                    server.broadcast(username + ": " + incomingMessage, THIS)
+                END IF
+            END WHILE
+
+        CATCH IOException
+            DISPLAY "Connection lost with " + username
+        FINALLY
+            CALL closeConnection()
+        END TRY
+    END METHOD
+
+    METHOD sendMessage(message)
+        IF out IS NOT NULL THEN
+            WRITE message TO out
+        END IF
+    END METHOD
+
+    METHOD closeConnection()
+        server.removeClient(THIS)
+        IF server isRunning THEN
+            server.broadcast("(server says) " + username + " left the chat.", THIS)
+            server.broadcastUserList()
+        END IF
+        CLOSE socket, in, out streams
+    END METHOD
+END CLASS
+
+
+================================================================================
+CLASS: Client
+================================================================================
+    DECLARE serverIp AS String
+    DECLARE serverIp AS Integer
+    DECLARE socket AS Socket
+    DECLARE in AS BufferedReader
+    DECLARE out AS PrintWriter
+    DECLARE isConnected AS Boolean
+    DECLARE messageListener AS Callback Function
+    DECLARE lastErrorMessage AS String
+
+    METHOD Client(serverIp, serverPort)
+        STORE serverIp, serverPort
+    END METHOD
+
+    METHOD connect(username, password)
+        TRY
+            CREATE socket and CONNECT to (serverIp, serverPort) WITH 5000ms timeout
+            CREATE input Reader and output Writer streams
+
+            SEND username TO server
+            SEND password TO server
+
+            READ response FROM in
+            IF response IS NULL THEN
+                SET lastErrorMessage = "Server closed connection during authentication."
+                CALL disconnect()
+                RETURN FALSE
+            END IF
+
+            IF response STARTS WITH "(system) Welcome" THEN
+                RESET socket timeout to 0 (infinite)
+                SET isConnected = TRUE
+                
+                START background thread running listenForMessages()
+                RETURN TRUE
+            ELSE
+                SET lastErrorMessage = response
+                CALL disconnect()
+                RETURN FALSE
+            END IF
+        CATCH IOException e
+            SET lastErrorMessage = e.message
+            CALL disconnect()
+            RETURN FALSE
+        END TRY
+    END METHOD
+
+    METHOD listenForMessages()
+        TRY
+            DECLARE incoming AS String
+            WHILE isConnected AND (READ incoming FROM in) IS NOT NULL DO
+                IF messageListener IS NOT NULL THEN
+                    CALL messageListener(incoming)
+                END IF
+            END WHILE
+        CATCH IOException
+            IF isConnected THEN
+                CALL messageListener("(system) Disconnected from server.")
+            END IF
+        FINALLY
+            CALL disconnect()
+        END TRY
+    END METHOD
+
+    METHOD sendMessage(message)
+        IF out IS NOT NULL AND isConnected THEN
+            WRITE message TO out
+        END IF
+    END METHOD
+
+    METHOD disconnect()
+        IF NOT isConnected THEN RETURN END IF
+        SET isConnected = FALSE
+        CLOSE socket, in, AND out streams
+    END METHOD
+END CLASS
+
+
+================================================================================
+CLASS: File Handling (FileHandling)
+================================================================================
+    METHOD encodeFileToBase64(file)
+        READ all bytes FROM file
+        ENCODE bytes TO Base64 string
+        RETURN Base64 string
+    END METHOD
+
+    METHOD saveBase64ToFile(base64Data, targetFile)
+        DECODE Base64 string TO byte array
+        CREATE parent directories IF NOT exist
+        WRITE byte array TO targetFile
+        RETURN targetFile
+    END METHOD
+
+    METHOD formatFileSize(bytes)
+        CALCULATE human-readable file size string (B, KB, MB, GB)
+        RETURN formatted string (e.g. "2.4 MB")
+    END METHOD
+
+    METHOD getDefaultDownloadsDirectory()
+        GET user home directory
+        IF "Downloads" directory exists THEN
+            RETURN "Downloads" directory
+        ELSE
+            CREATE AND RETURN "IntraChat_Downloads" directory
+        END IF
+    END METHOD
+END CLASS
+
+
+================================================================================
+CLASS: GUI - Login Structure (Structure)
+================================================================================
+    METHOD Structure()
+        INITIALIZE GUI components (labels, textfields, buttons)
+        DISPLAY LAN connection guidance
+    END METHOD
+
+    METHOD loginBtnActionPerformed()
+        READ username FROM usernameTF
+        READ password FROM passwordF
+        READ code FROM codeTF
+
+        IF username OR password IS EMPTY THEN
+            DISPLAY warning dialog "Please enter username and password"
+            RETURN
+        END IF
+
+        PARSE target IP and Port FROM code USING AuthService.parseConnectionCode(code)
+        DISABLE login button AND SET text "Connecting..."
+
+        START background thread:
+            CREATE Client(target.IP, target.port)
+            SET connectionResult = client.connect(username, password)
+            
+            ON Swing UI Thread:
+                ENABLE login button
+                IF connectionResult IS TRUE THEN
+                    OPEN Chat UI window with Client instance
+                    DISPOSE login window
+                ELSE
+                    DISPLAY appropriate error dialog (Pending approval / Wrong credentials / Connection failed)
+                END IF
+        END THREAD
+    END METHOD
+
+    METHOD startSeverBtnActionPerformed()
+        CALL Admin.openAdminConsole(Server.defaultPort)
+        DISPOSE current window
+    END METHOD
+END CLASS
+
+
+================================================================================
+CLASS: GUI - Admin Console (Admin)
+================================================================================
+    DECLARE serverInstance AS Server
+    DECLARE activeFilter AS String DEFAULT "ALL"
+    DECLARE currentPort AS Integer
+
+    METHOD Admin(port)
+        IF NOT AdminLockManager.acquireLock(port, THIS) THEN
+            DISPLAY warning "Only 1 admin allowed at a time for port " + port
+            DISPOSE window
+            RETURN
+        END IF
+
+        STORE currentPort
+        INITIALIZE GUI components
+        INITIALIZE DatabaseManager
+
+        START autoRefreshTimer to refresh user statistics every 2500ms
+        REFRESH UI data
+    END METHOD
+
+    METHOD refreshData()
+        FETCH total, accepted, and pending user counts FROM DatabaseManager
+        UPDATE dashboard statistics counters on buttons
+
+        FETCH user records based on activeFilter ("ALL", "ACCEPTED", "PENDING")
+        POPULATE user table with (ID, Username, Status, Created At)
+
+        IF serverInstance IS NOT NULL AND serverInstance.isRunning() THEN
+            UPDATE status display to "Online | IP: [LAN_IP] | Port: [PORT]"
+            DISPLAY server connection code
+        ELSE
+            UPDATE status display to "Offline"
+        END IF
+    END METHOD
+
+    METHOD acceptBtnActionPerformed()
+        GET selected user ID FROM table
+        UPDATE user status in database to isAllowed = "true"
+        REFRESH UI data
+        DISPLAY "User APPROVED"
+    END METHOD
+
+    METHOD rejectBtnActionPerformed()
+        GET selected user ID FROM table
+        UPDATE user status in database to isAllowed = "false"
+        REFRESH UI data
+        DISPLAY "User set to PENDING"
+    END METHOD
+
+    METHOD deleteBtnActionPerformed()
+        GET selected user ID FROM table
+        CONFIRM deletion WITH user dialog
+        IF confirmed THEN
+            DELETE user FROM DatabaseManager
+            REFRESH UI data
+        END IF
+    END METHOD
+
+    METHOD setPasswordBtnActionPerformed()
+        PROMPT administrator for new password
+        UPDATE user password using DatabaseManager.updateUserPassword()
+        DISPLAY success confirmation
+    END METHOD
+
+    METHOD toggleServerBtnActionPerformed()
+        IF serverInstance IS RUNNING THEN
+            STOP serverInstance
+            REFRESH UI data
+        ELSE
+            PARSE port FROM port textfield
+            CREATE AND START new Server(port) instance in background thread
+            COPY connection code TO clipboard
+            REFRESH UI data
+            DISPLAY "Server Online - Connection Code Ready"
+        END IF
+    END METHOD
+
+    NESTED CLASS AdminLockManager
+        STATIC activePorts AS Set of Integers
+        
+        METHOD acquireLock(port, admin)
+            TRY TO acquire file lock on temp file ("IntraChat_admin_[port].lock")
+            IF lock acquired THEN
+                REGISTER port and admin instance
+                RETURN TRUE
+            END IF
+            RETURN FALSE
+        END METHOD
+
+        METHOD releaseLock(port)
+            RELEASE file lock AND UNREGISTER port
+        END METHOD
+    END NESTED CLASS
+END CLASS
+
+
+================================================================================
+CLASS: GUI - Main Chat Window (Chat)
+================================================================================
+    DECLARE client AS Client
+    DECLARE currentUser AS String
+    DECLARE sharedFiles AS List of SharedFileRecord
+    DECLARE chatViews AS Map of (ConversationKey -> JTextArea)
+
+    METHOD Chat(client, username)
+        STORE client AND currentUser
+        INITIALIZE GUI components
+        WRAP root panel IN JScrollPane for scrollability
+
+        SETUP room tabs (#Maths, #General, #ELC, #SDN)
+        LOAD historical chat messages FROM DatabaseManager FOR each room
+
+        IF client IS connected THEN
+            REGISTER message listener callback -> onMessageReceived()
+            DISPLAY username and Connection Code in top banner
+        END IF
+    END METHOD
+
+    METHOD sendMessage()
+        READ message text FROM input field
+        IF message IS EMPTY THEN RETURN END IF
+
+        IF message encryption checkbox IS SELECTED THEN
+            PREFIX message WITH "[Encrypted]"
+        END IF
+
+        GET active tab name
+
+        IF message STARTS WITH "@username content" THEN
+            EXTRACT recipient AND content
+            OPEN or SELECT direct chat tab for recipient
+            SEND "DM:recipient:content" VIA client
+        ELSE IF active tab IS Direct DM (@recipient) THEN
+            SEND "DM:recipient:message" VIA client
+        ELSE
+            SEND "ROOM:activeRoom:message" VIA client
+        END IF
+
+        CLEAR input field
+    END METHOD
+
+    METHOD onMessageReceived(message)
+        ON Swing UI Thread:
+            IF message STARTS WITH "(system:users)" THEN
+                UPDATE online users list UI
+            ELSE IF message STARTS WITH "ROOM:" THEN
+                EXTRACT room, sender, AND content
+                APPEND message TO corresponding room chat text area
+                SHOW unread notification badge ON tab IF NOT currently active
+            ELSE IF message STARTS WITH "DM:" THEN
+                EXTRACT sender AND content
+                OPEN direct chat tab FOR sender
+                APPEND DM message TO chat text area
+                SHOW unread notification badge ON tab
+            ELSE IF message STARTS WITH "FILE:ROOM:" OR "FILE:DM:" THEN
+                HANDLE incoming file transfer (prompt quick save / Save As)
+            ELSE
+                APPEND general system message TO default chat view
+            END IF
+    END METHOD
+
+    METHOD sendFileToActiveConversation()
+        GET active conversation target (Room or @User)
+        OPEN FileChooser dialog to select local file
+        
+        ENCODE file content TO Base64 using FileHandling.encodeFileToBase64()
+        SEND file payload packet VIA client connection ("FILE:ROOM:..." OR "FILE:DM:...")
+        APPEND transfer notice TO active chat view
+    END METHOD
+
+    METHOD openSharedFilesHub()
+        DISPLAY modal dialog containing table of all sent/received files in session
+        PROVIDE options: "Download Selected", "Open Downloads Folder", "Send New File"
+    END METHOD
+END CLASS
