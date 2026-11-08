@@ -23,10 +23,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.ListModel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -49,6 +51,7 @@ public class Chat extends javax.swing.JFrame {
     private final List<SharedFileRecord> sharedFiles = new CopyOnWriteArrayList<>();
     private final Map<String, JTextArea> chatViews = new ConcurrentHashMap<>();
     private final Set<String> seenMessageSignatures = java.util.Collections.synchronizedSet(new java.util.HashSet<>());
+    private boolean isUpdatingTabTitle = false;
 
     /**
      * Creates new form Chat
@@ -533,32 +536,78 @@ public class Chat extends javax.swing.JFrame {
             }
         });
 
-        // ChatRoom selection synchronization with TabbedPane
-        ChatRooms.addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting()) {
-                String selected = ChatRooms.getSelectedValue();
-                if (selected != null) {
-                    for (int i = 0; i < jTabbedPane1.getTabCount(); i++) {
-                        String title = jTabbedPane1.getTitleAt(i).replace("• ", "").trim();
-                        if (title.equalsIgnoreCase(selected)) {
-                            jTabbedPane1.setSelectedIndex(i);
-                            break;
-                        }
+        // Setup dynamic room model and unnest scrollpanes for reliable click events
+        DefaultListModel<String> roomModel = new DefaultListModel<>();
+        roomModel.addElement("#General");
+        roomModel.addElement("#Maths");
+        roomModel.addElement("#ELC");
+        roomModel.addElement("#SDN");
+        ChatRooms.setModel(roomModel);
+        jScrollPane6.setViewportView(ChatRooms);
+        jScrollPane7.setViewportView(jList1);
+
+        // ChatRoom click and selection synchronization with TabbedPane
+        ChatRooms.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                int index = ChatRooms.locationToIndex(e.getPoint());
+                if (index >= 0) {
+                    ChatRooms.setSelectedIndex(index);
+                    String selected = ChatRooms.getModel().getElementAt(index);
+                    if (selected != null) {
+                        openRoomTab(selected, true);
+                        jTextField1.requestFocusInWindow();
                     }
                 }
             }
         });
 
+        ChatRooms.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                String selected = ChatRooms.getSelectedValue();
+                if (selected != null) {
+                    openRoomTab(selected, true);
+                }
+            }
+        });
+
+        // Context menu to create or join rooms
+        JPopupMenu roomMenu = new JPopupMenu();
+        JMenuItem createRoomItem = new JMenuItem("Join / Create New Room...");
+        createRoomItem.addActionListener(ev -> showCreateRoomDialog());
+        roomMenu.add(createRoomItem);
+        ChatRooms.setComponentPopupMenu(roomMenu);
+
+        chatrooms_label.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        chatrooms_label.setToolTipText("Click to join or create a new chat room");
+        chatrooms_label.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                showCreateRoomDialog();
+            }
+        });
+
         // Tab change listener to clear notification badges and update placeholder
         jTabbedPane1.addChangeListener(e -> {
+            if (isUpdatingTabTitle) return;
             int idx = jTabbedPane1.getSelectedIndex();
             if (idx >= 0) {
                 String title = jTabbedPane1.getTitleAt(idx);
                 if (title.startsWith("• ")) {
-                    jTabbedPane1.setTitleAt(idx, title.substring(2).trim());
+                    try {
+                        isUpdatingTabTitle = true;
+                        jTabbedPane1.setTitleAt(idx, title.substring(2).trim());
+                    } finally {
+                        isUpdatingTabTitle = false;
+                    }
                 }
                 updateInputPlaceholder();
-                String cleanTitle = jTabbedPane1.getTitleAt(idx).trim();
+                String cleanTitle = jTabbedPane1.getTitleAt(idx).replace("• ", "").trim();
+                if (cleanTitle.startsWith("#")) {
+                    ChatRooms.setSelectedValue(cleanTitle, true);
+                } else {
+                    ChatRooms.clearSelection();
+                }
                 JTextArea area = chatViews.get(normalizeTabKey(cleanTitle));
                 if (area != null) {
                     chatTextArea = area;
@@ -648,6 +697,75 @@ public class Chat extends javax.swing.JFrame {
             chatTextArea = area;
         }
         return area;
+    }
+
+    public JTextArea openRoomTab(String roomName, boolean selectTab) {
+        if (roomName == null || roomName.trim().isEmpty()) {
+            return null;
+        }
+        String cleanRoom = roomName.trim();
+        if (!cleanRoom.startsWith("#")) {
+            cleanRoom = "#" + cleanRoom;
+        }
+        String key = normalizeTabKey(cleanRoom);
+
+        // Ensure room is visible in the ChatRooms list on the left
+        ensureRoomInList(cleanRoom);
+
+        // Check if tab already exists
+        for (int i = 0; i < jTabbedPane1.getTabCount(); i++) {
+            String existingTitle = jTabbedPane1.getTitleAt(i).replace("• ", "").trim();
+            if (existingTitle.equalsIgnoreCase(cleanRoom)) {
+                if (selectTab) {
+                    jTabbedPane1.setSelectedIndex(i);
+                }
+                return chatViews.get(key);
+            }
+        }
+
+        // Create new room panel and tab dynamically
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(new java.awt.Color(32, 32, 32));
+        JTextArea area = setupConversationTab(cleanRoom, panel);
+        jTabbedPane1.addTab(cleanRoom, panel);
+
+        if (selectTab) {
+            jTabbedPane1.setSelectedComponent(panel);
+        }
+        return area;
+    }
+
+    private void ensureRoomInList(String roomName) {
+        if (roomName == null) return;
+        String clean = roomName.trim();
+        if (!clean.startsWith("#")) clean = "#" + clean;
+
+        ListModel<String> model = ChatRooms.getModel();
+        if (model instanceof DefaultListModel<String> dlm) {
+            for (int i = 0; i < dlm.getSize(); i++) {
+                if (dlm.getElementAt(i).equalsIgnoreCase(clean)) {
+                    return;
+                }
+            }
+            dlm.addElement(clean);
+        }
+    }
+
+    private void showCreateRoomDialog() {
+        String input = JOptionPane.showInputDialog(
+            this,
+            "Enter room name to join or create (e.g. #Study, #Gaming):",
+            "Join or Create Room",
+            JOptionPane.PLAIN_MESSAGE
+        );
+        if (input != null && !input.trim().isEmpty()) {
+            String room = input.trim();
+            if (!room.startsWith("#")) {
+                room = "#" + room;
+            }
+            openRoomTab(room, true);
+            jTextField1.requestFocusInWindow();
+        }
     }
 
     public JTextArea openDirectChat(String username, boolean selectTab) {
@@ -775,7 +893,7 @@ public class Chat extends javax.swing.JFrame {
                     if (seenMessageSignatures.add(sig)) {
                         JTextArea area = chatViews.get(normRoom);
                         if (area == null) {
-                            area = chatViews.get("#general");
+                            area = openRoomTab(room, false);
                         }
                         if (area != null) {
                             String senderLabel = sender.equalsIgnoreCase(currentUser) ? "You" : sender;
@@ -828,12 +946,10 @@ public class Chat extends javax.swing.JFrame {
                         String sender = message.substring(firstColon + 1, secondColon).trim();
                         String content = message.substring(secondColon + 1);
 
-                        JTextArea area = chatViews.get(normalizeTabKey(room));
-                        if (area == null && !room.startsWith("#")) {
-                            area = chatViews.get(normalizeTabKey("#" + room));
-                        }
+                        String normRoom = normalizeTabKey(room.startsWith("#") ? room : "#" + room);
+                        JTextArea area = chatViews.get(normRoom);
                         if (area == null) {
-                            area = chatViews.get("#general");
+                            area = openRoomTab(room, false);
                         }
 
                         if (area != null) {
@@ -931,6 +1047,9 @@ public class Chat extends javax.swing.JFrame {
 
     private void badgeUnreadTab(String targetTab) {
         String cleanTarget = targetTab.replace("• ", "").trim();
+        if (!cleanTarget.startsWith("#") && !cleanTarget.startsWith("@")) {
+            cleanTarget = "#" + cleanTarget;
+        }
         int activeIdx = jTabbedPane1.getSelectedIndex();
         String activeTitle = activeIdx >= 0 ? jTabbedPane1.getTitleAt(activeIdx).replace("• ", "").trim() : "";
         if (activeTitle.equalsIgnoreCase(cleanTarget)) {
@@ -941,7 +1060,12 @@ public class Chat extends javax.swing.JFrame {
             String title = jTabbedPane1.getTitleAt(i).replace("• ", "").trim();
             if (title.equalsIgnoreCase(cleanTarget)) {
                 if (!jTabbedPane1.getTitleAt(i).startsWith("• ")) {
-                    jTabbedPane1.setTitleAt(i, "• " + title);
+                    try {
+                        isUpdatingTabTitle = true;
+                        jTabbedPane1.setTitleAt(i, "• " + title);
+                    } finally {
+                        isUpdatingTabTitle = false;
+                    }
                 }
                 break;
             }
@@ -958,16 +1082,17 @@ public class Chat extends javax.swing.JFrame {
 
     private void sendMessage() {
         String msg = jTextField1.getText().trim();
-        if (msg.isEmpty() || msg.startsWith("type message here") || msg.startsWith("Message ")) {
+        int activeTabIndex = jTabbedPane1.getSelectedIndex();
+        String activeTab = activeTabIndex >= 0 ? jTabbedPane1.getTitleAt(activeTabIndex).replace("• ", "").trim() : "#General";
+        String currentPlaceholder = "Message " + activeTab + "...";
+
+        if (msg.isEmpty() || msg.equals("type message here.") || msg.equals("type message here") || msg.equalsIgnoreCase(currentPlaceholder)) {
             return;
         }
 
         if (jCheckBox1.isSelected()) {
             msg = "[Encrypted] " + msg;
         }
-
-        int activeTabIndex = jTabbedPane1.getSelectedIndex();
-        String activeTab = activeTabIndex >= 0 ? jTabbedPane1.getTitleAt(activeTabIndex).replace("• ", "").trim() : "#General";
 
         // Check if user specifically typed @User <content> from any room
         if (msg.startsWith("@") && msg.indexOf(' ') > 1) {

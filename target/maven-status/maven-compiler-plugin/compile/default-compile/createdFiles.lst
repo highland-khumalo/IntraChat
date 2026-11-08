@@ -18,6 +18,7 @@ com/IntraChat/gui/Admin$1.class
 com/IntraChat/database/DatabaseManager$UserRecord.class
 com/IntraChat/gui/Chat$6.class
 com/IntraChat/gui/Chat$9.class
+com/IntraChat/gui/Chat$10.class
 com/IntraChat/gui/Admin$2.class
 com/IntraChat/io/FileHandling.class
 com/IntraChat/gui/Admin.class
@@ -25,4 +26,5 @@ com/IntraChat/gui/Chat$SharedFileRecord.class
 com/IntraChat/gui/Chat$2.class
 com/IntraChat/gui/Chat$8.class
 com/IntraChat/Main.class
+com/IntraChat/gui/Chat$11.class
 com/IntraChat/gui/Chat$5.class
