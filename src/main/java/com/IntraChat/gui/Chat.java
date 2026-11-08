@@ -4,20 +4,76 @@
  */
 package com.IntraChat.gui;
 
-/**
- *
- * @author Lia's PC
- */
+import com.IntraChat.database.DatabaseManager;
+import com.IntraChat.io.FileHandling;
+import com.IntraChat.network.Client;
+import com.IntraChat.network.Server;
+import java.awt.BorderLayout;
+import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableModel;
+
 public class Chat extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Chat.class.getName());
+
+    private Client client;
+    private String currentUser = "Anonymous";
+    private JTextArea chatTextArea;
+
+    public record SharedFileRecord(String filename, long size, String sender, String target, String base64Data, String time) {}
+    private final List<SharedFileRecord> sharedFiles = new CopyOnWriteArrayList<>();
+    private final Map<String, JTextArea> chatViews = new ConcurrentHashMap<>();
 
     /**
      * Creates new form Chat
      */
     public Chat() {
         initComponents();
+        customInit();
     }
+
+    public Chat(Client client, String username) {
+        this.client = client;
+        this.currentUser = (username != null && !username.trim().isEmpty()) ? username.trim() : "Anonymous";
+        initComponents();
+        customInit();
+    }
+
+    private javax.swing.ImageIcon getSafeIcon(String resourcePath) {
+        java.net.URL url = getClass().getResource(resourcePath);
+        if (url == null && resourcePath.startsWith("/resources/")) {
+            url = getClass().getResource(resourcePath.substring("/resources".length()));
+        }
+        if (url == null && !resourcePath.startsWith("/resources/")) {
+            url = getClass().getResource("/resources" + resourcePath);
+        }
+        return url != null ? new javax.swing.ImageIcon(url) : null;
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -28,27 +84,1360 @@ public class Chat extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jButton7 = new javax.swing.JButton();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        OnlineUsers = new javax.swing.JList<>();
+        rootPanel = new javax.swing.JPanel();
+        iconsPanel = new javax.swing.JPanel();
+        files_button = new javax.swing.JButton();
+        notifications_button = new javax.swing.JButton();
+        chats_button = new javax.swing.JButton();
+        Settings_button = new javax.swing.JButton();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel1 = new javax.swing.JPanel();
+        chatPanel = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        chatrooms_label = new javax.swing.JLabel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        ChatRooms = new javax.swing.JList<>();
+        settings_label = new javax.swing.JLabel();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList<>();
+        Onlineusers_label = new javax.swing.JLabel();
+        jCheckBox1 = new javax.swing.JCheckBox();
+        send_button = new javax.swing.JButton();
+        Logo = new javax.swing.JLabel();
+        IP_label = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        Attach_button = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+
+        jButton7.setIcon(getSafeIcon("/resources/save_res.png"));
+        jButton7.setText("Save Chat Log");
+        jButton7.addActionListener(this::jButton7ActionPerformed);
+
+        OnlineUsers.setBackground(new java.awt.Color(32, 32, 32));
+        OnlineUsers.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, null, new java.awt.Color(255, 102, 0)));
+        OnlineUsers.setForeground(new java.awt.Color(255, 255, 255));
+        OnlineUsers.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = {};
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane8.setViewportView(OnlineUsers);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        rootPanel.setBackground(new java.awt.Color(15, 15, 15));
+        rootPanel.setForeground(new java.awt.Color(15, 15, 15));
+
+        iconsPanel.setBackground(new java.awt.Color(32, 32, 32));
+        iconsPanel.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 140, 0), 1, true));
+
+        files_button.setBackground(new java.awt.Color(32, 32, 32));
+        files_button.setIcon(getSafeIcon("/resources/folder-white.png"));
+        files_button.setBorder(null);
+        files_button.addActionListener(this::files_buttonActionPerformed);
+
+        notifications_button.setBackground(new java.awt.Color(32, 32, 32));
+        notifications_button.setBorder(null);
+        notifications_button.addActionListener(this::notifications_buttonActionPerformed);
+
+        chats_button.setBackground(new java.awt.Color(32, 32, 32));
+        chats_button.setIcon(getSafeIcon("/resources/speech-bubble-white.png"));
+        chats_button.setBorder(null);
+        chats_button.addActionListener(this::chats_buttonActionPerformed);
+
+        Settings_button.setBackground(new java.awt.Color(32, 32, 32));
+        Settings_button.setIcon(getSafeIcon("/resources/settings-white.png"));
+        Settings_button.setBorder(null);
+        Settings_button.addActionListener(this::Settings_buttonActionPerformed);
+
+        javax.swing.GroupLayout iconsPanelLayout = new javax.swing.GroupLayout(iconsPanel);
+        iconsPanel.setLayout(iconsPanelLayout);
+        iconsPanelLayout.setHorizontalGroup(
+            iconsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(iconsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(iconsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(iconsPanelLayout.createSequentialGroup()
+                        .addComponent(Settings_button, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(notifications_button, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(chats_button, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(files_button, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        iconsPanelLayout.setVerticalGroup(
+            iconsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(iconsPanelLayout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addComponent(chats_button, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(files_button, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(17, 17, 17)
+                .addComponent(Settings_button, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(notifications_button, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.setBackground(new java.awt.Color(102, 102, 102));
+        jTabbedPane1.setForeground(new java.awt.Color(255, 140, 0));
+        jTabbedPane1.setPreferredSize(new java.awt.Dimension(150, 150));
+
+        jPanel1.setBackground(new java.awt.Color(32, 32, 32));
+        jPanel1.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(255, 140, 0)));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 649, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 383, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("#Maths", jPanel1);
+
+        chatPanel.setBackground(new java.awt.Color(32, 32, 32));
+        chatPanel.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(255, 140, 0)));
+
+        javax.swing.GroupLayout chatPanelLayout = new javax.swing.GroupLayout(chatPanel);
+        chatPanel.setLayout(chatPanelLayout);
+        chatPanelLayout.setHorizontalGroup(
+            chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 649, Short.MAX_VALUE)
+        );
+        chatPanelLayout.setVerticalGroup(
+            chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 383, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("#General", chatPanel);
+
+        jPanel2.setBackground(new java.awt.Color(32, 32, 32));
+        jPanel2.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(255, 140, 0)));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 649, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 383, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("#ELC", jPanel2);
+
+        jPanel3.setBackground(new java.awt.Color(32, 32, 32));
+        jPanel3.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(255, 140, 0)));
+        jPanel3.setForeground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 649, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 383, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("#SDN", jPanel3);
+
+        chatrooms_label.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        chatrooms_label.setForeground(new java.awt.Color(242, 242, 242));
+        chatrooms_label.setText("Chat Rooms");
+
+        ChatRooms.setBackground(new java.awt.Color(32, 32, 32));
+        ChatRooms.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, null, new java.awt.Color(255, 102, 0)));
+        ChatRooms.setForeground(new java.awt.Color(255, 255, 255));
+        ChatRooms.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "#Maths", "#ELC", "#SDN", "#General" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane5.setViewportView(ChatRooms);
+
+        jScrollPane6.setViewportView(jScrollPane5);
+
+        settings_label.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        settings_label.setForeground(new java.awt.Color(242, 242, 242));
+        settings_label.setText("Settings");
+
+        jList1.setBackground(new java.awt.Color(32, 32, 32));
+        jList1.setForeground(new java.awt.Color(255, 255, 255));
+        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = {};
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(jList1);
+
+        jScrollPane7.setViewportView(jScrollPane1);
+
+        Onlineusers_label.setBackground(new java.awt.Color(32, 32, 32));
+        Onlineusers_label.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        Onlineusers_label.setForeground(new java.awt.Color(255, 255, 255));
+        Onlineusers_label.setText("OnlineUsers");
+
+        jCheckBox1.setBackground(new java.awt.Color(32, 32, 32));
+        jCheckBox1.setForeground(new java.awt.Color(255, 255, 255));
+        jCheckBox1.setText("Messsage encryption");
+        jCheckBox1.addActionListener(this::jCheckBox1ActionPerformed);
+
+        send_button.setBackground(new java.awt.Color(255, 140, 0));
+        send_button.setForeground(new java.awt.Color(255, 255, 255));
+        send_button.setIcon(getSafeIcon("/resources/send-2-white.png"));
+        send_button.setText("send");
+        send_button.addActionListener(this::send_buttonActionPerformed);
+
+        Logo.setIcon(getSafeIcon("/resources/final_logo.jpg"));
+
+        IP_label.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        IP_label.setForeground(new java.awt.Color(255, 255, 255));
+        IP_label.setText("Connecting...");
+
+        jTextField1.setBackground(new java.awt.Color(32, 32, 32));
+        jTextField1.setForeground(new java.awt.Color(255, 255, 255));
+        jTextField1.setText("type message here.");
+        jTextField1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 140, 0), 1, true));
+        jTextField1.addActionListener(this::jTextField1ActionPerformed);
+
+        Attach_button.setBackground(new java.awt.Color(255, 140, 0));
+        Attach_button.setIcon(getSafeIcon("/resources/Attatch-white.png"));
+        Attach_button.addActionListener(this::Attach_buttonActionPerformed);
+
+        jButton1.setBackground(new java.awt.Color(32, 32, 32));
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setIcon(getSafeIcon("/resources/search_white.png"));
+        jButton1.setText("search users");
+        jButton1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 140, 0), 1, true));
+        jButton1.addActionListener(this::jButton1ActionPerformed);
+
+        javax.swing.GroupLayout rootPanelLayout = new javax.swing.GroupLayout(rootPanel);
+        rootPanel.setLayout(rootPanelLayout);
+        rootPanelLayout.setHorizontalGroup(
+            rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(rootPanelLayout.createSequentialGroup()
+                .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(rootPanelLayout.createSequentialGroup()
+                        .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(rootPanelLayout.createSequentialGroup()
+                                .addGap(11, 11, 11)
+                                .addComponent(settings_label, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(rootPanelLayout.createSequentialGroup()
+                                .addGap(27, 27, 27)
+                                .addComponent(iconsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)
+                        .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(rootPanelLayout.createSequentialGroup()
+                                .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(Onlineusers_label, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(rootPanelLayout.createSequentialGroup()
+                                        .addGap(8, 8, 8)
+                                        .addComponent(chatrooms_label, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rootPanelLayout.createSequentialGroup()
+                                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(17, 17, 17)))
+                        .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 651, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(rootPanelLayout.createSequentialGroup()
+                                .addComponent(jTextField1)
+                                .addGap(18, 18, 18)
+                                .addComponent(Attach_button, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jCheckBox1)
+                                .addGap(18, 18, 18)
+                                .addComponent(send_button, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(34, 34, 34))))
+                    .addGroup(rootPanelLayout.createSequentialGroup()
+                        .addGap(520, 520, 520)
+                        .addComponent(IP_label, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(rootPanelLayout.createSequentialGroup()
+                        .addGap(11, 11, 11)
+                        .addComponent(Logo, javax.swing.GroupLayout.PREFERRED_SIZE, 436, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(37, Short.MAX_VALUE))
+        );
+        rootPanelLayout.setVerticalGroup(
+            rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(rootPanelLayout.createSequentialGroup()
+                .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(rootPanelLayout.createSequentialGroup()
+                        .addGap(54, 54, 54)
+                        .addComponent(IP_label, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(rootPanelLayout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addComponent(Logo, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(rootPanelLayout.createSequentialGroup()
+                        .addGap(39, 39, 39)
+                        .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(chatrooms_label)
+                            .addComponent(settings_label))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(rootPanelLayout.createSequentialGroup()
+                                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(26, 26, 26)
+                                .addComponent(Onlineusers_label, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(iconsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(rootPanelLayout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(rootPanelLayout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(Attach_button, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
+                                    .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING)))
+                            .addGroup(rootPanelLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jCheckBox1)
+                                    .addComponent(send_button))
+                                .addGap(12, 12, 12)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(rootPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(19, Short.MAX_VALUE)
+                .addComponent(rootPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(53, 53, 53))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void customInit() {
+        // Wrap rootPanel in a JScrollPane so the window is scrollable on smaller screens / laptops
+        getContentPane().removeAll();
+        getContentPane().setLayout(new BorderLayout());
+        JScrollPane mainScrollPane = new JScrollPane(rootPanel);
+        mainScrollPane.setBorder(null);
+        mainScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        mainScrollPane.getHorizontalScrollBar().setUnitIncrement(16);
+        mainScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        mainScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        mainScrollPane.getViewport().setBackground(rootPanel.getBackground());
+        mainScrollPane.setBackground(rootPanel.getBackground());
+        getContentPane().add(mainScrollPane, BorderLayout.CENTER);
+
+        // Adjust window size to fit screen bounds comfortably on laptops
+        try {
+            java.awt.Rectangle screenBounds = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+            pack();
+            int targetWidth = Math.min(getWidth(), screenBounds.width);
+            int targetHeight = Math.min(getHeight(), screenBounds.height - 40);
+            setSize(targetWidth, targetHeight);
+            setLocationRelativeTo(null);
+        } catch (Exception ignored) {}
+
+        // Setup the initial room panels in jTabbedPane1
+        setupConversationTab("#Maths", jPanel1);
+        setupConversationTab("#General", chatPanel);
+        setupConversationTab("#ELC", jPanel2);
+        setupConversationTab("#SDN", jPanel3);
+
+        // Load room histories from SQLite
+        List<String> rooms = List.of("#General", "#Maths", "#ELC", "#SDN");
+        for (String room : rooms) {
+            try {
+                var history = DatabaseManager.getChatHistoryForRoom(room);
+                JTextArea area = chatViews.get(normalizeTabKey(room));
+                if (area != null && history != null && !history.isEmpty()) {
+                    area.append("--- " + room + " History ---\n");
+                    for (var msg : history) {
+                        String sender = msg.sender().equalsIgnoreCase(currentUser) ? "You" : msg.sender();
+                        area.append("[" + msg.timestamp() + "] " + sender + ": " + msg.content() + "\n");
+                    }
+                    area.append("-----------------------------\n");
+                }
+            } catch (Exception e) {
+                logger.log(java.util.logging.Level.FINE, "Room history error for " + room + ": " + e.getMessage());
+            }
+        }
+
+        // Connection info display
+        String lanIp = Server.getLocalLanIp();
+        if (client != null && client.isConnected()) {
+            String connCode = com.IntraChat.security.AuthService.generateConnectionCode(client.getServerIp(), client.getServerPort());
+            IP_label.setText("User: " + currentUser + " | Code: " + connCode);
+            IP_label.setToolTipText("Server: " + client.getServerIp() + ":" + client.getServerPort() + " | Click to copy Connection Code");
+            IP_label.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+            IP_label.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseClicked(java.awt.event.MouseEvent e) {
+                    try {
+                        java.awt.datatransfer.StringSelection sel = new java.awt.datatransfer.StringSelection(connCode);
+                        java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().setContents(sel, sel);
+                        JOptionPane.showMessageDialog(Chat.this, "Connection Code copied to clipboard:\n" + connCode, "Code Copied", JOptionPane.INFORMATION_MESSAGE);
+                    } catch (Exception ignored) {}
+                }
+            });
+            client.setMessageListener(this::onMessageReceived);
+        } else {
+            IP_label.setText("User: " + currentUser + " | Offline (Your IP: " + lanIp + ")");
+        }
+
+        // Placeholder cleanup on jTextField1
+        jTextField1.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                String text = jTextField1.getText();
+                if (text.startsWith("type message here") || text.startsWith("Message ")) {
+                    jTextField1.setText("");
+                }
+                jTextField1.scrollRectToVisible(jTextField1.getBounds());
+            }
+            @Override
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                if (jTextField1.getText().trim().isEmpty()) {
+                    updateInputPlaceholder();
+                }
+            }
+        });
+
+        // ChatRoom selection synchronization with TabbedPane
+        ChatRooms.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                String selected = ChatRooms.getSelectedValue();
+                if (selected != null) {
+                    for (int i = 0; i < jTabbedPane1.getTabCount(); i++) {
+                        String title = jTabbedPane1.getTitleAt(i).replace("• ", "").trim();
+                        if (title.equalsIgnoreCase(selected)) {
+                            jTabbedPane1.setSelectedIndex(i);
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+
+        // Tab change listener to clear notification badges and update placeholder
+        jTabbedPane1.addChangeListener(e -> {
+            int idx = jTabbedPane1.getSelectedIndex();
+            if (idx >= 0) {
+                String title = jTabbedPane1.getTitleAt(idx);
+                if (title.startsWith("• ")) {
+                    jTabbedPane1.setTitleAt(idx, title.substring(2).trim());
+                }
+                updateInputPlaceholder();
+                String cleanTitle = jTabbedPane1.getTitleAt(idx).trim();
+                JTextArea area = chatViews.get(normalizeTabKey(cleanTitle));
+                if (area != null) {
+                    chatTextArea = area;
+                }
+            }
+        });
+
+        // Right-click context menu on tabs to close direct message tabs
+        jTabbedPane1.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                if (javax.swing.SwingUtilities.isRightMouseButton(e)) {
+                    int tabIndex = jTabbedPane1.indexAtLocation(e.getX(), e.getY());
+                    if (tabIndex >= 0) {
+                        String rawTitle = jTabbedPane1.getTitleAt(tabIndex);
+                        String clean = rawTitle.replace("• ", "").trim();
+                        if (clean.startsWith("@")) {
+                            JPopupMenu menu = new JPopupMenu();
+                            JMenuItem closeItem = new JMenuItem("Close Chat (" + clean + ")");
+                            closeItem.addActionListener(ev -> {
+                                chatViews.remove(clean.toLowerCase());
+                                jTabbedPane1.removeTabAt(tabIndex);
+                            });
+                            menu.add(closeItem);
+                            menu.show(jTabbedPane1, e.getX(), e.getY());
+                        }
+                    }
+                }
+            }
+        });
+
+        // Online users interaction: double click to chat, right click for options
+        setupUserListInteractions(OnlineUsers);
+        setupUserListInteractions(jList1);
+
+        // Select General room as default (index 1)
+        if (jTabbedPane1.getTabCount() > 1) {
+            jTabbedPane1.setSelectedIndex(1);
+        }
+        updateInputPlaceholder();
+
+        // Clean disconnect on close
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                if (client != null && client.isConnected()) {
+                    client.sendMessage("/quit");
+                    client.disconnect();
+                }
+            }
+        });
+    }
+
+    private void updateInputPlaceholder() {
+        int idx = jTabbedPane1.getSelectedIndex();
+        String activeTitle = idx >= 0 ? jTabbedPane1.getTitleAt(idx).replace("• ", "").trim() : "#General";
+        if (jTextField1.getText().trim().isEmpty() || jTextField1.getText().startsWith("type message here") || jTextField1.getText().startsWith("Message ")) {
+            jTextField1.setText("Message " + activeTitle + "...");
+        }
+    }
+
+    private String normalizeTabKey(String key) {
+        if (key == null) return "#general";
+        return key.replace("• ", "").trim().toLowerCase();
+    }
+
+    private JTextArea setupConversationTab(String conversationKey, JPanel panel) {
+        panel.setLayout(new BorderLayout());
+        JTextArea area = new JTextArea();
+        area.setEditable(false);
+        area.setBackground(new java.awt.Color(24, 24, 24));
+        area.setForeground(java.awt.Color.WHITE);
+        area.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
+        area.setLineWrap(true);
+        area.setWrapStyleWord(true);
+        JScrollPane scrollPane = new JScrollPane(area);
+        scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        panel.removeAll();
+        panel.add(scrollPane, BorderLayout.CENTER);
+        panel.revalidate();
+        panel.repaint();
+
+        String normalized = normalizeTabKey(conversationKey);
+        chatViews.put(normalized, area);
+        if ("#general".equals(normalized)) {
+            chatTextArea = area;
+        }
+        return area;
+    }
+
+    public JTextArea openDirectChat(String username, boolean selectTab) {
+        if (username == null || username.trim().isEmpty() || username.trim().equalsIgnoreCase(currentUser)) {
+            return null;
+        }
+        String targetUser = username.trim();
+        String tabTitle = "@" + targetUser;
+        String key = normalizeTabKey(tabTitle);
+
+        // Check if tab already exists
+        for (int i = 0; i < jTabbedPane1.getTabCount(); i++) {
+            String existingTitle = jTabbedPane1.getTitleAt(i).replace("• ", "").trim();
+            if (existingTitle.equalsIgnoreCase(tabTitle)) {
+                if (selectTab) {
+                    jTabbedPane1.setSelectedIndex(i);
+                }
+                return chatViews.get(key);
+            }
+        }
+
+        // Create new direct message panel and tab
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(new java.awt.Color(32, 32, 32));
+        JTextArea area = setupConversationTab(tabTitle, panel);
+        jTabbedPane1.addTab(tabTitle, panel);
+
+        // Load historical direct messages
+        try {
+            var history = DatabaseManager.getDirectMessageHistory(currentUser, targetUser);
+            if (history != null && !history.isEmpty()) {
+                area.append("--- Direct Messages with @" + targetUser + " ---\n");
+                for (var msg : history) {
+                    String senderLabel = msg.sender().equalsIgnoreCase(currentUser) ? "You" : msg.sender();
+                    area.append("[" + msg.timestamp() + "] " + senderLabel + ": " + msg.content() + "\n");
+                }
+                area.append("------------------------------------------\n");
+            } else {
+                area.append("--- Started Direct Chat with @" + targetUser + " ---\n");
+            }
+        } catch (Exception e) {
+            logger.log(java.util.logging.Level.FINE, "DM history error: " + e.getMessage());
+        }
+
+        if (selectTab) {
+            jTabbedPane1.setSelectedComponent(panel);
+        }
+        return area;
+    }
+
+    private void setupUserListInteractions(javax.swing.JList<String> list) {
+        list.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int index = list.locationToIndex(evt.getPoint());
+                if (index < 0) return;
+                String targetUser = list.getModel().getElementAt(index);
+                if (targetUser == null || targetUser.equalsIgnoreCase(currentUser)) return;
+
+                if (evt.getClickCount() == 2 && javax.swing.SwingUtilities.isLeftMouseButton(evt)) {
+                    openDirectChat(targetUser, true);
+                    jTextField1.requestFocusInWindow();
+                }
+            }
+
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                if (javax.swing.SwingUtilities.isRightMouseButton(evt)) {
+                    int index = list.locationToIndex(evt.getPoint());
+                    if (index >= 0) {
+                        list.setSelectedIndex(index);
+                        String targetUser = list.getModel().getElementAt(index);
+                        if (targetUser != null && !targetUser.equalsIgnoreCase(currentUser)) {
+                            JPopupMenu menu = new JPopupMenu();
+                            JMenuItem chatItem = new JMenuItem("Chat Privately (@" + targetUser + ")");
+                            chatItem.addActionListener(e -> {
+                                openDirectChat(targetUser, true);
+                                jTextField1.requestFocusInWindow();
+                            });
+                            JMenuItem fileItem = new JMenuItem("Send File to @" + targetUser + "...");
+                            fileItem.addActionListener(e -> sendFileToUser(targetUser));
+
+                            menu.add(chatItem);
+                            menu.add(fileItem);
+                            menu.show(list, evt.getX(), evt.getY());
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    public void onMessageReceived(String message) {
+        if (message == null) return;
+        java.awt.EventQueue.invokeLater(() -> {
+            if (message.startsWith("(system:users) ")) {
+                String usersString = message.substring("(system:users) ".length()).trim();
+                String[] users = usersString.split(",");
+                javax.swing.DefaultListModel<String> model = new javax.swing.DefaultListModel<>();
+                for (String u : users) {
+                    if (!u.trim().isEmpty()) {
+                        model.addElement(u.trim());
+                    }
+                }
+                OnlineUsers.setModel(model);
+                jList1.setModel(model);
+                return;
+            }
+
+            String time = new SimpleDateFormat("HH:mm:ss").format(new Date());
+
+            if (message.startsWith("ROOM:")) {
+                // Format: ROOM:<room>:<sender>:<content>
+                int firstColon = message.indexOf(':', 5);
+                if (firstColon != -1) {
+                    String room = message.substring(5, firstColon).trim();
+                    int secondColon = message.indexOf(':', firstColon + 1);
+                    if (secondColon != -1) {
+                        String sender = message.substring(firstColon + 1, secondColon).trim();
+                        String content = message.substring(secondColon + 1);
+
+                        JTextArea area = chatViews.get(normalizeTabKey(room));
+                        if (area == null && !room.startsWith("#")) {
+                            area = chatViews.get(normalizeTabKey("#" + room));
+                        }
+                        if (area == null) {
+                            area = chatViews.get("#general");
+                        }
+
+                        if (area != null) {
+                            String senderLabel = sender.equalsIgnoreCase(currentUser) ? "You" : sender;
+                            area.append("[" + time + "] " + senderLabel + ": " + content + "\n");
+                            area.setCaretPosition(area.getDocument().getLength());
+                        }
+
+                        badgeUnreadTab(room);
+                        return;
+                    }
+                }
+            } else if (message.startsWith("DM:")) {
+                // Incoming DM: DM:<sender>:<content>
+                int firstColon = message.indexOf(':', 3);
+                if (firstColon != -1) {
+                    String sender = message.substring(3, firstColon).trim();
+                    String content = message.substring(firstColon + 1);
+
+                    JTextArea area = openDirectChat(sender, false);
+                    if (area != null) {
+                        area.append("[" + time + "] " + sender + ": " + content + "\n");
+                        area.setCaretPosition(area.getDocument().getLength());
+                    }
+                    badgeUnreadTab("@" + sender);
+                    return;
+                }
+            } else if (message.startsWith("DM_SENT:")) {
+                // DM sent confirmation: DM_SENT:<recipient>:<content>
+                int firstColon = message.indexOf(':', 8);
+                if (firstColon != -1) {
+                    String recipient = message.substring(8, firstColon).trim();
+                    String content = message.substring(firstColon + 1);
+
+                    JTextArea area = openDirectChat(recipient, false);
+                    if (area != null) {
+                        area.append("[" + time + "] You: " + content + "\n");
+                        area.setCaretPosition(area.getDocument().getLength());
+                    }
+                    return;
+                }
+            } else if (message.startsWith("FILE:ROOM:")) {
+                // Group file incoming: FILE:ROOM:<room>:<sender>:<filename>:<base64Data>
+                int rColon = message.indexOf(':', 10);
+                if (rColon != -1) {
+                    String room = message.substring(10, rColon).trim();
+                    int sColon = message.indexOf(':', rColon + 1);
+                    if (sColon != -1) {
+                        String sender = message.substring(rColon + 1, sColon).trim();
+                        int fColon = message.indexOf(':', sColon + 1);
+                        if (fColon != -1) {
+                            String filename = message.substring(sColon + 1, fColon).trim();
+                            String base64Data = message.substring(fColon + 1);
+                            handleIncomingFile(sender, room, filename, base64Data, false);
+                            return;
+                        }
+                    }
+                }
+            } else if (message.startsWith("FILE:DM:")) {
+                // Direct file incoming: FILE:DM:<sender>:<filename>:<base64Data>
+                int sColon = message.indexOf(':', 8);
+                if (sColon != -1) {
+                    String sender = message.substring(8, sColon).trim();
+                    int fColon = message.indexOf(':', sColon + 1);
+                    if (fColon != -1) {
+                        String filename = message.substring(sColon + 1, fColon).trim();
+                        String base64Data = message.substring(fColon + 1);
+                        handleIncomingFile(sender, "@" + currentUser, filename, base64Data, true);
+                        return;
+                    }
+                }
+            } else if (message.startsWith("FILE_SENT:DM:")) {
+                // Sender confirmation of DM file: FILE_SENT:DM:<recipient>:<filename>
+                int rColon = message.indexOf(':', 13);
+                if (rColon != -1) {
+                    String recipient = message.substring(13, rColon).trim();
+                    String filename = message.substring(rColon + 1).trim();
+                    JTextArea area = openDirectChat(recipient, false);
+                    if (area != null) {
+                        area.append("[" + time + "] [FILE SENT] " + filename + " delivered to @" + recipient + "\n");
+                        area.setCaretPosition(area.getDocument().getLength());
+                    }
+                    return;
+                }
+            }
+
+            // Fallback for general server/system messages
+            JTextArea defaultArea = chatTextArea != null ? chatTextArea : chatViews.get("#general");
+            if (defaultArea != null) {
+                defaultArea.append(message + "\n");
+                defaultArea.setCaretPosition(defaultArea.getDocument().getLength());
+            }
+        });
+    }
+
+    private void badgeUnreadTab(String targetTab) {
+        String cleanTarget = targetTab.replace("• ", "").trim();
+        int activeIdx = jTabbedPane1.getSelectedIndex();
+        String activeTitle = activeIdx >= 0 ? jTabbedPane1.getTitleAt(activeIdx).replace("• ", "").trim() : "";
+        if (activeTitle.equalsIgnoreCase(cleanTarget)) {
+            return; // Currently viewing this tab, no badge needed
+        }
+
+        for (int i = 0; i < jTabbedPane1.getTabCount(); i++) {
+            String title = jTabbedPane1.getTitleAt(i).replace("• ", "").trim();
+            if (title.equalsIgnoreCase(cleanTarget)) {
+                if (!jTabbedPane1.getTitleAt(i).startsWith("• ")) {
+                    jTabbedPane1.setTitleAt(i, "• " + title);
+                }
+                break;
+            }
+        }
+    }
+
+    private void send_buttonActionPerformed(java.awt.event.ActionEvent evt) {
+        sendMessage();
+    }
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {
+        sendMessage();
+    }
+
+    private void sendMessage() {
+        String msg = jTextField1.getText().trim();
+        if (msg.isEmpty() || msg.startsWith("type message here") || msg.startsWith("Message ")) {
+            return;
+        }
+
+        if (jCheckBox1.isSelected()) {
+            msg = "[Encrypted] " + msg;
+        }
+
+        int activeTabIndex = jTabbedPane1.getSelectedIndex();
+        String activeTab = activeTabIndex >= 0 ? jTabbedPane1.getTitleAt(activeTabIndex).replace("• ", "").trim() : "#General";
+
+        // Check if user specifically typed @User <content> from any room
+        if (msg.startsWith("@") && msg.indexOf(' ') > 1) {
+            int spaceIdx = msg.indexOf(' ');
+            String targetUser = msg.substring(1, spaceIdx).trim();
+            String content = msg.substring(spaceIdx + 1).trim();
+            if (!content.isEmpty()) {
+                openDirectChat(targetUser, true);
+                if (client != null && client.isConnected()) {
+                    client.sendMessage("DM:" + targetUser + ":" + content);
+                } else {
+                    JTextArea area = openDirectChat(targetUser, true);
+                    if (area != null) {
+                        String time = new SimpleDateFormat("HH:mm:ss").format(new Date());
+                        area.append("[" + time + "] [Offline] You: " + content + "\n");
+                    }
+                    try {
+                        DatabaseManager.logMessage(currentUser, targetUser, content);
+                    } catch (Exception ignored) {}
+                }
+                jTextField1.setText("");
+                updateInputPlaceholder();
+                return;
+            }
+        }
+
+        // Route according to active tab
+        if (activeTab.startsWith("@")) {
+            String recipient = activeTab.substring(1);
+            if (client != null && client.isConnected()) {
+                client.sendMessage("DM:" + recipient + ":" + msg);
+            } else {
+                JTextArea area = chatViews.get(normalizeTabKey(activeTab));
+                if (area != null) {
+                    String time = new SimpleDateFormat("HH:mm:ss").format(new Date());
+                    area.append("[" + time + "] [Offline] You: " + msg + "\n");
+                }
+                try {
+                    DatabaseManager.logMessage(currentUser, recipient, msg);
+                } catch (Exception ignored) {}
+            }
+        } else {
+            // Group chat room
+            String roomName = activeTab.startsWith("#") ? activeTab : "#" + activeTab;
+            if (client != null && client.isConnected()) {
+                client.sendMessage("ROOM:" + roomName + ":" + msg);
+            } else {
+                JTextArea area = chatViews.get(normalizeTabKey(roomName));
+                if (area != null) {
+                    String time = new SimpleDateFormat("HH:mm:ss").format(new Date());
+                    area.append("[" + time + "] [Offline] You: " + msg + "\n");
+                }
+                try {
+                    DatabaseManager.logMessage(currentUser, roomName, msg);
+                } catch (Exception ignored) {}
+            }
+        }
+
+        jTextField1.setText("");
+        updateInputPlaceholder();
+        jTextField1.requestFocusInWindow();
+    }
+
+    private void sendFileToActiveConversation() {
+        int activeTabIndex = jTabbedPane1.getSelectedIndex();
+        String activeTab = activeTabIndex >= 0 ? jTabbedPane1.getTitleAt(activeTabIndex).replace("• ", "").trim() : "#General";
+        if (activeTab.startsWith("@")) {
+            sendFileToUser(activeTab.substring(1));
+        } else {
+            sendFileToRoom(activeTab.startsWith("#") ? activeTab : "#General");
+        }
+    }
+
+    private void sendFileToUser(String targetUser) {
+        if (targetUser == null || targetUser.trim().isEmpty()) return;
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Select file to send to @" + targetUser);
+        int result = chooser.showOpenDialog(this);
+        if (result != JFileChooser.APPROVE_OPTION) return;
+
+        File file = chooser.getSelectedFile();
+        if (file == null || !file.exists() || !file.isFile()) {
+            JOptionPane.showMessageDialog(this, "Selected file is invalid or does not exist.", "File Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        long size = file.length();
+        if (size > 20L * 1024 * 1024) {
+            int opt = JOptionPane.showConfirmDialog(
+                this,
+                "File size is " + FileHandling.formatFileSize(size) + ".\nFor quick LAN transmission, files under 20MB are recommended.\nDo you still want to send it?",
+                "Large File Warning",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+            );
+            if (opt != JOptionPane.YES_OPTION) return;
+        }
+
+        try {
+            String base64 = FileHandling.encodeFileToBase64(file);
+            String time = new SimpleDateFormat("HH:mm:ss").format(new Date());
+            SharedFileRecord record = new SharedFileRecord(file.getName(), size, currentUser, "@" + targetUser, base64, time);
+            sharedFiles.add(record);
+
+            if (client != null && client.isConnected()) {
+                client.sendMessage("FILE:DM:" + targetUser + ":" + file.getName() + ":" + base64);
+            } else {
+                JOptionPane.showMessageDialog(this, "You are currently offline. File transfer requires an active connection.", "Offline", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            JTextArea area = openDirectChat(targetUser, true);
+            if (area != null) {
+                area.append("[" + time + "] [FILE] You sent file '" + file.getName() + "' (" + FileHandling.formatFileSize(size) + ") to @" + targetUser + "\n");
+                area.setCaretPosition(area.getDocument().getLength());
+            }
+
+            JOptionPane.showMessageDialog(this, "File '" + file.getName() + "' (" + FileHandling.formatFileSize(size) + ") sent to @" + targetUser + " successfully!", "File Sent", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Failed to send file: " + e.getMessage(), "Transfer Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void sendFileToRoom(String roomName) {
+        String cleanRoom = (roomName != null && roomName.startsWith("#")) ? roomName : "#General";
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Select file to share in " + cleanRoom);
+        int result = chooser.showOpenDialog(this);
+        if (result != JFileChooser.APPROVE_OPTION) return;
+
+        File file = chooser.getSelectedFile();
+        if (file == null || !file.exists() || !file.isFile()) {
+            JOptionPane.showMessageDialog(this, "Selected file is invalid or does not exist.", "File Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        long size = file.length();
+        if (size > 20L * 1024 * 1024) {
+            int opt = JOptionPane.showConfirmDialog(
+                this,
+                "File size is " + FileHandling.formatFileSize(size) + ".\nFor quick LAN transmission, files under 20MB are recommended.\nDo you still want to share it?",
+                "Large File Warning",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+            );
+            if (opt != JOptionPane.YES_OPTION) return;
+        }
+
+        try {
+            String base64 = FileHandling.encodeFileToBase64(file);
+            String time = new SimpleDateFormat("HH:mm:ss").format(new Date());
+            SharedFileRecord record = new SharedFileRecord(file.getName(), size, currentUser, cleanRoom, base64, time);
+            sharedFiles.add(record);
+
+            if (client != null && client.isConnected()) {
+                client.sendMessage("FILE:ROOM:" + cleanRoom + ":" + file.getName() + ":" + base64);
+            } else {
+                JOptionPane.showMessageDialog(this, "You are currently offline. File transfer requires an active connection.", "Offline", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            JTextArea area = chatViews.get(normalizeTabKey(cleanRoom));
+            if (area != null) {
+                area.append("[" + time + "] [FILE] You shared '" + file.getName() + "' (" + FileHandling.formatFileSize(size) + ") in " + cleanRoom + "\n");
+                area.setCaretPosition(area.getDocument().getLength());
+            }
+
+            JOptionPane.showMessageDialog(this, "File '" + file.getName() + "' (" + FileHandling.formatFileSize(size) + ") shared in " + cleanRoom + " successfully!", "File Shared", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Failed to share file: " + e.getMessage(), "Transfer Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void handleIncomingFile(String sender, String destination, String filename, String base64Data, boolean isDirect) {
+        long estimatedSize = (long) (base64Data.length() * 0.75);
+        String formattedSize = FileHandling.formatFileSize(estimatedSize);
+        String time = new SimpleDateFormat("HH:mm:ss").format(new Date());
+
+        SharedFileRecord record = new SharedFileRecord(filename, estimatedSize, sender, destination, base64Data, time);
+        sharedFiles.add(record);
+
+        // Append notice in corresponding chat tab
+        if (isDirect) {
+            JTextArea area = openDirectChat(sender, false);
+            if (area != null) {
+                area.append("[" + time + "] [FILE RECEIVED] " + sender + " sent '" + filename + "' (" + formattedSize + ") - Saved to Shared Files Hub\n");
+                area.setCaretPosition(area.getDocument().getLength());
+            }
+            badgeUnreadTab("@" + sender);
+        } else {
+            JTextArea area = chatViews.get(normalizeTabKey(destination));
+            if (area == null && !destination.startsWith("#")) {
+                area = chatViews.get(normalizeTabKey("#" + destination));
+            }
+            if (area != null) {
+                area.append("[" + time + "] [FILE RECEIVED] " + sender + " shared '" + filename + "' (" + formattedSize + ") - Saved to Shared Files Hub\n");
+                area.setCaretPosition(area.getDocument().getLength());
+            }
+            badgeUnreadTab(destination);
+        }
+
+        // Friendly option dialog for quick action
+        String[] options = { "Quick Save to Downloads", "Save As...", "Open Files Hub", "Decide Later" };
+        int choice = JOptionPane.showOptionDialog(
+            this,
+            "<html><b style='color:#FF8C00; font-size:13px;'>New File Received!</b><br><br>"
+            + "<b>File:</b> " + filename + " (" + formattedSize + ")<br>"
+            + "<b>From:</b> " + sender + (isDirect ? " (Direct Message)" : " (in room " + destination + ")") + "<br><br>"
+            + "How would you like to handle this file?</html>",
+            "File Received - " + filename,
+            JOptionPane.DEFAULT_OPTION,
+            JOptionPane.INFORMATION_MESSAGE,
+            null,
+            options,
+            options[0]
+        );
+
+        if (choice == 0) {
+            // Quick save to downloads
+            saveFileDirectly(filename, base64Data, FileHandling.getDefaultDownloadsDirectory());
+        } else if (choice == 1) {
+            // Save As...
+            saveFileWithChooser(filename, base64Data);
+        } else if (choice == 2) {
+            // Open Files Hub
+            openSharedFilesHub();
+        }
+    }
+
+    private void saveFileDirectly(String filename, String base64Data, File directory) {
+        try {
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+            File target = getNonCollidingFile(directory, filename);
+            FileHandling.saveBase64ToFile(base64Data, target);
+            JOptionPane.showMessageDialog(
+                this,
+                "File saved successfully to:\n" + target.getAbsolutePath(),
+                "File Saved",
+                JOptionPane.INFORMATION_MESSAGE
+            );
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Failed to save file: " + e.getMessage(), "Save Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void saveFileWithChooser(String filename, String base64Data) {
+        JFileChooser chooser = new JFileChooser(FileHandling.getDefaultDownloadsDirectory());
+        chooser.setSelectedFile(new File(filename));
+        int res = chooser.showSaveDialog(this);
+        if (res == JFileChooser.APPROVE_OPTION) {
+            File target = chooser.getSelectedFile();
+            try {
+                FileHandling.saveBase64ToFile(base64Data, target);
+                JOptionPane.showMessageDialog(
+                    this,
+                    "File saved successfully to:\n" + target.getAbsolutePath(),
+                    "File Saved",
+                    JOptionPane.INFORMATION_MESSAGE
+                );
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Failed to save file: " + e.getMessage(), "Save Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private File getNonCollidingFile(File dir, String filename) {
+        File file = new File(dir, filename);
+        if (!file.exists()) return file;
+
+        String name = filename;
+        String ext = "";
+        int dot = filename.lastIndexOf('.');
+        if (dot > 0) {
+            name = filename.substring(0, dot);
+            ext = filename.substring(dot);
+        }
+        int count = 1;
+        while (file.exists()) {
+            file = new File(dir, name + "_" + count + ext);
+            count++;
+        }
+        return file;
+    }
+
+    private void openSharedFilesHub() {
+        JDialog dialog = new JDialog(this, "Shared Files Hub (" + sharedFiles.size() + " files)", true);
+        dialog.setLayout(new BorderLayout(10, 10));
+        dialog.setSize(680, 420);
+        dialog.setLocationRelativeTo(this);
+
+        String[] columnNames = { "Filename", "Size", "From", "To / Room", "Time" };
+        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        for (SharedFileRecord rec : sharedFiles) {
+            tableModel.addRow(new Object[] {
+                rec.filename(),
+                FileHandling.formatFileSize(rec.size()),
+                rec.sender(),
+                rec.target(),
+                rec.time()
+            });
+        }
+
+        JTable table = new JTable(tableModel);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.setRowHeight(24);
+        if (tableModel.getRowCount() > 0) {
+            table.setRowSelectionInterval(tableModel.getRowCount() - 1, tableModel.getRowCount() - 1);
+        }
+
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        JLabel headerLabel = new JLabel("Files shared and received in this IntraChat session:");
+        headerLabel.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 13));
+        topPanel.add(headerLabel);
+
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+
+        JButton downloadBtn = new JButton("Save / Download Selected");
+        downloadBtn.setBackground(new java.awt.Color(255, 140, 0));
+        downloadBtn.setForeground(java.awt.Color.WHITE);
+        downloadBtn.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow >= 0 && selectedRow < sharedFiles.size()) {
+                SharedFileRecord rec = sharedFiles.get(selectedRow);
+                saveFileWithChooser(rec.filename(), rec.base64Data());
+            } else {
+                JOptionPane.showMessageDialog(dialog, "Please select a file from the table first.", "Selection", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
+        JButton openDownloadsBtn = new JButton("Open Downloads Folder");
+        openDownloadsBtn.addActionListener(e -> {
+            try {
+                Desktop.getDesktop().open(FileHandling.getDefaultDownloadsDirectory());
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(dialog, "Downloads folder:\n" + FileHandling.getDefaultDownloadsDirectory().getAbsolutePath(), "Folder Path", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
+        JButton sendNewBtn = new JButton("Send New File...");
+        sendNewBtn.addActionListener(e -> {
+            dialog.dispose();
+            sendFileToActiveConversation();
+        });
+
+        JButton closeBtn = new JButton("Close");
+        closeBtn.addActionListener(e -> dialog.dispose());
+
+        bottomPanel.add(downloadBtn);
+        bottomPanel.add(openDownloadsBtn);
+        bottomPanel.add(sendNewBtn);
+        bottomPanel.add(closeBtn);
+
+        dialog.add(topPanel, BorderLayout.NORTH);
+        dialog.add(scrollPane, BorderLayout.CENTER);
+        dialog.add(bottomPanel, BorderLayout.SOUTH);
+        dialog.setVisible(true);
+    }
+
+    private void Attach_buttonActionPerformed(java.awt.event.ActionEvent evt) {
+        sendFileToActiveConversation();
+    }
+
+    private void files_buttonActionPerformed(java.awt.event.ActionEvent evt) {
+        openSharedFilesHub();
+    }
+
+    private void chats_buttonActionPerformed(java.awt.event.ActionEvent evt) {
+        if (jTabbedPane1.getTabCount() > 1) {
+            jTabbedPane1.setSelectedIndex(1);
+        }
+        jTextField1.requestFocusInWindow();
+    }
+
+    private void Settings_buttonActionPerformed(java.awt.event.ActionEvent evt) {
+        String status = (client != null && client.isConnected()) ? "Connected (" + client.getServerIp() + ":" + client.getServerPort() + ")" : "Disconnected";
+        String lanIp = Server.getLocalLanIp();
+        String connCode = (client != null && client.isConnected())
+                ? com.IntraChat.security.AuthService.generateConnectionCode(client.getServerIp(), client.getServerPort())
+                : com.IntraChat.security.AuthService.generateConnectionCode(lanIp, Server.defaultPort);
+        JOptionPane.showMessageDialog(
+            this,
+            "Logged in as: " + currentUser
+            + "\nConnection Code: " + connCode
+            + "\nServer Address: " + status
+            + "\nThis Device's IP: " + lanIp
+            + "\n\nTip for connecting other devices on the same Wi-Fi/LAN:\n"
+            + "Tell other users to enter this Connection Code (" + connCode + ")\n"
+            + "into the 'Connection Code' field on their login screen.",
+            "Settings & Connection Info",
+            JOptionPane.INFORMATION_MESSAGE
+        );
+    }
+
+    private void notifications_buttonActionPerformed(java.awt.event.ActionEvent evt) {
+        long unreadCount = 0;
+        for (int i = 0; i < jTabbedPane1.getTabCount(); i++) {
+            if (jTabbedPane1.getTitleAt(i).startsWith("• ")) {
+                unreadCount++;
+            }
+        }
+        String msg = (unreadCount > 0)
+            ? "You have unread messages in " + unreadCount + " conversation(s) marked with '•'."
+            : "No unread notifications.";
+        JOptionPane.showMessageDialog(this, msg, "Notifications", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+        String search = JOptionPane.showInputDialog(this, "Enter username to search:", "Search Users", JOptionPane.QUESTION_MESSAGE);
+        if (search != null && !search.trim().isEmpty()) {
+            var model = OnlineUsers.getModel();
+            boolean found = false;
+            for (int i = 0; i < model.getSize(); i++) {
+                if (model.getElementAt(i).equalsIgnoreCase(search.trim())) {
+                    OnlineUsers.setSelectedIndex(i);
+                    OnlineUsers.ensureIndexIsVisible(i);
+                    found = true;
+                    int opt = JOptionPane.showConfirmDialog(
+                        this,
+                        "User '" + model.getElementAt(i) + "' is online!\nWould you like to open a direct private chat?",
+                        "User Found",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE
+                    );
+                    if (opt == JOptionPane.YES_OPTION) {
+                        openDirectChat(model.getElementAt(i), true);
+                    }
+                    break;
+                }
+            }
+            if (!found) {
+                JOptionPane.showMessageDialog(this, "User '" + search + "' is not currently online.", "Search Result", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    }
+
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {
+        if (jCheckBox1.isSelected()) {
+            onMessageReceived("(system) End-to-end message encryption mode activated.");
+        } else {
+            onMessageReceived("(system) Message encryption mode deactivated.");
+        }
+    }
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {
+        int idx = jTabbedPane1.getSelectedIndex();
+        String activeTitle = idx >= 0 ? jTabbedPane1.getTitleAt(idx).replace("• ", "").trim() : "General";
+        JTextArea currentArea = chatViews.get(normalizeTabKey(activeTitle));
+        if (currentArea == null || currentArea.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "The chat log for " + activeTitle + " is currently empty.", "Save Log", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        String safeFilename = "chat_log_" + activeTitle.replaceAll("[^a-zA-Z0-9_-]", "") + ".txt";
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setSelectedFile(new File(safeFilename));
+        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            try (FileWriter writer = new FileWriter(fileChooser.getSelectedFile())) {
+                writer.write(currentArea.getText());
+                JOptionPane.showMessageDialog(this, "Chat log for " + activeTitle + " saved successfully!", "Save Log", JOptionPane.INFORMATION_MESSAGE);
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "Failed to save file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    public void start() {
+                /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+            logger.log(java.util.logging.Level.SEVERE, null, ex);
+        }        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+            logger.log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> new Chat().setVisible(true));
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> new Chat().setVisible(true));
+    }
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
+        /* Set the Nimbus look and feel */        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+            logger.log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> new Chat().setVisible(true));
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
@@ -70,5 +1459,36 @@ public class Chat extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Attach_button;
+    private javax.swing.JList<String> ChatRooms;
+    private javax.swing.JLabel IP_label;
+    private javax.swing.JLabel Logo;
+    private javax.swing.JList<String> OnlineUsers;
+    private javax.swing.JLabel Onlineusers_label;
+    private javax.swing.JButton Settings_button;
+    private javax.swing.JPanel chatPanel;
+    private javax.swing.JLabel chatrooms_label;
+    private javax.swing.JButton chats_button;
+    private javax.swing.JButton files_button;
+    private javax.swing.JPanel iconsPanel;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton7;
+    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JList<String> jList1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JScrollPane jScrollPane8;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JButton notifications_button;
+    private javax.swing.JPanel rootPanel;
+    private javax.swing.JButton send_button;
+    private javax.swing.JLabel settings_label;
     // End of variables declaration//GEN-END:variables
 }
+

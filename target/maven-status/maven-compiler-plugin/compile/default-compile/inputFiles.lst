@@ -1,9 +1,11 @@
-C:\Users\Lia's PC\OneDrive\Documents\GitHub\IntraChat\src\main\java\com\IntraChat\database\DatabaseManager.java
-C:\Users\Lia's PC\OneDrive\Documents\GitHub\IntraChat\src\main\java\com\IntraChat\gui\Chat.java
-C:\Users\Lia's PC\OneDrive\Documents\GitHub\IntraChat\src\main\java\com\IntraChat\gui\Structure.java
-C:\Users\Lia's PC\OneDrive\Documents\GitHub\IntraChat\src\main\java\com\IntraChat\io\FileHandling.java
-C:\Users\Lia's PC\OneDrive\Documents\GitHub\IntraChat\src\main\java\com\IntraChat\Main.java
-C:\Users\Lia's PC\OneDrive\Documents\GitHub\IntraChat\src\main\java\com\IntraChat\network\Client.java
-C:\Users\Lia's PC\OneDrive\Documents\GitHub\IntraChat\src\main\java\com\IntraChat\network\ClientHandler.java
-C:\Users\Lia's PC\OneDrive\Documents\GitHub\IntraChat\src\main\java\com\IntraChat\network\Server.java
-C:\Users\Lia's PC\OneDrive\Documents\GitHub\IntraChat\src\main\java\com\IntraChat\NetworkBackendTest.java
+/home/bonginkosi0607/Documents/GitHub/IntraChat/src/main/java/com/IntraChat/IntraChat.java
+/home/bonginkosi0607/Documents/GitHub/IntraChat/src/main/java/com/IntraChat/Main.java
+/home/bonginkosi0607/Documents/GitHub/IntraChat/src/main/java/com/IntraChat/database/DatabaseManager.java
+/home/bonginkosi0607/Documents/GitHub/IntraChat/src/main/java/com/IntraChat/gui/Admin.java
+/home/bonginkosi0607/Documents/GitHub/IntraChat/src/main/java/com/IntraChat/gui/Chat.java
+/home/bonginkosi0607/Documents/GitHub/IntraChat/src/main/java/com/IntraChat/gui/Structure.java
+/home/bonginkosi0607/Documents/GitHub/IntraChat/src/main/java/com/IntraChat/io/FileHandling.java
+/home/bonginkosi0607/Documents/GitHub/IntraChat/src/main/java/com/IntraChat/network/Client.java
+/home/bonginkosi0607/Documents/GitHub/IntraChat/src/main/java/com/IntraChat/network/ClientHandler.java
+/home/bonginkosi0607/Documents/GitHub/IntraChat/src/main/java/com/IntraChat/network/Server.java
+/home/bonginkosi0607/Documents/GitHub/IntraChat/src/main/java/com/IntraChat/security/AuthService.java
