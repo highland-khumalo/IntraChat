@@ -8,13 +8,32 @@ import java.text.DecimalFormat;
 import java.util.Base64;
 import java.util.Scanner;
 
+/**
+ *
+ * @author Simanye
+ */
 public class FileHandling {
 
+    /**
+     * Reads a file and converts its contents into
+     * a Base64 encoded string for transmission.
+     * @param file
+     * @return
+     * @throws IOException
+     */
     public static String encodeFileToBase64(File file) throws IOException {
         byte[] bytes = Files.readAllBytes(file.toPath());
         return Base64.getEncoder().encodeToString(bytes);
     }
 
+    /**
+     * Decodes Base64 data and saves it as a file
+     * on the local system.
+     * @param base64Data
+     * @param targetFile
+     * @return
+     * @throws IOException
+     */
     public static File saveBase64ToFile(String base64Data, File targetFile) throws IOException {
         byte[] bytes = Base64.getDecoder().decode(base64Data);
         if (targetFile.getParentFile() != null && !targetFile.getParentFile().exists()) {
@@ -26,6 +45,13 @@ public class FileHandling {
         return targetFile;
     }
 
+    /**
+     * Converts a file size in bytes into a
+     * human-readable format such as KB, MB, or GB.
+     *
+     * @param bytes The file size in bytes.
+     * @return A formatted file size string
+     */
     public static String formatFileSize(long bytes) {
         if (bytes <= 0) return "0 B";
         final String[] units = new String[] { "B", "KB", "MB", "GB" };
@@ -34,6 +60,13 @@ public class FileHandling {
         return new DecimalFormat("#,##0.#").format(bytes / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
     }
 
+    /**
+     *Retrieves the default download directory used
+     * for saving received files. If the system Downloads
+     * folder is unavailable, a custom IntraChat_Downloads
+     * folder is created and returned
+     * @return
+     */
     public static File getDefaultDownloadsDirectory() {
         String userHome = System.getProperty("user.home");
         File downloads = new File(userHome, "Downloads");
@@ -48,6 +81,17 @@ public class FileHandling {
     }
 
     // Legacy login method preserved for backward compatibility
+
+    /**
+     * Authenticates a user using the supplied
+     * credentials and connection code.
+     * This method is retained for backward
+     * compatibility with older component
+     * @param username
+     * @param password
+     * @param code
+     * @return
+     */
     public static boolean login(String username, String password, String code) {
         try {
             File file = new File("user_data.txt");

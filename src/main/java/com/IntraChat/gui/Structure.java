@@ -8,13 +8,18 @@ import com.IntraChat.network.Client;
 import com.IntraChat.network.Server;
 import javax.swing.JOptionPane;
 
+/**
+ *
+ * @author Liyabona
+ */
 public class Structure extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Chat.class.getName());
     private static Server runningServer;
 
     /**
-     * Creates new form Chat
+     *  Creates the login window and initializes
+     * all graphical user interface components
      */
     public Structure() {
         initComponents();
@@ -39,6 +44,10 @@ public class Structure extends javax.swing.JFrame {
         return url != null ? new javax.swing.ImageIcon(url) : null;
     }
 
+    /**
+     * Displays the login window on the
+     * Swing Event Dispatch Thread.
+     */
     public void start() {
         java.awt.EventQueue.invokeLater(() -> setVisible(true));
     }

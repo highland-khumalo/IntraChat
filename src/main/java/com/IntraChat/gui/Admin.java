@@ -36,12 +36,21 @@ public class Admin extends javax.swing.JFrame {
     private javax.swing.Timer autoRefreshTimer;
 
     /**
-     * Creates new form Admin
+     *  Creates an Admin Console using the
+     * default server port
      */
     public Admin() {
         this(Server.defaultPort);
     }
 
+    /**
+     * Creates an Admin Console for the specified
+     * server port and ensures that only one admin
+     * instance can manage that port at a time.
+     *
+     * @param port The server port to manage.
+
+     */
     public Admin(int port) {
         if (!AdminLockManager.acquireLock(port, this)) {
             JOptionPane.showMessageDialog(
@@ -153,6 +162,11 @@ public class Admin extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Refreshes the Admin Console dashboard by
+     * updating user statistics and rebuilding
+     * the user table based on the active filter.
+     */
     public void refreshData() {
         try {
             int total = DatabaseManager.getUserCount();
